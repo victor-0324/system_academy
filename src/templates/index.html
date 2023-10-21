@@ -5,12 +5,12 @@
 	Facebook: https://fb.com/fh5co
 	URL: https://freehtml5.co
 -->
-<html lang="en">
+<html lang="pt-br">
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Fox - Free One Page Template, Free Fitness HTML5 Template by FreeHTML5.co</title>
+  <title>Academia Enovare</title>
 
   <!-- Bootstrap CSS -->
 <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
@@ -20,7 +20,8 @@
 
 </head>
 <body>
-<div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" "{{ url_for('static', filename='images/banner2.jpg') }}">
+  <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
+
   <nav class="navbar navbar-expand-md navbar-dark">
     <div class="container"> 
       <!-- Brand --> 
@@ -46,9 +47,9 @@
   <div class="container">
     <div class="fh5co-banner-text-box">
       <div class="quote-box pl-5 pr-5 wow bounceInRight">
-        <h2> FREE TEMPLATE <br><span>BY FREEHTML5.CO</span> </h2>
+        <h2> Saude em  <br><span>Primeiro lugar</span> </h2>
       </div>
-      <a href="#" class="btn text-uppercase btn-outline-danger btn-lg mr-3 mb-3 wow bounceInUp"> What's new</a> <a href="#" class="btn text-uppercase btn-outline-danger btn-lg mb-3 wow bounceInDown"> Courses</a> </div>
+      <a href="#" class="btn text-uppercase btn-outline-danger btn-lg mr-3 mb-3 wow bounceInUp">Alunos</a> <a href="#" class="btn text-uppercase btn-outline-danger btn-lg mb-3 wow bounceInDown"> Admistração</a> </div>
   </div>
 </div>
 <div class="container-fluid fh5co-network">
@@ -62,12 +63,12 @@
         <p class="wow bounceInDown">The lowdown on Blood Flow Restriction training • FREE CEC/CPD • ​Let's compare ​Raw Vs Cooked • Building Ab, Core &amp; Pelvic strength • Get​ clients short-term wins from long-term goals • So you want to operate multiple clubs? + LOADS MORE</p>
       </div>
       <div class="col-md-6">
-        <figure class="wow bounceInDown"> <img src="images/about-img.jpg" alt="gym" class="img-fluid" /> </figure>
+        <figure class="wow bounceInDown"> <img src="{{ url_for('static', filename='images/about-img.jpg') }}" alt="gym" class="img-fluid" /> </figure>
       </div>
     </div>
   </div>
 </div>
-<div id="about-us" class="container-fluid fh5co-about-us pl-0 pr-0 parallax-window" data-parallax="scroll" data-image-src="images/about-us-bg.jpg">
+<div id="about-us" class="container-fluid fh5co-about-us pl-0 pr-0 parallax-window" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/about-us-bg.jpg')}}">
   <div class="container">
     <div class="col-sm-6 offset-sm-6">
       <h2 class="wow bounceInLeft" data-wow-delay=".25s">ABOUT US</h2>
@@ -79,14 +80,14 @@
 <div class="container-fluid fh5co-content-box">
   <div class="container">
     <div class="row">
-      <div class="col-md-5 pr-0"><img src="images/rode-gym.jpg" alt="gym" class="img-fluid wow bounceInLeft" /> </div>
+      <div class="col-md-5 pr-0"><img src="{{ url_for('static', filename='images/rode-gym.jpg')}}"  alt="gym" class="img-fluid wow bounceInLeft" /> </div>
       <div class="col-md-7 pl-0">
         <div class="wow bounceInRight" data-wow-delay=".25s">
           <div class="card-img-overlay">
             <p>Great weekend, met lots of cool people and took away quite a bit. Thank you for the experience, and to you and your professional team for 
               making things seem </p>
           </div>
-          <img src="images/gym-girls.jpg" alt="girls in gym" class="img-fluid" /> </div>
+          <img src="{{ url_for('static', filename='images/gym-girls.jpg')}}"  alt="girls in gym" class="img-fluid" /> </div>
       </div>
     </div>
     <div class="row trainers pl-0 pr-0">
@@ -112,7 +113,7 @@
         </div>
       </div>
     </div>
-    <div class="row gallery">
+    <!-- <div class="row gallery">
       <div class="col-md-4">
         <div class="card">
           <div class="card-body mb-4 wow bounceInLeft" data-wow-delay=".25s">
@@ -137,7 +138,7 @@
           </div>
           <img class="card-img-top img-fluid wow bounceInLeft" data-wow-delay=".25s" src="images/g3.jpg" alt="Card image"> </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 <footer class="container-fluid">
@@ -203,11 +204,11 @@
 <!-- Optional JavaScript --> 
 <!-- jQuery first, then Bootstrap JS, ... -->
 
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/parallax.js"></script>
-<script src="js/wow.js"></script>
-<script src="js/main.js"></script>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/parallax.js') }}"></script>
+<script src="{{ url_for('static', filename='js/wow.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
 </html>
