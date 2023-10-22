@@ -5,11 +5,14 @@ from src.database import Base
 class Treino(Base):
     __tablename__ = "treinos"
     id = Column(Integer, primary_key=True)
-    descricao = Column(String(200), nullable=False)
+    dia_treino = Column(String(200), nullable=False)
+    horario = Column(String(100), nullable=False)
+    exercicio_treino = Column(String(200), nullable=False)
+    inicio = Column(String(100))
+    obejetivo = Column(String(100))
     
-
     def __repr__(self):
-        return f"Treino: {self.descricao}"
+        return f"{self.dia_treino} {self.horario}{self.exercicio} {self.inicio_treino} {self.obejetivo}"
 
 class Aluno(Base):
     __tablename__ = "alunos"
@@ -21,7 +24,7 @@ class Aluno(Base):
     # Adicione outras colunas relacionadas a alunos
 
     def __repr__(self):
-        return f"Aluno: {self.nome}"
+        return f"{self.nome} {self.login}{self.senha}{self.treinos}"
 
 class Admin(Base):
     __tablename__ = "admins"
@@ -32,4 +35,4 @@ class Admin(Base):
     # Adicione outras colunas relacionadas a administradores
 
     def __repr__(self):
-        return f"Admin: {self.nome}"
+        return f"{self.nome}{self.senha}{self.login}"

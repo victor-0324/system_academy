@@ -1,1 +1,1 @@
-from models import Aluno, Treino
+from .models import Aluno, Treino, Admin
