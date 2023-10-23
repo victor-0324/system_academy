@@ -1,0 +1,58 @@
+body.dark-theme {
+    background-color: #121212;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.titulo-pagina {
+    text-align: center;
+    color: #ff8c00; /* laranja escuro */
+}
+
+.pesquisa-alunos {
+    margin-bottom: 20px;
+}
+
+label {
+    color: #ff8c00;
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ff8c00;
+}
+
+th {
+    background-color: #ff8c00;
+    color: #121212; /* preto */
+}
+
+button {
+    background-color: #ff8c00;
+    color: #121212;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+button:hover {
+    background-color: #ff4500; /* laranja mais escuro */
+}

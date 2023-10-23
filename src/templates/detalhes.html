@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    <title>Detalhes do Aluno</title>
+</head>
+<body class="detalhes-page">
+    <main>
+        <div class="registro-formulario">
+            <h1>Detalhes do Aluno</h1>
+        </div>  
+        <div class="conteudo"> 
+            <div class="dados-pessoais">
+                <h2 class="titulo-secao">Dados Pessoais</h2>
+                    {% for aluno in aluno %}
+                        <div class="dados-pessoais">
+                            <div class="input-wrapper">
+                                <label for="nome">Nome:</label>
+                                <p>{{ aluno.nome }}</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="idade">Idade:</label>
+                                <p>{{ aluno.idade }}</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="sexo">Sexo:</label>
+                                <p>{{ aluno.sexo }}</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="altura">Altura (cm):</label>
+                                <p>{{ aluno.altura }}</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="peso">Peso (kg):</label>
+                                <p>{{ aluno.peso }}</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="email">Email:</label>
+                                <p>{{ aluno.email }}</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="telefone">Telefone:</label>
+                                <p>{{ aluno.telefone }}</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="dia_semana">Dia da Semana:</label>
+                                <p>{{ aluno.dia_semana }}</p>
+                            </div>
+                            <div>
+                                <tr>
+                                    <td>
+                                        <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
+                                    </td>
+                                </tr>
+                            </div>
+
+                            <!-- Adicione outros campos de dados pessoais aqui -->
+                        </div>
+                        
+                    {% endfor %}
+                   
+            <!-- Adicione outras seções conforme necessário -->
+
+            <!-- Botão para voltar à lista de alunos -->
+            <div class="enviar">
+                <a href="/alunos">
+                    <button class="registro-formulario" type="button">Voltar</button>
+                </a>
+                
+            </div>
+        </div>
+    </main>
+    <script>
+        function confirmarExclusao(alunoId) {
+            var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+            if (confirmacao) {
+                // Se confirmado, redireciona para a rota de exclusão
+                window.location.href = "/alunos/deletar/"+ alunoId;
+            }
+        }
+    </script>
+</body>
+</html>

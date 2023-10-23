@@ -1,0 +1,144 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212; /* Preto escuro */
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.registro-formulario {
+    background-color: #ff8c00; /* Laranja escuro */
+    color: #121212; /* Preto */
+    text-align: center;
+    padding: 10px;
+}
+
+h1 {
+    margin: 0;
+}
+
+.conteudo {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.dados-pessoais, .contato, .enviar, .input-wrapper {
+    flex: 1 1 calc(50% - 20px);
+}
+
+.input-wrapper {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input,
+select,
+button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff; /* Branco */
+    color: #333; /* Cinza escuro */
+}
+
+input[type="submit"] {
+    background-color: #ff8c00; /* Laranja escuro */
+    color: #121212; /* Preto */
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #ff4500; /* Laranja mais escuro */
+}
+
+.titulo-secao {
+    color: #333;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+#listaTreinos {
+    list-style-type: none;
+    padding: 0;
+}
+
+#listaTreinos li {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.visualizacao {
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    .dados-pessoais,
+    .contato,
+    .enviar,
+    .input-wrapper {
+        flex: 1 1 100%;
+    }
+}
+
+.detalhes-page .dados-pessoais {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.detalhes-page .input-wrapper {
+    flex: 1 1 calc(33.33% - 20px);
+    margin-bottom: 20px;
+}
+
+.detalhes-page label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.detalhes-page p {
+    margin: 0;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+}
+
+.detalhes-page h2 {
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .detalhes-page .dados-pessoais .input-wrapper {
+        flex: 1 1 100%;
+    }
+}

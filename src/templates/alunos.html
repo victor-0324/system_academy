@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/alunos.css')}}">
+    <title>Lista de Alunos</title>
+</head>
+
+<body class="dark-theme">
+    <main>
+        <h1 class="titulo-pagina">Lista de Alunos</h1>
+        <div class="pesquisa-alunos">
+            <label for="pesquisa">Pesquisar:</label>
+            <input type="text" id="pesquisa" placeholder="Digite o nome do aluno">
+        </div>
+
+        <div class="resultados-pesquisa">
+            <h2>Resultados da Pesquisa</h2>
+            <ul id="listaPesquisa"></ul>
+        </div>
+
+        <div class="tabela-alunos">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaAlunosBody">
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td>{{ aluno.nome }}</td>
+                        <td>
+                            <a href="detalhes/{{ aluno.id }}" target="_blank">
+                                <button type="button">Detalhes</button>
+                            </a>
+                            <a href="deletar/{{ aluno.id }}">
+                                <button type="button">Deletar</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="botoes-acoes">
+            <a href="{{ url_for('cadastro_app.cadastrar') }}">
+                <button type="button">Novo Aluno</button>
+            </a>
+            <a href="{{ url_for('initial_app.mostrar') }}">
+                <button type="button">Inicio</button>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        var alunos = [
+            {% for aluno in alunos %}
+            {
+                "id": "{{ aluno.id }}",
+                "nome": "{{ aluno.nome }}"
+            },
+            {% endfor %}
+        ];
+    
+        var pesquisaInput = document.getElementById('pesquisa');
+        var listaPesquisa = document.getElementById('listaPesquisa');
+        var tabelaAlunosBody = document.getElementById('tabelaAlunosBody');
+    
+        pesquisaInput.addEventListener('input', function () {
+            var termoPesquisa = pesquisaInput.value.trim().toLowerCase();
+    
+            if (termoPesquisa === '') {
+                // Se o campo de pesquisa estiver vazio, limpa a lista de pesquisa e restaura a tabela original
+                listaPesquisa.innerHTML = '';
+                atualizarTabela(alunos);
+                return;
+            }
+    
+            var resultados = alunos.filter(function (aluno) {
+                return aluno.nome.toLowerCase().includes(termoPesquisa);
+            });
+    
+            // Atualiza a lista de pesquisa
+            listaPesquisa.innerHTML = '';
+            resultados.forEach(function (resultado) {
+                var listItem = document.createElement('li');
+                listItem.textContent = resultado.nome;
+                listItem.onclick = function () {
+                    window.open('detalhes/' + resultado.id, '_blank');
+                };
+                listaPesquisa.appendChild(listItem);
+            });
+    
+            // Atualiza a tabela de alunos
+            atualizarTabela(resultados);
+        });
+    
+        function atualizarTabela(resultados) {
+            tabelaAlunosBody.innerHTML = '';
+            resultados.forEach(function (resultado) {
+                var newRow = tabelaAlunosBody.insertRow(tabelaAlunosBody.rows.length);
+                var cellNome = newRow.insertCell(0);
+                var cellAcoes = newRow.insertCell(1);
+    
+                cellNome.innerHTML = resultado.nome;
+    
+                var detalhesButton = document.createElement('button');
+                detalhesButton.textContent = 'Detalhes';
+                detalhesButton.onclick = function () {
+                    window.open('detalhes/' + resultado.id, '_blank');
+                };
+    
+                cellAcoes.appendChild(detalhesButton);
+            });
+        }
+    </script>
+</body>
+
+</html>

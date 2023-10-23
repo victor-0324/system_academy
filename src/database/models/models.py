@@ -20,11 +20,16 @@ class Aluno(Base):
     nome = Column(String(80), nullable=False)
     login = Column(String(80), unique=True, nullable=False)
     senha = Column(String(80), nullable=False)
-    treinos = relationship('Treino', backref='aluno', lazy=True)
-    # Adicione outras colunas relacionadas a alunos
-
+    telefone = Column(String(80), nullable=False)
+    email = Column(String(80), nullable=False) 
+    idade = Column(String(80), nullable=False)
+    peso = Column(String(80), nullable=False) 
+    altura = Column(String(80), nullable=False)
+    sexo = Column(String(80), nullable=False)
+    dia_semana = Column(String(80), nullable=False)
+    
     def __repr__(self):
-        return f"{self.nome} {self.login}{self.senha}{self.treinos}"
+        return f"{self.nome} {self.login}{self.senha}{self.treinos}{self.telefone}{self.email}{self.idade}{self.peso}{self.altura}{self.sexo}{self.dia_semana}"
 
 class Admin(Base):
     __tablename__ = "admins"

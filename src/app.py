@@ -24,6 +24,17 @@ def init_app():
         from .blueprints import initial_app
 
         app.register_blueprint(initial_app)
+        
+        # Cadastros alunos
+        from .blueprints import cadastro_app
+
+        app.register_blueprint(cadastro_app)
+
+         # Cadastros alunos
+        from .blueprints import clientes_app
+
+        app.register_blueprint(clientes_app)
+
 
         # Criando tabelas que não existem e estão
         # Criando a enginer

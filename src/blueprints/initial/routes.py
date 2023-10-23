@@ -6,5 +6,4 @@ initial_app = Blueprint("initial_app", __name__, url_prefix="/", template_folder
 # Tela Iniciarl do app
 @initial_app.route("/", methods=["GET", "POST"])
 def mostrar():
-    clientes = Querys.get_alunos()
-    return render_template("index.html",clientes=clientes)
+    return render_template("index.html")

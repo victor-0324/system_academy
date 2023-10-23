@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    <title>Cadastro de Aluno</title>
+</head>
+<body>
+    <main>
+        <div class="registro-formulario">
+            <h1>Cadastrar Novo Aluno</h1>
+        </div>  
+        <div class="conteudo"> 
+            <form  method="post">
+                <div class="dados-pessoais">
+                    <h2 class="titulo-secao">Dados Pessoais</h2>
+                    <div class="input-wrapper">
+                        <label for="nome">Nome:</label>
+                        <input type="text" name="nome" id="nome" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="idade">Idade:</label>
+                        <input type="number" name="idade" id="idade" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="sexo">Sexo:</label>
+                        <select name="sexo" id="sexo" required>
+                            <option value="" disabled selected>Selecione...</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="altura">Altura (cm):</label>
+                        <input type="number" name="altura" id="altura" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="peso">Peso (kg):</label>
+                        <input type="number" name="peso" id="peso" required>
+                    </div>
+                </div>
+                <div class="contato">
+                    <h2 class="titulo-secao">Informações de Contato</h2>
+                    <div class="input-wrapper">
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" id="email" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="telefone">Telefone:</label>
+                        <input type="tel" name="telefone" id="telefone" required>
+                    </div>
+                    <h2 class="titulo-secao">Data de Pagemnto</h2>
+
+                    <div class="input-wrapper">
+                      <label for="tel">dia:</label>
+                      <input type="dia_semana" name="dia_semana" id="dia" required>
+                    </div>
+
+                    <h2 class="titulo-secao">Login e senha do Aluno</h2>
+                    <div class="input-wrapper">
+                        <label for="login">login:</label>
+                        <input type="login" name="login" id="email" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="senha">Senha:</label>
+                        <input type="senha" name="senha" id="senha" required>
+                    </div>
+                </div>
+                
+                <div class="enviar">
+                    <input type="submit" name="cadastrar" value="Cadastrar">
+                </div>
+            </form>
+            <form id="cadastroForm">
+              <div class="input-wrapper">
+                  <h2 class="titulo-secao">Treino da Semana</h2>
+                  <div class="input-group">
+                      <select id="diaSemana" name="dia-semana" required>
+                          <option value="" disabled selected>Selecione o dia</option>
+                          <option value="segunda&sexta">Segunda-feira & Sexta-feira</option>
+                          <option value="terca&Quinta">Terça-feira & Quinta-feira</option>
+                          <option value="quarta">Quarta-feira</option>
+                      </select>
+                      <input id="treino" type="text" name="treino" placeholder="Treino do dia" required>
+                      
+                  </div>
+                  <button type="button" id="adicionarTreino">Adicionar Treino</button>
+              </div>
+  
+              <!-- Lista de treinos adicionados -->
+              <div class="visualizacao" id="visualizacao">
+                  <h2>Treinos Adicionados:</h2>
+                  <ul id="listaTreinos"></ul>
+              </div>
+              <div>
+                <input type="submit" name="treino" value="Enviar">
+              </div>
+              
+          </form>
+        </div>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          var treinos = [];
+
+          document.getElementById('adicionarTreino').addEventListener('click', function () {
+              var diaSemana = document.getElementById('diaSemana').value;
+              var treino = document.getElementById('treino').value;
+
+              // Adiciona o treino ao array
+              treinos.push({ diaSemana: diaSemana, treino: treino });
+
+              // Atualiza a lista de treinos na visualização
+              var listaTreinos = document.getElementById('listaTreinos');
+              listaTreinos.innerHTML = '';
+              treinos.forEach(function (t) {
+                  var listItem = document.createElement('li');
+                  listItem.innerText = `${t.diaSemana}: ${t.treino}`;
+                  listaTreinos.appendChild(listItem);
+              });
+
+              // Limpa os campos de entrada
+              document.getElementById('diaSemana').value = '';
+              document.getElementById('treino').value = '';
+          });
+
+          document.getElementById('cadastroForm').addEventListener('submit', function (event) {
+              // Previne o envio do formulário (pode ser removido se desejar enviar para o servidor)
+              event.preventDefault();
+
+              // Aqui você pode enviar os dados para o servidor, se necessário
+              console.log('Dados enviados para o servidor:', treinos);
+          });
+      });
+  </script>
+</body>
+</html>
