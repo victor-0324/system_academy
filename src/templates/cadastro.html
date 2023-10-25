@@ -5,6 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+</head>
     <title>Cadastro de Aluno</title>
 </head>
 <body>
@@ -13,7 +19,7 @@
             <h1>Cadastrar Novo Aluno</h1>
         </div>  
         <div class="conteudo"> 
-            <form  method="post">
+            <form method="post">
                 <div class="dados-pessoais">
                     <h2 class="titulo-secao">Dados Pessoais</h2>
                     <div class="input-wrapper">
@@ -51,90 +57,279 @@
                         <label for="telefone">Telefone:</label>
                         <input type="tel" name="telefone" id="telefone" required>
                     </div>
-                    <h2 class="titulo-secao">Data de Pagemnto</h2>
-
+                    <h2 class="titulo-secao">Data de Pagamento</h2>
                     <div class="input-wrapper">
-                      <label for="tel">dia:</label>
-                      <input type="dia_semana" name="dia_semana" id="dia" required>
+                        <label for="dia">Dia:</label>
+                        <input type="text" name="dia_semana" id="dia" required>
                     </div>
-
                     <h2 class="titulo-secao">Login e senha do Aluno</h2>
                     <div class="input-wrapper">
-                        <label for="login">login:</label>
-                        <input type="login" name="login" id="email" required>
+                        <label for="login">Login:</label>
+                        <input type="text" name="login" id="login" required>
                     </div>
                     <div class="input-wrapper">
                         <label for="senha">Senha:</label>
-                        <input type="senha" name="senha" id="senha" required>
+                        <input type="password" name="senha" id="senha" required>
                     </div>
                 </div>
-                
+                <div class="dados-pessoais" id="cadastroTreinoForm">
+                    <h2 class="titulo-secao">Informações de Treino</h2>
+                    
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Tipo de Treino:</label>
+                        <select id="tipoTreino" name="tipo-treino" required>
+                            <option value="" disabled selected>Selecione o tipo</option>
+                            <option value="iniciante">Iniciante</option>
+                            <option value="medio">Médio</option>
+                            <option value="avancado">Avançado</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="horario">Horário:</label>
+                        <select id="horario" name="horario" required>
+                            <option value="" disabled selected>Selecione o horário</option>
+                            <option value="manha">Manhã</option>
+                            <option value="tarde">Tarde</option>
+                            <option value="noite">Noite</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="data">Inicio:</label>
+                        <input type="text" name="inicio" id="data" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="obj">Objetivo:</label>
+                        <input type="text" name="obj" id="objt" required>
+                    </div>
+                    
+                </div>
+            
+                <div class="contato" id="treinoDetalhes">
+                    <h2>Detalhes do Treino Selecionado:</h2>
+                        <p id="treinoDetalhesTexto"></p>
+                        <div class="input-wrapper">
+                        <button type="button" id="verTreinoBtn">Ver Treino</button>
+                    </div>
+                </div>
                 <div class="enviar">
                     <input type="submit" name="cadastrar" value="Cadastrar">
                 </div>
-            </form>
-            <form id="cadastroForm">
-              <div class="input-wrapper">
-                  <h2 class="titulo-secao">Treino da Semana</h2>
-                  <div class="input-group">
-                      <select id="diaSemana" name="dia-semana" required>
-                          <option value="" disabled selected>Selecione o dia</option>
-                          <option value="segunda&sexta">Segunda-feira & Sexta-feira</option>
-                          <option value="terca&Quinta">Terça-feira & Quinta-feira</option>
-                          <option value="quarta">Quarta-feira</option>
-                      </select>
-                      <input id="treino" type="text" name="treino" placeholder="Treino do dia" required>
-                      
-                  </div>
-                  <button type="button" id="adicionarTreino">Adicionar Treino</button>
-              </div>
-  
-              <!-- Lista de treinos adicionados -->
-              <div class="visualizacao" id="visualizacao">
-                  <h2>Treinos Adicionados:</h2>
-                  <ul id="listaTreinos"></ul>
-              </div>
-              <div>
-                <input type="submit" name="treino" value="Enviar">
-              </div>
-              
-          </form>
+            </form>   
         </div>
     </main>
-
+    
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          var treinos = [];
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            var treinosPredefinidos = {
+'iniciante':  {
+    'segunda&sexta':  {
+        'exercicios': [
+                    {
+                        'nome': 'Bicicleta',
+                        'serie': 1,
+                        'repeticao': '3 minutos',
+                        'tempoDescanso': '40 seg',
+                        'carga': 'Constante'
+                    },
+                    {
+                        'nome': 'Crucifixo Baixo Halter',
+                        'serie': 3,
+                        'repeticao': 'Falha',
+                        'tempoDescanso': '45 seg',
+                        'carga': 'Constante'
+                    },
+                    {
+                        'nome': 'Supino Inclinado ($5/F5)',
+                        'serie': 3,
+                        'repeticao': 'Falha',
+                        'tempoDescanso': '45 seg',
+                        'carga': 'Constante'
+                    },
+                    {
+                        'nome': 'Crucifixo Reto',
+                        'serie': 4,
+                        'repeticao': 'Falha',
+                        'tempoDescanso': '45 Seg',
+                        'carga': 'Constante'
+                    },
+                    {
+                        'nome': 'Triceps Banco',
+                        'serie': 2,
+                        'repeticao': 'Restpause',
+                        'tempoDescanso': '45 seg',
+                        'carga': 'Constante'
+                    },
+                    {
+                        'nome': 'Francês Barra H',
+                        'serie': 4,
+                        'repeticao': '12',
+                        'tempoDescanso': '45 seg',
+                        'carga': 'Constante'
+                    },
+                    {
+                        'nome': 'Triceps Unilateral Cross',
+                        'serie': 5,
+                        'repeticao': 'Falha',
+                        'tempoDescanso': 'S/D',
+                        'carga': 'Constante'
+                    }
+                ],
 
-          document.getElementById('adicionarTreino').addEventListener('click', function () {
-              var diaSemana = document.getElementById('diaSemana').value;
-              var treino = document.getElementById('treino').value;
+    'terca&quinta':  {                                 
+        'exercicios': [
+                        {
+                            'nome': 'Esteira',
+                            'serie': 1,
+                            'repeticao': '3 min',
+                            'tempoDescanso': '-----',
+                            'carga': 'Constante'
+                        },
+                        {
+                            'nome': 'Remada Cavalinho',
+                            'serie': 4,
+                            'repeticao': '12',
+                            'tempoDescanso': '40 seg',
+                            'carga': 'Constante'
+                        },
+                        {
+                            'nome': 'Remada Posterior',
+                            'serie': 4,
+                            'repeticao': '12',
+                            'tempoDescanso': '40 seg',
+                            'carga': 'Crescente'
+                        },
+                        {
+                            'nome': 'Remada Curvada Cross',
+                            'serie': 4,
+                            'repeticao': '10',
+                            'tempoDescanso': '60 seg',
+                            'carga': 'Constante'
+                        },
+                        {
+                            'nome': 'Leg 900',
+                            'serie': 4,
+                            'repeticao': '12',
+                            'tempoDescanso': '60 seg',
+                            'carga': 'Constante'
+                        },
+                        {
+                            'nome': 'Agach. Sumô',
+                            'serie': 3,
+                            'repeticao': '10',
+                            'tempoDescanso': '60 seg',
+                            'carga': 'Constante'
+                        },
+                        {
+                            'nome': 'Panturrilha Guiado',
+                            'serie': 1,
+                            'repeticao': '70',
+                            'tempoDescanso': '-----',
+                            'carga': 'Constante'
+                        },
+                        {
+                            'nome': 'Abd Remador Banco',
+                            'serie': 5,
+                            'repeticao': '30 segundos',
+                            'tempoDescanso': '45 Seg',
+                            'carga': 'Constante'
+                        }
+                    ],
+            },
+    'quarta':  {
+        'exercicios': [
+            {
+                'nome': 'Bicicleta',
+                'serie': 1,
+                'repeticao': '3 Minutos',
+                'tempoDescanso': '-----',
+                'carga': 'Constante'
+            },
+            {
+                'nome': 'Desenv. Olímpico',
+                'serie': 3,
+                'repeticao': 'Falha',
+                'tempoDescanso': '45 seg',
+                'carga': 'Constante'
+            },
+            {
+                'nome': 'Elevação Lateral (final 10 Iso)',
+                'serie': 3,
+                'repeticao': 'Falha',
+                'tempoDescanso': '45 seg',
+                'carga': 'Constante'
+            },
+            {
+                'nome': 'Encolhimento',
+                'serie': 3,
+                'repeticao': 'Falha',
+                'tempoDescanso': '45 seg',
+                'carga': 'Constante'
+            },
+            {
+                'nome': 'Rosca Concentrada',
+                'serie': 3,
+                'repeticao': 'Falha',
+                'tempoDescanso': 'S/D',
+                'carga': 'Constante'
+            },
+            {
+                'nome': 'Rosca Alternada com Iso',
+                'serie': 3,
+                'repeticao': 'Falha',
+                'tempoDescanso': '45 seg',
+                'carga': 'Constante'
+            },
+            {
+                        'nome': 'Rosca Inversa',
+                        'serie': 3,
+                        'repeticao': 'Falha',
+                        'tempoDescanso': '45 seg',
+                        'carga': 'Constante'
+                    }
+                ],
+            },
+        },
+    },  
+};
+   
 
-              // Adiciona o treino ao array
-              treinos.push({ diaSemana: diaSemana, treino: treino });
+document.getElementById('verTreinoBtn').addEventListener('click', function () {
+    var tipoTreino = document.getElementById('tipoTreino').value.toLowerCase();
 
-              // Atualiza a lista de treinos na visualização
-              var listaTreinos = document.getElementById('listaTreinos');
-              listaTreinos.innerHTML = '';
-              treinos.forEach(function (t) {
-                  var listItem = document.createElement('li');
-                  listItem.innerText = `${t.diaSemana}: ${t.treino}`;
-                  listaTreinos.appendChild(listItem);
-              });
+    if (treinosPredefinidos[tipoTreino]) {
+        var treino = treinosPredefinidos[tipoTreino];
+        var mensagemTreino = `
+            Tipo de Treino: ${tipoTreino}
+            Exercícios:
+        `;
 
-              // Limpa os campos de entrada
-              document.getElementById('diaSemana').value = '';
-              document.getElementById('treino').value = '';
-          });
+        for (var dia in treino) {
+            mensagemTreino += `
+                Dia: ${dia}
+                Exercícios:
+            `;
 
-          document.getElementById('cadastroForm').addEventListener('submit', function (event) {
-              // Previne o envio do formulário (pode ser removido se desejar enviar para o servidor)
-              event.preventDefault();
+            treino[dia].exercicios.forEach(function (exercicio) {
+                mensagemTreino += `
+                    - ${exercicio.nome}
+                      Série: ${exercicio.serie}
+                      Repetições: ${exercicio.repeticao}
+                      Tempo de Descanso: ${exercicio.tempoDescanso}
+                      Carga: ${exercicio.carga}
+                `;
+            });
+        }
 
-              // Aqui você pode enviar os dados para o servidor, se necessário
-              console.log('Dados enviados para o servidor:', treinos);
-          });
-      });
-  </script>
+        document.getElementById('treinoDetalhesTexto').innerText = mensagemTreino;
+    } else {
+        document.getElementById('treinoDetalhesTexto').innerText = `Treino do tipo ${tipoTreino} não encontrado.`;
+    }
+
+    document.getElementById('treinoDetalhes').style.display = 'block';
+});
+        });
+    </script>
+    
 </body>
 </html>

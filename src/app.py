@@ -35,6 +35,11 @@ def init_app():
 
         app.register_blueprint(clientes_app)
 
+        # Treinos
+        from .blueprints import treino_app
+
+        app.register_blueprint(treino_app)
+
 
         # Criando tabelas que não existem e estão
         # Criando a enginer

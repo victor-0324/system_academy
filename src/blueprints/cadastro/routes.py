@@ -17,7 +17,11 @@ def cadastrar():
       login = request.form['login']
       senha = request.form['senha']
       dia_semana = request.form['dia_semana']
-      Querys.cadastrar_aluno(nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana)
+      tipo_treino = request.form['tipo-treino']
+      horario = request.form['horario']
+      inicio = request.form['inicio']
+      obj = request.form['obj']
+      Querys.cadastrar_aluno(obj, inicio, horario, tipo_treino, nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana)
       return redirect(url_for("clientes_app.mostrar"))
     
     return render_template("cadastro.html") 

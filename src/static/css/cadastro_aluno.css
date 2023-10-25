@@ -101,13 +101,25 @@ input[type="submit"]:hover {
     .input-wrapper {
         flex: 1 1 100%;
     }
+
+    form {
+        gap: 10px; /* Reduzir o espaçamento entre os campos em dispositivos menores */
+    }
+}
+
+/* Adicionei estilos para a página de detalhes */
+.detalhes-page {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .detalhes-page .dados-pessoais {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    background-color: #fff;
+    background-color: #f5f5f5; /* Cinza claro */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -126,7 +138,7 @@ input[type="submit"]:hover {
 
 .detalhes-page p {
     margin: 0;
-    padding: 5px;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;

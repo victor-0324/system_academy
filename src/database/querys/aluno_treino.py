@@ -1,6 +1,6 @@
 from typing import List
 from src.database.config import DBConnectionHendler, db_connector
-from src.database.models import Treino, Aluno
+from src.database.models import Aluno
 
 class Querys():
 
@@ -8,7 +8,8 @@ class Querys():
     @db_connector
     def mostrar(cls, connection):
         """Retorna uma lista de todos os clientes"""
-        mostrar = connection.session.query(Aluno)
+        mostrar = connection.session.query(Aluno) 
+        mostrar = mostrar.all()
         return mostrar
 
     @classmethod
@@ -45,13 +46,15 @@ class Querys():
 
     @classmethod
     @db_connector
-    def cadastrar_aluno(cls, connection, nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana):
+    def cadastrar_aluno(cls, connection, nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana, tipo_treino, horario, inicio, obj):
         aluno = Aluno(
-            nome=nome, idade=idade, sexo=sexo, altura=altura, peso=peso, email=email, telefone=telefone, login=login, senha=senha, dia_semana=dia_semana
+            nome=nome, idade=idade, sexo=sexo, altura=altura, peso=peso, email=email, telefone=telefone, login=login, senha=senha, dia_semana=dia_semana,
+            tipo_treino=tipo_treino, horario=horario, inicio=inicio, obj=obj
         )
         connection.session.add(aluno)
         connection.session.commit()
         return aluno
+
 
     @classmethod
     @db_connector

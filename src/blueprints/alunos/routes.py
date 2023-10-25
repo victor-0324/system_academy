@@ -7,7 +7,8 @@ clientes_app = Blueprint("clientes_app", __name__, url_prefix="/alunos", templat
 @clientes_app.route("/", methods=["GET", "POST"])
 def mostrar():
     alunos = Querys.mostrar()
-    return render_template("alunos.html",alunos=alunos)
+    quantidade_alunos = len(alunos)
+    return render_template("alunos.html",alunos=alunos, quantidade_alunos=quantidade_alunos)
 
 
 @clientes_app.route("/detalhes/<int:aluno_id>", methods=["GET"])
