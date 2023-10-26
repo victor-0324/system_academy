@@ -12,55 +12,57 @@
         <div class="registro-formulario">
             <h1>Detalhes do Aluno</h1>
         </div>  
-        <div class="conteudo"> 
-            <div class="dados-pessoais">
-                <h2 class="titulo-secao">Dados Pessoais</h2>
-                    {% for aluno in aluno %}
-                        <div class="dados-pessoais">
-                            <div class="input-wrapper">
-                                <label for="nome">Nome:</label>
-                                <p>{{ aluno.nome }}</p>
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="idade">Idade:</label>
-                                <p>{{ aluno.idade }}</p>
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="sexo">Sexo:</label>
-                                <p>{{ aluno.sexo }}</p>
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="altura">Altura (cm):</label>
-                                <p>{{ aluno.altura }}</p>
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="peso">Peso (kg):</label>
-                                <p>{{ aluno.peso }}</p>
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="email">Email:</label>
-                                <p>{{ aluno.email }}</p>
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="telefone">Telefone:</label>
-                                <p>{{ aluno.telefone }}</p>
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="dia_semana">Dia do Pagamento:</label>
-                                <p>{{ aluno.dia_semana }}</p>
-                            </div>
-                            <div>
-                                <tr>
-                                    <td>
-                                        <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
-                                    </td>
-                                </tr>
-                            </div>
+        
+            {% for aluno in aluno %}
+                <div class="dados-pessoais">
+                    <div class="input-wrapper">
+                        <label for="nome">Nome:</label>
+                        <p>{{ aluno.nome }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="idade">Idade:</label>
+                        <p>{{ aluno.idade }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="sexo">Sexo:</label>
+                        <p>{{ aluno.sexo }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="altura">Altura (cm):</label>
+                        <p>{{ aluno.altura }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="peso">Peso (kg):</label>
+                        <p>{{ aluno.peso }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="email">Email:</label>
+                        <p>{{ aluno.email }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="telefone">Telefone:</label>
+                        <p>{{ aluno.telefone }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="dia_semana">Dia do Pagamento:</label>
+                        <p>{{ aluno.dia_semana }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipo_treino">Tipo do treino:</label>
+                        <p>{{ aluno.tipo_treino }}</p>
+                    </div>
+                    <div>
+                        <tr>
+                            <td>
+                                <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
+                            </td>
+                        </tr>
+                    </div>
 
-                            <!-- Adicione outros campos de dados pessoais aqui -->
-                        </div>
-                        
-                    {% endfor %}
+                    <!-- Adicione outros campos de dados pessoais aqui -->
+                </div>
+                
+            {% endfor %}
                    
             <!-- Adicione outras seções conforme necessário -->
 
@@ -71,7 +73,7 @@
                 </a>
                 
             </div>
-        </div>
+        
     </main>
     <script>
         function confirmarExclusao(alunoId) {

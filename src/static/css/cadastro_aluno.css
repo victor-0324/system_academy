@@ -1,8 +1,9 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #121212; /* Preto escuro */
+    background-color: #121212; /* Fundo escuro */
     margin: 0;
     padding: 0;
+    color: #fff; /* Texto branco */
 }
 
 main {
@@ -20,13 +21,14 @@ main {
 
 h1 {
     margin: 0;
+    color: #fff; /* Texto branco */
 }
 
 .conteudo {
-    background-color: #fff;
+    background-color: #333; /* Cinza escuro */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 form {
@@ -35,7 +37,10 @@ form {
     gap: 20px;
 }
 
-.dados-pessoais, .contato, .enviar, .input-wrapper {
+.dados-pessoais,
+.contato,
+.enviar,
+.input-wrapper {
     flex: 1 1 calc(50% - 20px);
 }
 
@@ -46,7 +51,7 @@ form {
 label {
     display: block;
     margin-bottom: 8px;
-    color: #333;
+    color: #fff; /* Texto branco */
 }
 
 input,
@@ -57,8 +62,8 @@ button {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    background-color: #fff; /* Branco */
-    color: #333; /* Cinza escuro */
+    background-color: #121212; /* Preto escuro */
+    color: #fff; /* Texto branco */
 }
 
 input[type="submit"] {
@@ -72,7 +77,7 @@ input[type="submit"]:hover {
 }
 
 .titulo-secao {
-    color: #333;
+    color: #fff; /* Texto branco */
 }
 
 .input-group {
@@ -87,42 +92,30 @@ input[type="submit"]:hover {
 
 #listaTreinos li {
     margin-bottom: 10px;
-    color: #333;
+    color: #fff; /* Texto branco */
 }
 
 .visualizacao {
     margin-top: 20px;
 }
 
-@media (max-width: 600px) {
-    .dados-pessoais,
-    .contato,
-    .enviar,
-    .input-wrapper {
-        flex: 1 1 100%;
-    }
-
-    form {
-        gap: 10px; /* Reduzir o espaçamento entre os campos em dispositivos menores */
-    }
-}
-
 /* Adicionei estilos para a página de detalhes */
 .detalhes-page {
-    background-color: #fff;
+    background-color: #333; /* Cinza escuro */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    color: #fff; /* Texto branco */
 }
 
 .detalhes-page .dados-pessoais {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    background-color: #f5f5f5; /* Cinza claro */
+    background-color: #555; /* Cinza mais escuro */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 .detalhes-page .input-wrapper {
@@ -133,7 +126,7 @@ input[type="submit"]:hover {
 .detalhes-page label {
     display: block;
     margin-bottom: 8px;
-    color: #333;
+    color: #fff; /* Texto branco */
 }
 
 .detalhes-page p {
@@ -142,11 +135,11 @@ input[type="submit"]:hover {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    background-color: #f5f5f5;
+    background-color: #555; /* Cinza mais escuro */
 }
 
 .detalhes-page h2 {
-    color: #333;
+    color: #fff; /* Texto branco */
 }
 
 @media (max-width: 768px) {
@@ -154,3 +147,5 @@ input[type="submit"]:hover {
         flex: 1 1 100%;
     }
 }
+
+

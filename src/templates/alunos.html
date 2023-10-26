@@ -9,8 +9,8 @@
     <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/treino.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    
 </head>
     <title>Lista de Alunos</title>
 </head>
@@ -23,13 +23,14 @@
             <label for="pesquisa">Pesquisar:</label>
             <input type="text" id="pesquisa" placeholder="Digite o nome do aluno">
         </div>
+        <div class="resultados-pesquisa">
+            <h3>Resultados da Pesquisa</h3>
+            <ul id="listaPesquisa"></ul>
+        </div>
         <div class="informacoes-gerais">
             <p>Total de Alunos Cadastrados: {{ quantidade_alunos }}</p>
         </div>
-        <div class="resultados-pesquisa">
-            <h2>Resultados da Pesquisa</h2>
-            <ul id="listaPesquisa"></ul>
-        </div>
+        
         <div class="botoes-acoes">
             <a href="{{ url_for('cadastro_app.cadastrar') }}">
                 <button type="button">Novo Aluno</button>

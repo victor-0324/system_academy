@@ -29,23 +29,6 @@ class Querys():
 
     @classmethod
     @db_connector
-    def get_alunos(cls, connection, treino, nome):
-        aluno = Aluno(
-            nome = nome.upper(), treino=treino
-        )
-        connection.session.add(aluno)
-        connection.session.commit()
-
-        return Aluno.query.all()
-
-    @classmethod
-    @db_connector
-    def get_treinos_aluno(aluno_id):
-        return Treino.query.filter_by(aluno_id=aluno_id).all()
-
-
-    @classmethod
-    @db_connector
     def cadastrar_aluno(cls, connection, nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana, tipo_treino, horario, inicio, obj):
         aluno = Aluno(
             nome=nome, idade=idade, sexo=sexo, altura=altura, peso=peso, email=email, telefone=telefone, login=login, senha=senha, dia_semana=dia_semana,
@@ -55,11 +38,3 @@ class Querys():
         connection.session.commit()
         return aluno
 
-
-    @classmethod
-    @db_connector
-    def cadastrar_treino(descricao, aluno_id):
-        treino = Treino(descricao=descricao, aluno_id=aluno_id)
-        db.session.add(treino)
-        db.session.commit()
-        return treino

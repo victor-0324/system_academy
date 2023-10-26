@@ -37,45 +37,53 @@
             </div>
           </div>
         </nav>
-    <div class="container-fluid fh5co-content-box">
-        <div class="container">
-            
-            <div class="row trainers pl-0 pr-0">
-                <div class="col-12 bg-50">
-                <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
-                  <h2> Treinos </h2>
-                </div>
+        <div class="container-fluid fh5co-content-box">
+          <div class="container">
+  
+              <div class="row trainers pl-0 pr-0">
+                  <div class="col-12 bg-50">
+                      <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
+                          <h2> Treinos </h2>
+                      </div>
+                  </div>
+                  {% for dia_semana, exercicios in dados_treino.items() %}
+                  <div class="col-md-6 pr-5 pl-5">
+                      <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
+                          <img class="card-img-top rounded-circle img-fluid" src="images/trainers1.jpg" alt="Card image">
+                          <div class="card-body mb-5">
+                              <h4 class="card-title">{{ dia_semana }}</h4>
+                              <div class="row">
+                                  {% for exercicio in exercicios %}
+                                  <div class="col-6">
+                                      <div class="exercicio">
+                                          <p>{{ exercicio.nome }}</p>
+                                          <p>Série: {{ exercicio.serie }}</p>
+                                          <p>Repetições: {{ exercicio.repeticao }}</p>
+                                          <p>Tempo de Descanso: {{ exercicio.tempoDescanso }}</p>
+                                          <p>Carga: {{ exercicio.carga }}</p>
+                                      </div>
+                                  </div>
+                                  {% endfor %}
+                              </div>
+                              <button class="btn-concluir" onclick="concluirTreino('{{ dia_semana }}')">Concluir Treino</button>
+                          </div>
+                      </div>
+                  </div>
+                  {% endfor %}
+  
               </div>
-                {% for treino in treinos %}
-                    <div class="col-md-6 pr-5 pl-5">
-                        <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
-                            <img class="card-img-top rounded-circle img-fluid" src="images/trainers1.jpg" alt="Card image">
-                            <div class="card-body mb-5">
-                                <h4 class="card-title">{{ treino.dia_semana }}</h4>
-                                <p class="card-text">{{ treino.descricao }}</p>
-                                <button class="btn-concluir" onclick="concluirTreino('{{ treino.id }}')">Concluir Treino</button>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-
-            </div>
-
-        </div>
-    </div>
-
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/parallax.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/wow.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-    <script>
-        function concluirTreino(treinoId) {
-            // Implemente a lógica para marcar o treino como concluído no banco de dados
-            console.log('Treino concluído:', treinoId);
-        }
-    </script>
+  
+          </div>
+      </div>
+  
+      <!-- Seu código existente ... -->
+  
+      <script>
+          function concluirTreino(dia_semana) {
+              // Implemente a lógica para marcar o treino como concluído no banco de dados
+              console.log('Treino concluído para:', dia_semana);
+          }
+      </script>
 </body>
 
 </html>

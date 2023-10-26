@@ -17,6 +17,8 @@ def mostrar_detalhes(aluno_id):
    
     return render_template('detalhes.html', aluno=aluno)
 
+
+
 @clientes_app.route("/deletar/<int:aluno_id>", methods=["GET", "POST"])
 def deletar(aluno_id):
     Querys.deletar(aluno_id)
