@@ -30,9 +30,8 @@
         <div class="informacoes-gerais">
             <p>Total de Alunos Cadastrados: {{ quantidade_alunos }}</p>
         </div>
-        
         <div class="botoes-acoes">
-            <a href="{{ url_for('cadastro_app.cadastrar') }}">
+            <a target="_blank" href="{{ url_for('cadastro_app.cadastrar') }}">
                 <button type="button">Novo Aluno</button>
             </a>
             <a href="{{ url_for('initial_app.mostrar') }}">

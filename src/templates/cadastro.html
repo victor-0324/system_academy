@@ -12,324 +12,184 @@
     
 </head>
     <title>Cadastro de Aluno</title>
-</head>
+
 <body>
-    <main>
+    
+    <div class="container">
         <div class="registro-formulario">
             <h1>Cadastrar Novo Aluno</h1>
         </div>  
+        
         <div class="conteudo"> 
             <form method="post">
                 <div class="dados-pessoais">
-                    <h2 class="titulo-secao">Dados Pessoais</h2>
-                    <div class="input-wrapper">
-                        <label for="nome">Nome:</label>
-                        <input type="text" name="nome" id="nome" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="idade">Idade:</label>
-                        <input type="number" name="idade" id="idade" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="sexo">Sexo:</label>
-                        <select name="sexo" id="sexo" required>
-                            <option value="" disabled selected>Selecione...</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="feminino">Feminino</option>
-                        </select>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="altura">Altura (cm):</label>
-                        <input type="number" name="altura" id="altura" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="peso">Peso (kg):</label>
-                        <input type="number" name="peso" id="peso" required>
-                    </div>
+                    <h3 class="titulo-secao">Cadastro</h3>
+                        <div class="input-wrapper">
+                            <label for="nome">Nome:</label>
+                            <input type="text" name="nome" id="nome" required>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="idade">Idade:</label>
+                            <input type="number" name="idade" id="idade" required>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="sexo">Sexo:</label>
+                            <select name="sexo" id="sexo" required>
+                                <option value="" disabled selected>Selecione...</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="feminino">Feminino</option>
+                            </select>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="altura">Altura (cm):</label>
+                            <input type="number" name="altura" id="altura" required>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="peso">Peso (kg):</label>
+                            <input type="number" name="peso" id="peso" required>
+                        </div>
                 </div>
                 <div class="contato">
-                    <h2 class="titulo-secao">Informações de Contato</h2>
-                    <div class="input-wrapper">
-                        <label for="email">Email:</label>
-                        <input type="email" name="email" id="email" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="telefone">Telefone:</label>
-                        <input type="tel" name="telefone" id="telefone" required>
-                    </div>
-                    <!-- <h2 class="titulo-secao">Data de Pagamento</h2> -->
-                    <div class="input-wrapper">
-                        <label for="dia">Data de Pagamento<:</label>
-                        <input type="text" name="dia_semana" id="dia" required>
-                    </div>
-                    <h4 class="titulo-secao">Login e senha do Aluno</h4>
-                    <div class="input-wrapper">
-                        <label for="login">Login:</label>
-                        <input type="text" name="login" id="login" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="senha">Senha:</label>
-                        <input type="password" name="senha" id="senha" required>
-                    </div>
-                </div>
-                <div class="dados-pessoais" id="cadastroTreinoForm">
-                    <h2 class="titulo-secao">Informações de Treino</h2>
-                    
-                    <div class="input-wrapper">
-                        <label for="tipoTreino">Tipo de Treino:</label>
-                        <select id="tipoTreino" name="tipo-treino" required>
-                            <option value="" disabled selected>Selecione o tipo</option>
-                            <option value="iniciante">Iniciante</option>
-                            <option value="medio">Médio</option>
-                            <option value="avancado">Avançado</option>
-                        </select>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="horario">Horário:</label>
-                        <select id="horario" name="horario" required>
-                            <option value="" disabled selected>Selecione o horário</option>
-                            <option value="manha">Manhã</option>
-                            <option value="tarde">Tarde</option>
-                            <option value="noite">Noite</option>
-                        </select>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="data">Inicio:</label>
-                        <input type="text" name="inicio" id="data" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="obj">Objetivo:</label>
-                        <input type="text" name="obj" id="objt" required>
-                    </div>
-                    
-                </div>
-            
-                <div class="contato" id="treinoDetalhes">
-                    <h2 class="titulo-secao">Resumo Treino:</h2>
-                        <p class="titulo-secao" id="treinoDetalhesTexto"></p>
+                    <h3 class="titulo-secao">Contatos</h3>
                         <div class="input-wrapper">
-                        <button type="button" id="verTreinoBtn">Ver Treino</button>
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" id="email" required>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="telefone">Telefone:</label>
+                            <input type="tel" name="telefone" id="telefone" required>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="dia">Data de Pagamento:</label>
+                            <input type="text" name="dia_semana" id="dia" required>
+                        </div>
+                        <h5 class="titulo-secao">Senha do Aluno</h5>
+                        <div class="input-wrapper">
+                            <label for="login">Login:</label>
+                            <input type="text" name="login" id="login" required>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="senha">Senha:</label>
+                            <input type="password" name="senha" id="senha" required>
+                        </div>
+                </div>
+                <div class="dados-pessoais">
+                    <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
+                        <h3 class="titulo-secao">Cadastro de Treino</h3>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Dias da semana:</label>
+                                <select id="tipoTreino" name="tipo-treino" required>
+                                    <option value="" disabled selected>Dia do treino</option>
+                                    <option value="segunda&sexta">Segunda & Sexta</option>
+                                    <option value="terca&quinta">Terça & Quinta</option>
+                                    <option value="quarta">Quarta</option>
+                                </select>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar Exercício:</label>
+                                <input type="text" name="exercicio" id="exercicio" >
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar serie:</label>
+                                <input type="number" name="serie" id="serie" >
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar Repetição:</label>
+                                <input type="number" name="repeticao" id="repeticao" >
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar Descanso:</label>
+                                <input type="text" name="descanso" id="descanso" >
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar Carga:</label>
+                                <input type="text" name="carga" id="carga" >
+                            </div>
+                            <div class="input-wrapper">
+                                <div class="enviar">
+                                    <button type="button" onclick="adicionarExercicio()">Adicionar Exercício</button>
+                                </div>
+                            </div>
                     </div>
                 </div>
-                <div class="enviar">
-                    <input type="submit" name="cadastrar" value="Cadastrar">
+                    <!-- Lista de exercícios adicionados -->
+                <div class="contato">
+                    <h3 class="titulo-secao" >Exercícios Adicionados:</h3>
+                        <div class="input-wrapper">
+                            <ul class="titulo-secao" id="exerciciosAdicionados">
+                                <!-- Aqui serão exibidos os exercícios adicionados -->
+                            </ul>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="horario">Horário:</label>
+                            <select id="horario" name="horario" required>
+                                <option value="" disabled selected>Selecione o horário</option>
+                                <option value="manha">Manhã</option>
+                                <option value="tarde">Tarde</option>
+                                <option value="noite">Noite</option>
+                            </select>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="data">Inicio:</label>
+                            <input type="text" name="inicio" id="data" required>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="obj">Objetivo:</label>
+                            <input type="text" name="obj" id="objt" required>
+                        </div>
+                        <div class="enviar">
+                            <input type="submit" name="cadastrar" value="Cadastrar">
+                        </div>
                 </div>
             </form>   
         </div>
-    </main>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            
-            var treinosPredefinidos = {
-'iniciante':  {
-    'segunda&sexta':  {
-        'exercicios': [
-                    {
-                        'nome': 'Bicicleta',
-                        'serie': 1,
-                        'repeticao': '3 minutos',
-                        'tempoDescanso': '40 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Crucifixo Baixo Halter',
-                        'serie': 3,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Supino Inclinado ($5/F5)',
-                        'serie': 3,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Crucifixo Reto',
-                        'serie': 4,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': '45 Seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Triceps Banco',
-                        'serie': 2,
-                        'repeticao': 'Restpause',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Francês Barra H',
-                        'serie': 4,
-                        'repeticao': '12',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Triceps Unilateral Cross',
-                        'serie': 5,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': 'S/D',
-                        'carga': 'Constante'
+            <script>
+                var exercicios = [];
+        
+                function adicionarExercicio() {
+                    var tipoTreino = document.getElementById('tipoTreino').value;
+                    var exercicio = document.getElementById('exercicio').value;
+                    var serie = document.getElementById('serie').value;
+                    var repeticao = document.getElementById('repeticao').value;
+                    var descanso = document.getElementById('descanso').value;
+                    var carga = document.getElementById('carga').value;
+        
+                    // Verifica se todos os campos estão preenchidos
+                    if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
+                        alert('Por favor, preencha todos os campos do exercício.');
+                        return;
                     }
-                ],
-
-    'terca&quinta':  {                                 
-        'exercicios': [
-                        {
-                            'nome': 'Esteira',
-                            'serie': 1,
-                            'repeticao': '3 min',
-                            'tempoDescanso': '-----',
-                            'carga': 'Constante'
-                        },
-                        {
-                            'nome': 'Remada Cavalinho',
-                            'serie': 4,
-                            'repeticao': '12',
-                            'tempoDescanso': '40 seg',
-                            'carga': 'Constante'
-                        },
-                        {
-                            'nome': 'Remada Posterior',
-                            'serie': 4,
-                            'repeticao': '12',
-                            'tempoDescanso': '40 seg',
-                            'carga': 'Crescente'
-                        },
-                        {
-                            'nome': 'Remada Curvada Cross',
-                            'serie': 4,
-                            'repeticao': '10',
-                            'tempoDescanso': '60 seg',
-                            'carga': 'Constante'
-                        },
-                        {
-                            'nome': 'Leg 900',
-                            'serie': 4,
-                            'repeticao': '12',
-                            'tempoDescanso': '60 seg',
-                            'carga': 'Constante'
-                        },
-                        {
-                            'nome': 'Agach. Sumô',
-                            'serie': 3,
-                            'repeticao': '10',
-                            'tempoDescanso': '60 seg',
-                            'carga': 'Constante'
-                        },
-                        {
-                            'nome': 'Panturrilha Guiado',
-                            'serie': 1,
-                            'repeticao': '70',
-                            'tempoDescanso': '-----',
-                            'carga': 'Constante'
-                        },
-                        {
-                            'nome': 'Abd Remador Banco',
-                            'serie': 5,
-                            'repeticao': '30 segundos',
-                            'tempoDescanso': '45 Seg',
-                            'carga': 'Constante'
-                        }
-                    ],
-            },
-    'quarta':  {
-        'exercicios': [
-            {
-                'nome': 'Bicicleta',
-                'serie': 1,
-                'repeticao': '3 Minutos',
-                'tempoDescanso': '-----',
-                'carga': 'Constante'
-            },
-            {
-                'nome': 'Desenv. Olímpico',
-                'serie': 3,
-                'repeticao': 'Falha',
-                'tempoDescanso': '45 seg',
-                'carga': 'Constante'
-            },
-            {
-                'nome': 'Elevação Lateral (final 10 Iso)',
-                'serie': 3,
-                'repeticao': 'Falha',
-                'tempoDescanso': '45 seg',
-                'carga': 'Constante'
-            },
-            {
-                'nome': 'Encolhimento',
-                'serie': 3,
-                'repeticao': 'Falha',
-                'tempoDescanso': '45 seg',
-                'carga': 'Constante'
-            },
-            {
-                'nome': 'Rosca Concentrada',
-                'serie': 3,
-                'repeticao': 'Falha',
-                'tempoDescanso': 'S/D',
-                'carga': 'Constante'
-            },
-            {
-                'nome': 'Rosca Alternada com Iso',
-                'serie': 3,
-                'repeticao': 'Falha',
-                'tempoDescanso': '45 seg',
-                'carga': 'Constante'
-            },
-            {
-                        'nome': 'Rosca Inversa',
-                        'serie': 3,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    }
-                ],
-            },
-        },
-    },  
-};
-   
-
-document.getElementById('verTreinoBtn').addEventListener('click', function () {
-    var tipoTreino = document.getElementById('tipoTreino').value.toLowerCase();
-
-    if (treinosPredefinidos[tipoTreino]) {
-        var treino = treinosPredefinidos[tipoTreino];
-        var mensagemTreino = `
-            Tipo de Treino: ${tipoTreino}
-            Exercícios:
-        `;
-
-        for (var dia in treino) {
-            mensagemTreino += `
-                Dia: ${dia}
-                Exercícios:
-            `;
-
-            treino[dia].exercicios.forEach(function (exercicio) {
-                mensagemTreino += `
-                    - ${exercicio.nome}
-                      Série: ${exercicio.serie}
-                      Repetições: ${exercicio.repeticao}
-                      Tempo de Descanso: ${exercicio.tempoDescanso}
-                      Carga: ${exercicio.carga}
-                `;
-            });
-        }
-
-        document.getElementById('treinoDetalhesTexto').innerText = mensagemTreino;
-    } else {
-        document.getElementById('treinoDetalhesTexto').innerText = `Treino do tipo ${tipoTreino} não encontrado.`;
-    }
-
-    document.getElementById('treinoDetalhes').style.display = 'block';
-});
-        });
-    </script>
-    
+        
+                    var exercicioInfo = `Dia: ${tipoTreino}, Exercício: ${exercicio}, Série: ${serie}, Repetição: ${repeticao}, Descanso: ${descanso}, Carga: ${carga}`;
+                    exercicios.push(exercicioInfo);
+        
+                    // Atualiza a lista de exercícios na página
+                    atualizarListaExercicios();
+        
+                    // Limpa os campos de treino
+                    limparCamposTreino();
+                }
+        
+                function atualizarListaExercicios() {
+                    var listaExercicios = document.getElementById('exerciciosAdicionados');
+                    listaExercicios.innerHTML = '';
+        
+                    exercicios.forEach(function (exercicio, index) {
+                        var itemLista = document.createElement('li');
+                        itemLista.textContent = exercicio;
+                        listaExercicios.appendChild(itemLista);
+                    });
+                }
+        
+                function limparCamposTreino() {
+                    document.getElementById('exercicio').value = '';
+                    document.getElementById('serie').value = '';
+                    document.getElementById('repeticao').value = '';
+                    document.getElementById('descanso').value = '';
+                    document.getElementById('carga').value = '';
+                }
+            </script>
+    </div>
 </body>
 </html>
