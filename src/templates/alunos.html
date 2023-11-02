@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
+
     
 </head>
     <title>Lista de Alunos</title>
@@ -54,9 +56,7 @@
                             <a href="detalhes/{{ aluno.id }}" target="_blank">
                                 <button type="button">Detalhes</button>
                             </a>
-                            <a href="deletar/{{ aluno.id }}">
-                                <button type="button">Deletar</button>
-                            </a>
+                                <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -66,6 +66,15 @@
         <br>
     </main>
 
+
+    <script>
+        function confirmarExclusao(alunoId) {
+            var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+            if (confirmacao) {
+                window.location.href = "/alunos/deletar/" + alunoId;
+            }
+        }
+    </script>
     <script>
         var alunos = [
             {% for aluno in alunos %}

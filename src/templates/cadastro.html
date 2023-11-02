@@ -8,6 +8,7 @@
     <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
 </head>
@@ -21,7 +22,7 @@
         </div>  
         
         <div class="conteudo"> 
-            <form method="post">
+            <form method="post" onsubmit="return enviarExerciciosParaServidor()">
                 <div class="dados-pessoais">
                     <h3 class="titulo-secao">Cadastro</h3>
                         <div class="input-wrapper">
@@ -59,10 +60,6 @@
                             <label for="telefone">Telefone:</label>
                             <input type="tel" name="telefone" id="telefone" required>
                         </div>
-                        <div class="input-wrapper">
-                            <label for="dia">Data de Pagamento:</label>
-                            <input type="text" name="dia_semana" id="dia" required>
-                        </div>
                         <h5 class="titulo-secao">Senha do Aluno</h5>
                         <div class="input-wrapper">
                             <label for="login">Login:</label>
@@ -72,13 +69,17 @@
                             <label for="senha">Senha:</label>
                             <input type="password" name="senha" id="senha" required>
                         </div>
+                        <div class="input-wrapper">
+                            <label for="dia">Data de Pagamento:</label>
+                            <input type="text" name="dia_semana" id="dia" required>
+                        </div>
                 </div>
                 <div class="dados-pessoais">
                     <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
                         <h3 class="titulo-secao">Cadastro de Treino</h3>
                             <div class="input-wrapper">
                                 <label for="tipoTreino">Dias da semana:</label>
-                                <select id="tipoTreino" name="tipo-treino" required>
+                                <select id="tipoTreino"  required>
                                     <option value="" disabled selected>Dia do treino</option>
                                     <option value="segunda&sexta">Segunda & Sexta</option>
                                     <option value="terca&quinta">Terça & Quinta</option>
@@ -87,23 +88,23 @@
                             </div>
                             <div class="input-wrapper">
                                 <label for="tipoTreino">Adicionar Exercício:</label>
-                                <input type="text" name="exercicio" id="exercicio" >
+                                <input type="text" id="exercicio" >
                             </div>
                             <div class="input-wrapper">
                                 <label for="tipoTreino">Adicionar serie:</label>
-                                <input type="number" name="serie" id="serie" >
+                                <input type="number"  id="serie" >
                             </div>
                             <div class="input-wrapper">
                                 <label for="tipoTreino">Adicionar Repetição:</label>
-                                <input type="number" name="repeticao" id="repeticao" >
+                                <input type="number"  id="repeticao" >
                             </div>
                             <div class="input-wrapper">
                                 <label for="tipoTreino">Adicionar Descanso:</label>
-                                <input type="text" name="descanso" id="descanso" >
+                                <input type="text"  id="descanso" >
                             </div>
                             <div class="input-wrapper">
                                 <label for="tipoTreino">Adicionar Carga:</label>
-                                <input type="text" name="carga" id="carga" >
+                                <input type="text"  id="carga" >
                             </div>
                             <div class="input-wrapper">
                                 <div class="enviar">
@@ -134,8 +135,8 @@
                             <input type="text" name="inicio" id="data" required>
                         </div>
                         <div class="input-wrapper">
-                            <label for="obj">Objetivo:</label>
-                            <input type="text" name="obj" id="objt" required>
+                            <label for="objetivo">Objetivo:</label>
+                            <input type="text" name="obj" id="objetivo" required>
                         </div>
                         <div class="enviar">
                             <input type="submit" name="cadastrar" value="Cadastrar">
@@ -143,53 +144,111 @@
                 </div>
             </form>   
         </div>
-    
-            <script>
-                var exercicios = [];
-        
-                function adicionarExercicio() {
-                    var tipoTreino = document.getElementById('tipoTreino').value;
-                    var exercicio = document.getElementById('exercicio').value;
-                    var serie = document.getElementById('serie').value;
-                    var repeticao = document.getElementById('repeticao').value;
-                    var descanso = document.getElementById('descanso').value;
-                    var carga = document.getElementById('carga').value;
-        
-                    // Verifica se todos os campos estão preenchidos
-                    if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
-                        alert('Por favor, preencha todos os campos do exercício.');
-                        return;
-                    }
-        
-                    var exercicioInfo = `Dia: ${tipoTreino}, Exercício: ${exercicio}, Série: ${serie}, Repetição: ${repeticao}, Descanso: ${descanso}, Carga: ${carga}`;
-                    exercicios.push(exercicioInfo);
-        
-                    // Atualiza a lista de exercícios na página
-                    atualizarListaExercicios();
-        
-                    // Limpa os campos de treino
-                    limparCamposTreino();
-                }
-        
-                function atualizarListaExercicios() {
-                    var listaExercicios = document.getElementById('exerciciosAdicionados');
-                    listaExercicios.innerHTML = '';
-        
-                    exercicios.forEach(function (exercicio, index) {
-                        var itemLista = document.createElement('li');
-                        itemLista.textContent = exercicio;
-                        listaExercicios.appendChild(itemLista);
-                    });
-                }
-        
-                function limparCamposTreino() {
-                    document.getElementById('exercicio').value = '';
-                    document.getElementById('serie').value = '';
-                    document.getElementById('repeticao').value = '';
-                    document.getElementById('descanso').value = '';
-                    document.getElementById('carga').value = '';
-                }
-            </script>
+           
     </div>
+
+    <script>
+       
+            // Escopo local para evitar variáveis globais desnecessárias
+            var exercicios = [];
+        
+            function adicionarExercicio()  {
+               
+                var tipoTreino = document.getElementById('tipoTreino').value;
+                var exercicio = document.getElementById('exercicio').value;
+                var serie = document.getElementById('serie').value;
+                var repeticao = document.getElementById('repeticao').value;
+                var descanso = document.getElementById('descanso').value;
+                var carga = document.getElementById('carga').value;
+        
+                // Verifica se todos os campos estão preenchidos
+                if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
+                    alert('Por favor, preencha todos os campos do exercício.');
+                    return;
+                }
+        
+                var exercicioInfo = {
+                    'tipoTreino': tipoTreino,
+                    'exercicio': exercicio,
+                    'serie': serie,
+                    'repeticao': repeticao,
+                    'descanso': descanso,
+                    'carga': carga,
+                };
+        
+                exercicios.push(exercicioInfo);
+        
+                // Adicione logs para verificar o que está sendo adicionado
+                console.log('Exercício adicionado:', exercicioInfo);
+                console.log('Lista de exercícios atualizada:', exercicios);
+                // Atualiza a lista de exercícios na página
+                atualizarListaExercicios();
+        
+                // Limpa os campos de treino
+                limparCamposTreino();
+                
+            }
+        
+            function atualizarListaExercicios() {
+               
+                var listaExercicios = document.getElementById('exerciciosAdicionados');
+                listaExercicios.innerHTML = '';
+            
+                exercicios.forEach(function (exercicio, index) {
+                    var itemLista = document.createElement('li');
+                    itemLista.textContent = `Dia: ${exercicio.tipoTreino}, Exercício: ${exercicio.exercicio}, Série: ${exercicio.serie}, Repetição: ${exercicio.repeticao}, Descanso: ${exercicio.descanso}, Carga: ${exercicio.carga}`;
+                    listaExercicios.appendChild(itemLista);
+                });
+                return exercicios;
+            }
+        
+            function limparCamposTreino() {
+               
+                document.getElementById('exercicio').value = '';
+                document.getElementById('serie').value = '';
+                document.getElementById('repeticao').value = '';
+                document.getElementById('descanso').value = '';
+                document.getElementById('carga').value = '';
+            }
+        
+            function enviarExerciciosParaServidor() {
+                // Obtenha os dados dos exercícios
+                var exercicios = atualizarListaExercicios();
+            
+                // Verifique se há exercícios antes de enviar
+                if (exercicios.length === 0) {
+                    alert('Adicione pelo menos um exercício antes de cadastrar.');
+                    return false; // Impede o envio do formulário
+                }
+            
+                // Adicione os exercícios ao formData
+                var formData = new FormData(document.querySelector('form'));
+                formData.append('exercicios', JSON.stringify(exercicios));
+            
+                // Faça a solicitação POST para o servidor
+                fetch('/cadastro', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Lida com a resposta do servidor
+                        console.log(data);
+                        // Limpa os exercícios após o envio
+                        exercicios = [];
+                        atualizarListaExercicios();
+                        // Redireciona para a outra página após o cadastro
+                        window.location.href = '/alunos';
+                    })
+                    .catch(error => {
+                        // Lida com erros
+                        console.error(error);
+                    });
+            
+                return false; // Impede o envio do formulário
+            }
+            
+                        
+    </script>
 </body>
 </html>

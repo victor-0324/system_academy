@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
     <title>Detalhes do Aluno</title>
 </head>
 <body class="detalhes-page">
@@ -48,39 +49,42 @@
                         <p>{{ aluno.dia_semana }}</p>
                     </div>
                     <div class="input-wrapper">
-                        <label for="tipo_treino">Tipo do treino:</label>
-                        <p>{{ aluno.tipo_treino }}</p>
+                        <label for="horario">Horario:</label>
+                        <p>{{ aluno.horario }}</p>
                     </div>
-                    <div>
-                        <tr>
-                            <td>
-                                <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
-                            </td>
-                        </tr>
+                    <div class="input-wrapper">
+                        <label for="obj">Objetivo:</label>
+                        <p>{{ aluno.obj }}</p>
+                    </div> 
+                    <div class="input-wrapper">
+                        <label>Exercícios:</label>
+                        <ul>
+                            {% for exercicio in aluno.exercicios %}
+                                <li>{{ exercicio.tipoTreino }} - {{ exercicio.exercicio }} - {{ exercicio.serie }} - {{ exercicio.repeticao }} - {{ exercicio.descanso }} - {{ exercicio.carga }}</li>
+                            {% endfor %}
+                        </ul>
                     </div>
-
+                    <div  class="enviar">
+                        <button class="registro-formulario" type="button" >MODIFICAR</button>
+                    </div>
+                    <div  class="enviar">
+                        <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">DELETAR</button>
+                    </div>
                     <!-- Adicione outros campos de dados pessoais aqui -->
                 </div>
-                
             {% endfor %}
-                   
-            <!-- Adicione outras seções conforme necessário -->
-
-            <!-- Botão para voltar à lista de alunos -->
-            <div class="enviar">
-                <a href="/alunos">
-                    <button class="registro-formulario" type="button">Voltar</button>
-                </a>
-                
-            </div>
-        
+        <!-- Botão para voltar à lista de alunos -->
+        <div class="enviar">
+            <a href="/alunos">
+                <button class="registro-formulario" type="button">VOLTAR</button>
+            </a>
+        </div>
     </main>
     <script>
         function confirmarExclusao(alunoId) {
             var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
             if (confirmacao) {
-                // Se confirmado, redireciona para a rota de exclusão
-                window.location.href = "/alunos/deletar/"+ alunoId;
+                window.location.href = "/alunos/deletar/" + alunoId;
             }
         }
     </script>

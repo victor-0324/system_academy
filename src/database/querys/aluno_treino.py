@@ -1,6 +1,6 @@
 from typing import List
 from src.database.config import DBConnectionHendler, db_connector
-from src.database.models import Aluno
+from src.database.models import Aluno, ExerciciosAluno
 
 class Querys():
 
@@ -21,20 +21,43 @@ class Querys():
     @classmethod
     @db_connector
     def deletar(cls, connection, aluno_id):
-        """someting"""
-        cliente = connection.session.query(Aluno).filter_by(id=aluno_id).first()
-        connection.session.delete(cliente)
-        connection.session.commit()
+        aluno = connection.session.query(Aluno).filter_by(id=aluno_id).first()
+
+        if aluno:
+            # Deletar os exercícios associados ao aluno
+            connection.session.query(ExerciciosAluno).filter_by(aluno_id=aluno.id).delete()
+            # Deletar o aluno
+            connection.session.delete(aluno)
+            # Commit das alterações
+            connection.session.commit()
+            return True  # Indica que a deleção foi bem-sucedida
+        return False
 
 
     @classmethod
     @db_connector
-    def cadastrar_aluno(cls, connection, nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana, tipo_treino, horario, inicio, obj):
+    def cadastrar_aluno(cls, connection, nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana, horario, inicio, obj, exercicios):
         aluno = Aluno(
-            nome=nome, idade=idade, sexo=sexo, altura=altura, peso=peso, email=email, telefone=telefone, login=login, senha=senha, dia_semana=dia_semana,
-            tipo_treino=tipo_treino, horario=horario, inicio=inicio, obj=obj
+            nome=nome, idade=idade, sexo=sexo, altura=altura, peso=peso, email=email, telefone=telefone,
+            login=login, senha=senha, dia_semana=dia_semana, horario=horario,  inicio=inicio, obj=obj
         )
+
         connection.session.add(aluno)
         connection.session.commit()
+
+        for exercicio in exercicios:
+            exercicio_aluno = ExerciciosAluno(
+                aluno_id=aluno.id,
+                tipoTreino=exercicio.get('tipoTreino', ''),
+                exercicio=exercicio.get('exercicio', ''),
+                serie=exercicio.get('serie', ''),
+                repeticao=exercicio.get('repeticao', ''),
+                descanso=exercicio.get('descanso', ''),
+                carga=exercicio.get('carga', '')
+            )
+            connection.session.add(exercicio_aluno)
+
+        connection.session.commit()
+
         return aluno
 

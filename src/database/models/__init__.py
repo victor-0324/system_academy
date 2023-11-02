@@ -1,1 +1,1 @@
-from .models import Aluno, Admin
+from .models import Aluno, Admin, ExerciciosAluno
