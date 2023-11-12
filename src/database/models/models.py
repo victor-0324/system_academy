@@ -1,5 +1,8 @@
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, String, JSON
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Integer, ForeignKey, create_engine
+from sqlalchemy.orm import relationship, sessionmaker
+from flask_login import UserMixin, login_manager
+from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy import Column, String, Integer, Boolean, ForeignKey
 from src.database import Base
 
 class Aluno(Base):
@@ -13,17 +16,38 @@ class Aluno(Base):
     email = Column(String(80), nullable=False)
     telefone = Column(String(80), nullable=False)
     login = Column(String(80), nullable=False)
-    senha = Column(String(80), nullable=False)
+    senha = Column(String(256), nullable=False)
     dia_semana = Column(String(80), nullable=False)
     horario = Column(String(100), nullable=False)
     inicio = Column(String(100), nullable=False)
     obj = Column(String(100), nullable=False)
+    permissao = Column(String(80), nullable=False)
+    
+    def set_password(self, password):
+        self.senha = generate_password_hash(password, method="sha256")
+
+    def check_password(self, password):
+        return check_password_hash(self.senha, password)
+
+    def is_active(self):
+        # Aqui você pode implementar a lógica para verificar se o aluno está ativo
+        return True 
+
+    # Adicionando métodos necessários para Flask-Login
+    def get_id(self):
+        return str(self.id)
+
+    def is_authenticated(self):
+        return True  # ou implemente a lógica desejada
+
+    def is_anonymous(self):
+        return False
 
     # Relacionamento com a tabela ExerciciosAluno
     exercicios = relationship('ExerciciosAluno', back_populates='aluno')
 
     def __repr__(self):
-        return f"{self.nome} {self.login} {self.senha} {self.telefone} {self.email} {self.idade} {self.peso} {self.altura} {self.sexo} {self.dia_semana} {self.obj} {self.tipo_treino} {self.horario} {self.inicio}"
+        return f"{self.nome} {self.login} {self.senha} {self.telefone} {self.email} {self.idade} {self.peso} {self.altura} {self.sexo} {self.dia_semana} {self.obj} {self.horario} {self.inicio} {self.permissao}"
 
 class ExerciciosAluno(Base):
     __tablename__ = "exercicios_aluno"
@@ -44,13 +68,3 @@ class ExerciciosAluno(Base):
     def __repr__(self):
         return f"{self.tipoTreino} {self.exercicio} {self.serie} {self.repeticao} {self.descanso} {self.carga}"
  
-class Admin(Base):
-    __tablename__ = "admins"
-    id = Column(Integer, primary_key=True)
-    nome = Column(String(80), nullable=False)
-    login = Column(String(80), unique=True, nullable=False)
-    senha = Column(String(80), nullable=False)
-    
-
-    def __repr__(self):
-        return f"{self.nome}{self.senha}{self.login}"

@@ -13,7 +13,6 @@
         <div class="registro-formulario">
             <h1>Detalhes do Aluno</h1>
         </div>  
-        
             {% for aluno in aluno %}
                 <div class="dados-pessoais">
                     <div class="input-wrapper">
@@ -49,6 +48,14 @@
                         <p>{{ aluno.dia_semana }}</p>
                     </div>
                     <div class="input-wrapper">
+                        <label for="login">LOGIN:</label>
+                        <p>{{ aluno.login }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="login">SENHA:</label>
+                        <p>{{ aluno.login }}</p>
+                    </div>
+                    <div class="input-wrapper">
                         <label for="horario">Horario:</label>
                         <p>{{ aluno.horario }}</p>
                     </div>
@@ -57,23 +64,57 @@
                         <p>{{ aluno.obj }}</p>
                     </div> 
                     <div class="input-wrapper">
+                        <label for="permissao">permissao:</label>
+                        <p>{{ aluno.permissao }}</p>
+                    </div> 
+                    <div class="input-wrapper">
                         <label>Exercícios:</label>
-                        <ul>
+                        {% set dias_exercicios = {} %}
+                        {% for exercicio in aluno.exercicios %}
+                            {% set dia = exercicio.tipoTreino %}
+                            {% if dias_exercicios[dia] is not defined %}
+                                {% set _ = dias_exercicios.update({dia: []}) %}
+                            {% endif %}
+                            {% set _ = dias_exercicios[dia].append(exercicio) %}
+                        {% endfor %}
+                
+                        {% for dia, exercicios_do_dia in dias_exercicios.items() %}
+                            <div class="col-md-6 mb-4">
+                                    <div class="card-body">
+                                        <ul class="list-group text-left">
+                                            <li class="list-group-item">
+                                                <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
+                                                {% for exercicio in exercicios_do_dia %}
+                                                    <hr class="mb-3">
+                                                    <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
+                                                    <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
+                                                    <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
+                                                    <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }} Seg</p>
+                                                    <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>
+            
+                                                {% endfor %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                            </div>
+                        {% endfor %}
+                        <!-- <ul>
                             {% for exercicio in aluno.exercicios %}
                                 <li>{{ exercicio.tipoTreino }} - {{ exercicio.exercicio }} - {{ exercicio.serie }} - {{ exercicio.repeticao }} - {{ exercicio.descanso }} - {{ exercicio.carga }}</li>
                             {% endfor %}
-                        </ul>
+                        </ul> -->
                     </div>
-                    <div  class="enviar">
-                        <button class="registro-formulario" type="button" >MODIFICAR</button>
-                    </div>
-                    <div  class="enviar">
-                        <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">DELETAR</button>
-                    </div>
+            <div  class="enviar">
+                <button class="registro-formulario" type="button" >MODIFICAR</button>
+            </div>
+            <div  class="enviar">
+                <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">DELETAR</button>
+            </div>
                     <!-- Adicione outros campos de dados pessoais aqui -->
                 </div>
-            {% endfor %}
+        {% endfor %}
         <!-- Botão para voltar à lista de alunos -->
+        
         <div class="enviar">
             <a href="/alunos">
                 <button class="registro-formulario" type="button">VOLTAR</button>

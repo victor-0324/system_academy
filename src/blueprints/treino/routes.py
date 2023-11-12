@@ -1,67 +1,34 @@
-from flask import Blueprint, request, render_template, url_for, redirect
+from flask import Blueprint, render_template, flash, redirect, url_for,current_app, request
+from flask_login import current_user, login_required
 from src.database.querys import Querys
+from functools import wraps
+from src.database.config import DBConnectionHandler, db
+
+treino_app = Blueprint("treino_app", __name__, url_prefix="/treino", template_folder='templates', static_folder='static')
 
 
-
-treino_app = Blueprint("treino_app", __name__, url_prefix="/treinos", template_folder='templates',static_folder='static')
+def treino_required(func):
+    """Decorator para restringir o acesso apenas a usuários com permissão 'treino'."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if current_user.is_authenticated and current_user.permissao == 'treino':
+            return func(*args, **kwargs)
+        else:
+            return redirect(url_for('login_app.login'))
+    return wrapper
 
 
 @treino_app.route("/", methods=["GET", "POST"])
+@treino_required
 def mostrar():
-    # Exemplo de dados dinâmicos, substitua isso pelos dados reais da sua aplicação
-    dados_treino = {
-         'segunda e sexta': [
-                    {
-                        'nome': 'Bicicleta',
-                        'serie': 1,
-                        'repeticao': '3 minutos',
-                        'tempoDescanso': '40 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Crucifixo Baixo Halter',
-                        'serie': 3,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Supino Inclinado ($5/F5)',
-                        'serie': 3,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Crucifixo Reto',
-                        'serie': 4,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': '45 Seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Triceps Banco',
-                        'serie': 2,
-                        'repeticao': 'Restpause',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Francês Barra H',
-                        'serie': 4,
-                        'repeticao': '12',
-                        'tempoDescanso': '45 seg',
-                        'carga': 'Constante'
-                    },
-                    {
-                        'nome': 'Triceps Unilateral Cross',
-                        'serie': 5,
-                        'repeticao': 'Falha',
-                        'tempoDescanso': 'S/D',
-                        'carga': 'Constante'
-                    }
-                ],
-    }
+    # Recupere o ID do aluno da URL
+    aluno_id = current_user.id
 
-    return render_template("treinos_alunos.html", dados_treino=dados_treino) 
+    # Agora, use o aluno_id para recuperar os treinos específicos do aluno
+    session = current_app.db.session
+    querys_instance = Querys(session)
 
+    exercicios = querys_instance.get_exercicios_by_aluno(aluno_id)
+
+    return render_template('treinos_alunos.html', exercicios=exercicios)
+  

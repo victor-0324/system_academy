@@ -1,0 +1,71 @@
+<div class="row trainers pl-0 pr-0">
+    <div class="col-12 bg-50">
+      <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
+        <h2> TRAINERS </h2>
+      </div>
+    </div>
+    <div class="col-md-6 pr-5 pl-5">
+      <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;"> <img class="card-img-top rounded-circle img-fluid" src="images/trainers1.jpg" alt="Card image">
+        <div class="card-body mb-5">
+          <h4 class="card-title">JENIFERR</h4>
+          <p class="card-text">Trainers, athletes and serious clients alike are looking for the toughest, most brutally productive training techniques to spice up their workouts and provide a truly unique challenge</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 pl-5 pr-5">
+      <div class="card text-center wow bounceInRight" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInRight;"> <img class="card-img-top rounded-circle img-fluid" src="images/trainers2.jpg" alt="Card image">
+        <div class="card-body mb-5">
+          <h4 class="card-title">JHON</h4>
+          <p class="card-text">Trainers, athletes and serious clients alike are looking for the toughest, most brutally productive training techniques to spice up their workouts and provide a truly unique challenge</p>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+
+
+  <div class="row trainers pl-0 pr-0">
+    <div class="col-12 bg-50">
+      <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
+        <h2> TRAINERS </h2>
+      </div>
+    </div>
+      <!-- Seu código existente ... -->
+      <div class="container-fluid fh5co-content-box">
+        <div class="row justify-content-center">
+            {% set dias_exercicios = {} %}
+            {% for exercicio in exercicios %}
+                {% set dia = exercicio.tipoTreino %}
+                {% if dias_exercicios[dia] is not defined %}
+                    {% set _ = dias_exercicios.update({dia: []}) %}
+                {% endif %}
+                {% set _ = dias_exercicios[dia].append(exercicio) %}
+            {% endfor %}
+    
+            {% for dia, exercicios_do_dia in dias_exercicios.items() %}
+                <div class="col-md-6 mb-4">
+                    <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
+                        <img class="card-img-top rounded-circle img-fluid" src="images/trainers1.jpg" alt="Card image">
+                        <div class="card-body">
+                            <ul class="list-group text-left">
+                                <li class="list-group-item">
+                                    <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
+                                    {% for exercicio in exercicios_do_dia %}
+                                        <hr class="mb-3">
+                                        <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
+                                        <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
+                                        <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
+                                        <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }} Seg</p>
+                                        <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>
+                                        <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>
+
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>

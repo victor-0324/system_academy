@@ -1,53 +1,40 @@
-""" Metodo de fabrica """
+from flask import Flask, current_app
+from flask_login import LoginManager
+from src.database.querys import Querys
+from src.database.config import db, DBConnectionHandler, DevelopmentConfig
+from src.database import Base
+from src.database.models import Aluno
 
-from flask import Flask
+login_manager = LoginManager()
+
+def load_user(user_id):
+    with DBConnectionHandler(current_app.db) as connection:
+        connection = DBConnectionHandler(db)
+        user = connection.query(Aluno).get(int(user_id))
+        return user
 
 def init_app():
-    """Contruindo o app"""
+    """Construindo o app"""
     app = Flask(__name__)
+    app.config.from_object("src.database.config.DevelopmentConfig")
 
-    # Configuração do app
-    app.secret_key = "vitorvitoriaeyaramariaauvesdacosta"
+    login_manager.init_app(app)
+    login_manager.login_view = 'login_app.login'
+    login_manager.user_loader(load_user)
 
- 
+    # Importar blueprints após a criação do aplicativo
+    from .blueprints import login_app, initial_app, cadastro_app, clientes_app, treino_app
 
-    # Database
-    from .database import DBConnectionHendler
-    from .database import Base
-
-    db_connection = DBConnectionHendler()
-    engine = db_connection.get_engine()
+    # Registrar blueprints
+    app.register_blueprint(login_app)
+    app.register_blueprint(initial_app)
+    app.register_blueprint(cadastro_app)
+    app.register_blueprint(clientes_app)
+    app.register_blueprint(treino_app)
+    db_handler = DBConnectionHandler(db)
+    db_handler.init_app(app)
     
     with app.app_context():
-       
-        # Aplicativo inicial
-        from .blueprints import initial_app
+        Base.metadata.create_all(db_handler.get_connection().engine)
 
-        app.register_blueprint(initial_app)
-        
-        # Cadastros alunos
-        from .blueprints import cadastro_app
-
-        app.register_blueprint(cadastro_app)
-
-         # Cadastros alunos
-        from .blueprints import clientes_app
-
-        app.register_blueprint(clientes_app)
-
-        # Treinos
-        from .blueprints import treino_app
-
-        app.register_blueprint(treino_app)
-
-
-        # Criando tabelas que não existem e estão
-        # Criando a enginer
-        try:
-            Base.metadata.create_all(engine)
-            print("Tabelas criadas com sucesso!")
-            
-        except Exception as e:
-            print(f"Erro ao criar tabelas: {e}")
-
-        return app
+    return app, login_manager

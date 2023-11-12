@@ -11,81 +11,112 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
    
+    
 </head>
 
 <body>
-    <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
+    <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll">
 
         <nav class="navbar navbar-expand-md navbar-dark">
           <div class="container"> 
             <!-- Brand --> 
-            <a class="navbar-brand mr-auto" href="/"><img src="{{ url_for('static', filename='images/Enovare.jpg') }}" style="width: 150px; height: 40px;" alt="FoxPro" /></a> 
-            
+            <a class="navbar-brand mr-auto" href="/">
+              <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
+            </a>
             <!-- Toggler/collapsibe Button -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
             
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
               <ul class="navbar-nav ml-auto">
-                <li class="nav-item"> <a class="nav-link" href="/alunos">Alunos</a> </li>
-                <li class="nav-item"> <a class="nav-link" href="/cadastro">Cadastrar</a> </li>
-                <!-- <li class="nav-item"> <a class="nav-link" href="#"></a> </li>  -->
-                <li class="nav-item"> <a class="nav-link" href="/treinos">Treinos</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="/treino">Evolução</a> </li>
               </ul>
               <ul class="navbar-nav ml-5">
+                <li class="nav-item">
+                    <a class="nav-link " href="/login/logout">
+                        Sair
+                    </a>
+                </li>
+            </ul>            
+              <!-- <ul class="navbar-nav ml-5">
                 <li class="nav-item"> <a class="nav-link btn btn-danger" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> </li>
-              </ul>
+              </ul> -->
             </div>
           </div>
         </nav>
+        <br>
         <div class="container-fluid fh5co-content-box">
           <div class="container">
-  
-              <div class="row trainers pl-0 pr-0">
-                  <div class="col-12 bg-50">
-                      <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
-                          <h2> Treinos </h2>
-                      </div>
-                  </div>
-                  {% for dia_semana, exercicios in dados_treino.items() %}
-                  <div class="col-md-6 pr-5 pl-5">
-                      <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
-                          <img class="card-img-top rounded-circle img-fluid" src="images/trainers1.jpg" alt="Card image">
-                          <div class="card-body mb-5">
-                              <h4 class="card-title">{{ dia_semana }}</h4>
-                              <div class="row">
-                                  {% for exercicio in exercicios %}
-                                  <div class="col-6">
-                                      <div class="exercicio">
-                                          <p>{{ exercicio.nome }}</p>
-                                          <p>Série: {{ exercicio.serie }}</p>
-                                          <p>Repetições: {{ exercicio.repeticao }}</p>
-                                          <p>Tempo de Descanso: {{ exercicio.tempoDescanso }}</p>
-                                          <p>Carga: {{ exercicio.carga }}</p>
-                                          
-                                      </div>
-                                  </div>
-                                  {% endfor %}
-                              </div>
-                              <button class="btn-concluir" onclick="concluirTreino('{{ dia_semana }}')">Concluir Treino</button>
-                          </div>
-                      </div>
-                  </div>
-                  {% endfor %}
-  
+            
+            <div class="row trainers pl-0 pr-0">
+              <div class="col-12 bg-50">
+                <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
+                  <h2> TREINOS </h2>
+                  <h4 class="card-title">{{ current_user.nome }} </h4>
+                </div>
               </div>
-  
+              {% set dias_exercicios = {} %}
+            {% for exercicio in exercicios %}
+                {% set dia = exercicio.tipoTreino %}
+                {% if dias_exercicios[dia] is not defined %}
+                    {% set _ = dias_exercicios.update({dia: []}) %}
+                {% endif %}
+                {% set _ = dias_exercicios[dia].append(exercicio) %}
+            {% endfor %}
+    
+            {% for dia, exercicios_do_dia in dias_exercicios.items() %}
+                <div class="col-md-6 mb-4">
+                    <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
+                        <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
+                        <div class="card-body">
+                            <ul class="list-group text-left">
+                                <li class="list-group-item">
+                                    <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
+                                    {% for exercicio in exercicios_do_dia %}
+                                        <hr class="mb-3">
+                                        <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
+                                        <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
+                                        <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
+                                        <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }} Seg</p>
+                                        <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>
+                                        <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>
+
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+           
           </div>
-      </div>
-  
-      <!-- Seu código existente ... -->
-  
-      <script>
+        </div>
+
+
+    <script>
+        function marcarConcluido(botao) {
+            botao.innerHTML = 'Concluído';
+            botao.style.backgroundColor = '#008000';  // Cor verde após clicar
+            botao.style.color = '#ffffff';  // Texto branco após clicar
+            botao.disabled = true;  // Desativa o botão após ser concluído
+            }
+        </script>
+   
+   
+        <script>
           function concluirTreino(dia_semana) {
               // Implemente a lógica para marcar o treino como concluído no banco de dados
               console.log('Treino concluído para:', dia_semana);
           }
-      </script>
+        </script>
+
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/parallax.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/wow.js') }}"></script>
+
+
 </body>
 
 </html>
