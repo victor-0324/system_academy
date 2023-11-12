@@ -52,20 +52,21 @@
     <div class="fh5co-banner-text-box">
       <div class="quote-box pl-5 pr-5 wow bounceInRight">
         <h2> Academia <br><span>Innovare</span> </h2>
+        
       </div>
       
       <a href="/alunos" class="btn text-uppercase btn-outline-danger btn-lg mr-3 mb-3 wow bounceInUp">Alunos</a> <a href="/cadastro"  target="_blank" class="btn text-uppercase btn-outline-danger btn-lg mb-3 wow bounceInDown"> Cadastrar</a> </div>
   </div>
 </div>
-<!-- <div class="container-fluid fh5co-network">
+<div class="container-fluid fh5co-network">
   <div class="container">
     <div class="row">
       <div class="col-md-6">
-        <h4 class="wow bounceInUp">FOR NETWORK</h4>
-        <h2 class="wow bounceInRight">MEMBERS</h2>
+        <h4 class="wow bounceInUp">Pagina do administrador</h4>
+        <h2 class="wow bounceInRight">{{current_user.nome}}</h2>
         <hr />
-        <h5 class="wow bounceInLeft">NETWORK SUMMER 2017</h5>
-        <p class="wow bounceInDown">The lowdown on Blood Flow Restriction training • FREE CEC/CPD • ​Let's compare ​Raw Vs Cooked • Building Ab, Core &amp; Pelvic strength • Get​ clients short-term wins from long-term goals • So you want to operate multiple clubs? + LOADS MORE</p>
+        <h5 class="wow bounceInLeft">Innovare 2023</h5>
+        <p class="wow bounceInDown">Desafie seus limites, conquiste seus objetivos! Treine com intensidade, supere-se a cada dia. Seus resultados falam mais alto do que suas desculpas. Vamos juntos alcançar novos patamares de força e determinação!</p>
       </div>
       <div class="col-md-6">
         <figure class="wow bounceInDown"> <img src="{{ url_for('static', filename='images/about-img.jpg') }}" alt="gym" class="img-fluid" /> </figure>
@@ -73,7 +74,7 @@
     </div>
   </div>
 </div>
-<div id="about-us" class="container-fluid fh5co-about-us pl-0 pr-0 parallax-window" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/about-us-bg.jpg')}}">
+<!-- <div id="about-us" class="container-fluid fh5co-about-us pl-0 pr-0 parallax-window" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/about-us-bg.jpg')}}">
   <div class="container">
     <div class="col-sm-6 offset-sm-6">
       <h2 class="wow bounceInLeft" data-wow-delay=".25s">ABOUT US</h2>

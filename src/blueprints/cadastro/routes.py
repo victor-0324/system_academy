@@ -21,7 +21,7 @@ def admin_required(func):
 
 # Tela Iniciarl do app
 @cadastro_app.route("/", methods=["GET", "POST"])
-# @admin_required
+@admin_required
 def cadastrar():
   
     if request.method == 'POST':

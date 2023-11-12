@@ -11,35 +11,58 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
 </head>
     <title>Lista de Alunos</title>
 </head>
 
 <body class="dark-theme">
-   
+    <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
+
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container"> 
+        <!-- Brand --> 
+        <a class="navbar-brand mr-auto" href="/">
+            <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
+        </a>
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
+        
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav ml-auto">
+                <br>
+                <li class="nav-item"> <a class="nav-link" href="/">Inicio</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="/cadastro">Cadastrar</a> </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="/login/logout">
+                        Sair
+                    </a>
+                </li>
+            </ul>
+
+      
+        </div>
+        </div>
+    </nav>
+    
     <main>
         <h1 class="titulo-pagina">Lista de Alunos</h1>
         <div class="pesquisa-alunos">
             <label for="pesquisa">Pesquisar:</label>
             <input type="text" id="pesquisa" placeholder="Digite o nome do aluno">
         </div>
+    
         <div class="resultados-pesquisa">
-            <h3>Resultados da Pesquisa</h3>
+            
             <ul id="listaPesquisa"></ul>
         </div>
+        <br> <br>
         <div class="informacoes-gerais">
             <p>Total de Alunos Cadastrados: {{ quantidade_alunos }}</p>
         </div>
-        <div class="botoes-acoes">
-            <a target="_blank" href="{{ url_for('cadastro_app.cadastrar') }}">
-                <button type="button">Novo Aluno</button>
-            </a>
-            <a href="{{ url_for('initial_app.mostrar') }}">
-                <button type="button">Inicio</button>
-            </a>
-        </div>
+        
         <div class="tabela-alunos">
             <table>
                 <thead>
@@ -75,6 +98,7 @@
             }
         }
     </script>
+
     <script>
         var alunos = [
             {% for aluno in alunos %}
@@ -138,6 +162,11 @@
             });
         }
     </script>
+  
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+   
+  
     
 </body>
 

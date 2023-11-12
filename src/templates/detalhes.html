@@ -5,10 +5,42 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
-    <title>Detalhes do Aluno</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
 </head>
 <body class="detalhes-page">
+
+    <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
+
+        <nav class="navbar navbar-expand-md navbar-dark">
+            <div class="container"> 
+            <!-- Brand --> 
+            <a class="navbar-brand mr-auto" href="/">
+                <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
+            </a>
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
+            
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <br>
+                    <li class="nav-item"> <a class="nav-link" href="/">Inicio</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="/alunos">Alunos</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="/cadastro">Cadastrar</a> </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="/login/logout">
+                            Sair
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            </div>
+        </nav>
     <main>
         <div class="registro-formulario">
             <h1>Detalhes do Aluno</h1>
@@ -43,17 +75,19 @@
                         <label for="telefone">Telefone:</label>
                         <p>{{ aluno.telefone }}</p>
                     </div>
-                    <div class="input-wrapper">
-                        <label for="dia_semana">Dia do Pagamento:</label>
-                        <p>{{ aluno.dia_semana }}</p>
-                    </div>
+
                     <div class="input-wrapper">
                         <label for="login">LOGIN:</label>
                         <p>{{ aluno.login }}</p>
                     </div>
                     <div class="input-wrapper">
-                        <label for="login">SENHA:</label>
-                        <p>{{ aluno.login }}</p>
+                        <label for="senha">SENHA:</label>
+                        <p>{{ aluno.senha }}</p>
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <label for="dia_semana">Dia do Pagamento:</label>
+                        <p>{{ aluno.dia_semana }}</p>
                     </div>
                     <div class="input-wrapper">
                         <label for="horario">Horario:</label>
@@ -69,17 +103,19 @@
                     </div> 
                     <div class="input-wrapper">
                         <label>Exercícios:</label>
-                        {% set dias_exercicios = {} %}
-                        {% for exercicio in aluno.exercicios %}
-                            {% set dia = exercicio.tipoTreino %}
-                            {% if dias_exercicios[dia] is not defined %}
-                                {% set _ = dias_exercicios.update({dia: []}) %}
-                            {% endif %}
-                            {% set _ = dias_exercicios[dia].append(exercicio) %}
-                        {% endfor %}
-                
-                        {% for dia, exercicios_do_dia in dias_exercicios.items() %}
-                            <div class="col-md-6 mb-4">
+                        <button type="button" class="ver-exercicios">Ver Exercícios</button>
+                        <div class="exercicios-container hidden">
+                            {% set dias_exercicios = {} %}
+                            {% for exercicio in aluno.exercicios %}
+                                {% set dia = exercicio.tipoTreino %}
+                                {% if dias_exercicios[dia] is not defined %}
+                                    {% set _ = dias_exercicios.update({dia: []}) %}
+                                {% endif %}
+                                {% set _ = dias_exercicios[dia].append(exercicio) %}
+                            {% endfor %}
+                    
+                            {% for dia, exercicios_do_dia in dias_exercicios.items() %}
+                                <div class="col-md-12 mb-6">
                                     <div class="card-body">
                                         <ul class="list-group text-left">
                                             <li class="list-group-item">
@@ -91,19 +127,16 @@
                                                     <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
                                                     <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }} Seg</p>
                                                     <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>
-            
                                                 {% endfor %}
                                             </li>
                                         </ul>
                                     </div>
-                            </div>
-                        {% endfor %}
-                        <!-- <ul>
-                            {% for exercicio in aluno.exercicios %}
-                                <li>{{ exercicio.tipoTreino }} - {{ exercicio.exercicio }} - {{ exercicio.serie }} - {{ exercicio.repeticao }} - {{ exercicio.descanso }} - {{ exercicio.carga }}</li>
+                                </div>
                             {% endfor %}
-                        </ul> -->
+                        </div>
+                       
                     </div>
+                    
             <div  class="enviar">
                 <button class="registro-formulario" type="button" >MODIFICAR</button>
             </div>
@@ -111,16 +144,20 @@
                 <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">DELETAR</button>
             </div>
                     <!-- Adicione outros campos de dados pessoais aqui -->
-                </div>
+            </div>
         {% endfor %}
-        <!-- Botão para voltar à lista de alunos -->
         
-        <div class="enviar">
-            <a href="/alunos">
-                <button class="registro-formulario" type="button">VOLTAR</button>
-            </a>
-        </div>
     </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".ver-exercicios").on("click", function() {
+                $(".exercicios-container").toggleClass("hidden");
+            });
+        });
+    </script>
+    
     <script>
         function confirmarExclusao(alunoId) {
             var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
@@ -129,5 +166,8 @@
             }
         }
     </script>
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 </html>

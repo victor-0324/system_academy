@@ -70,7 +70,7 @@ class Querys():
             .filter_by(login=login)
             .first()
         )
-        if aluno and aluno.check_password(senha):
+        if aluno and aluno.senha:
             return aluno, aluno.permissao  # Agora retorna o aluno e sua permissão
 
         return None, None 
@@ -79,7 +79,7 @@ class Querys():
     def cadastrar_aluno(self, nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana, horario, inicio, obj, permissao, exercicios):
         aluno = Aluno(
             nome=nome, idade=idade, sexo=sexo, altura=altura, peso=peso, email=email, telefone=telefone,
-            login=login, senha=generate_password_hash(senha), dia_semana=dia_semana, horario=horario,  inicio=inicio, obj=obj, permissao=permissao
+            login=login, senha=senha, dia_semana=dia_semana, horario=horario,  inicio=inicio, obj=obj, permissao=permissao
         )
 
         self.session.add(aluno)

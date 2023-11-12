@@ -15,13 +15,41 @@
     <title>Cadastro de Aluno</title>
 
 <body>
- 
+    <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
 
-    <div class="container">
+        <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container"> 
+        <!-- Brand --> 
+        <a class="navbar-brand mr-auto" href="/">
+            <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
+        </a>
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav ml-auto">
+            <br>
+            <li class="nav-item"> <a class="nav-link" href="/">Inicio</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="/alunos">Alunos</a> </li>
+            <li class="nav-item">
+                    <a class="nav-link " href="/login/logout">
+                        Sair
+                    </a>
+                </li>
+
+            </ul>
+
+            
+        </div>
+        </div>
+        </nav>
+        <br>
+        <div class="container">
         <div class="registro-formulario">
-            <h1>Cadastrar Novo Aluno</h1>
+            <h1>Novo Aluno</h1>
         </div>  
-        
+
         <div class="conteudo"> 
             <form method="post" onsubmit="return enviarExerciciosParaServidor()">
                 <div class="dados-pessoais">
@@ -143,8 +171,8 @@
                             <label for="permissao">ATENÇÂO:</label>
                             <select id="permissao" name="permissao" required>
                                 <option value="" disabled selected>Seleciona a permissão</option>
-                                <option value="admin">ADMIN</option>
-                                <option value="treino">Aluno</option>
+                                <option value="admin">ADMINISTRADOR</option>
+                                <option value="treino">ALUNO</option>
                             </select>
                         </div>
                     
@@ -159,126 +187,128 @@
                 </div>
             </form>   
         </div>
-    </div>
+        </div>
+
     <script>
-       
-        // Escopo local para evitar variáveis globais desnecessárias
-        var exercicios = [];
-    
-        function adicionarExercicio()  {
-           
-            var tipoTreino = document.getElementById('tipoTreino').value;
-            var exercicio = document.getElementById('exercicio').value;
-            var serie = document.getElementById('serie').value;
-            var repeticao = document.getElementById('repeticao').value;
-            var descanso = document.getElementById('descanso').value;
-            var carga = document.getElementById('carga').value;
-    
-            // Verifica se todos os campos estão preenchidos
-            if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
-                alert('Por favor, preencha todos os campos do exercício.');
-                return;
-            }
-    
-            var exercicioInfo = {
-                'tipoTreino': tipoTreino,
-                'exercicio': exercicio,
-                'serie': serie,
-                'repeticao': repeticao,
-                'descanso': descanso,
-                'carga': carga,
-            };
-    
-            exercicios.push(exercicioInfo);
-    
-            // Adicione logs para verificar o que está sendo adicionado
-            console.log('Exercício adicionado:', exercicioInfo);
-            console.log('Lista de exercícios atualizada:', exercicios);
-            // Atualiza a lista de exercícios na página
+
+    // Escopo local para evitar variáveis globais desnecessárias
+    var exercicios = [];
+
+    function adicionarExercicio()  {
+
+    var tipoTreino = document.getElementById('tipoTreino').value;
+    var exercicio = document.getElementById('exercicio').value;
+    var serie = document.getElementById('serie').value;
+    var repeticao = document.getElementById('repeticao').value;
+    var descanso = document.getElementById('descanso').value;
+    var carga = document.getElementById('carga').value;
+
+    // Verifica se todos os campos estão preenchidos
+    if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
+        alert('Por favor, preencha todos os campos do exercício.');
+        return;
+    }
+
+    var exercicioInfo = {
+        'tipoTreino': tipoTreino,
+        'exercicio': exercicio,
+        'serie': serie,
+        'repeticao': repeticao,
+        'descanso': descanso,
+        'carga': carga,
+    };
+
+    exercicios.push(exercicioInfo);
+
+    // Adicione logs para verificar o que está sendo adicionado
+    console.log('Exercício adicionado:', exercicioInfo);
+    console.log('Lista de exercícios atualizada:', exercicios);
+    // Atualiza a lista de exercícios na página
+    atualizarListaExercicios();
+
+    // Limpa os campos de treino
+    limparCamposTreino();
+
+    }
+
+    function atualizarListaExercicios() {
+
+    var listaExercicios = document.getElementById('exerciciosAdicionados');
+    listaExercicios.innerHTML = '';
+
+    exercicios.forEach(function (exercicio, index) {
+        var itemLista = document.createElement('li');
+        itemLista.textContent = `Dia: ${exercicio.tipoTreino}, Exercício: ${exercicio.exercicio}, Série: ${exercicio.serie}, Repetição: ${exercicio.repeticao}, Descanso: ${exercicio.descanso}, Carga: ${exercicio.carga}`;
+        listaExercicios.appendChild(itemLista);
+    });
+    return exercicios;
+    }
+
+    function limparCamposTreino() {
+
+    document.getElementById('exercicio').value = '';
+    document.getElementById('serie').value = '';
+    document.getElementById('repeticao').value = '';
+    document.getElementById('descanso').value = '';
+    document.getElementById('carga').value = '';
+    }
+
+    function enviarExerciciosParaServidor() {
+    // Obtenha os dados dos exercícios
+    var exercicios = atualizarListaExercicios();
+
+    // Verifique se há exercícios antes de enviar
+    if (exercicios.length === 0) {
+        alert('Adicione pelo menos um exercício antes de cadastrar.');
+        return false; // Impede o envio do formulário
+    }
+
+    // Adicione os exercícios ao formData
+    var formData = new FormData(document.querySelector('form'));
+    formData.append('exercicios', JSON.stringify(exercicios));
+
+    // Faça a solicitação POST para o servidor
+    fetch('/cadastro', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Lida com a resposta do servidor
+            console.log(data);
+            // Limpa os exercícios após o envio
+            exercicios = [];
             atualizarListaExercicios();
-    
-            // Limpa os campos de treino
-            limparCamposTreino();
-            
-        }
-    
-        function atualizarListaExercicios() {
-           
-            var listaExercicios = document.getElementById('exerciciosAdicionados');
-            listaExercicios.innerHTML = '';
-        
-            exercicios.forEach(function (exercicio, index) {
-                var itemLista = document.createElement('li');
-                itemLista.textContent = `Dia: ${exercicio.tipoTreino}, Exercício: ${exercicio.exercicio}, Série: ${exercicio.serie}, Repetição: ${exercicio.repeticao}, Descanso: ${exercicio.descanso}, Carga: ${exercicio.carga}`;
-                listaExercicios.appendChild(itemLista);
-            });
-            return exercicios;
-        }
-    
-        function limparCamposTreino() {
-           
-            document.getElementById('exercicio').value = '';
-            document.getElementById('serie').value = '';
-            document.getElementById('repeticao').value = '';
-            document.getElementById('descanso').value = '';
-            document.getElementById('carga').value = '';
-        }
-    
-        function enviarExerciciosParaServidor() {
-            // Obtenha os dados dos exercícios
-            var exercicios = atualizarListaExercicios();
-        
-            // Verifique se há exercícios antes de enviar
-            if (exercicios.length === 0) {
-                alert('Adicione pelo menos um exercício antes de cadastrar.');
-                return false; // Impede o envio do formulário
-            }
-        
-            // Adicione os exercícios ao formData
-            var formData = new FormData(document.querySelector('form'));
-            formData.append('exercicios', JSON.stringify(exercicios));
-        
-            // Faça a solicitação POST para o servidor
-            fetch('/cadastro', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Lida com a resposta do servidor
-                    console.log(data);
-                    // Limpa os exercícios após o envio
-                    exercicios = [];
-                    atualizarListaExercicios();
-                    // Redireciona para a outra página após o cadastro
-                    window.location.href = '/alunos';
-                })
-                .catch(error => {
-                    // Lida com erros
-                    console.error(error);
-                });
-        
-            return false; // Impede o envio do formulário
-        }
-    </script>
-
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            // Ocultar o aviso quando a página é carregada
-            $('#aviso-admin').hide();
-
-            // Exibir ou ocultar o aviso com base na escolha do usuário
-            $('#permissao').change(function () {
-                if ($(this).val() === 'admin') {
-                    $('#aviso-admin').show();
-                } else {
-                    $('#aviso-admin').hide();
-                }
-            });
+            // Redireciona para a outra página após o cadastro
+            window.location.href = '/alunos';
+        })
+        .catch(error => {
+            // Lida com erros
+            console.error(error);
         });
+
+    return false; // Impede o envio do formulário
+    }
+    </script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+    $(document).ready(function () {
+    // Ocultar o aviso quando a página é carregada
+    $('#aviso-admin').hide();
+
+    // Exibir ou ocultar o aviso com base na escolha do usuário
+    $('#permissao').change(function () {
+        if ($(this).val() === 'admin') {
+            $('#aviso-admin').show();
+        } else {
+            $('#aviso-admin').hide();
+        }
+    });
+    });
     </script>
 
+    
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 </html>
