@@ -45,54 +45,55 @@
           </div>
         </nav>
         <br>
+        
         <div class="container-fluid fh5co-content-box">
-          <div class="container">
-            
-            <div class="row trainers pl-0 pr-0">
-              <div class="col-12 bg-50">
-                <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
-                  <h2> TREINOS </h2>
-                  <h4 class="card-title">{{ current_user.nome }} </h4>
+            <div class="container">
+              
+              <div class="row trainers pl-0 pr-0">
+                <div class="col-12 bg-50">
+                  <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
+                    <h2> TREINOS </h2>
+                    <h4 class="card-title">{{ current_user.nome }} </h4>
+                  </div>
                 </div>
+                {% set dias_exercicios = {} %}
+              {% for exercicio in exercicios %}
+                  {% set dia = exercicio.tipoTreino %}
+                  {% if dias_exercicios[dia] is not defined %}
+                      {% set _ = dias_exercicios.update({dia: []}) %}
+                  {% endif %}
+                  {% set _ = dias_exercicios[dia].append(exercicio) %}
+              {% endfor %}
+        
+              {% for dia, exercicios_do_dia in dias_exercicios.items() %}
+                  <div class="col-md-6 mb-4">
+                      <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
+                          <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
+                          <div class="card-body">
+                              <ul class="list-group text-left">
+                                  <li class="list-group-item">
+                                      <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
+                                      {% for exercicio in exercicios_do_dia %}
+                                          <hr class="mb-3">
+                                          <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
+                                          <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
+                                          <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
+                                          <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }}</p>
+                                          <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>        
+                                        <br>
+                                      <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>                                  
+                                      {% endfor %}
+                                      
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              {% endfor %}
               </div>
-              {% set dias_exercicios = {} %}
-            {% for exercicio in exercicios %}
-                {% set dia = exercicio.tipoTreino %}
-                {% if dias_exercicios[dia] is not defined %}
-                    {% set _ = dias_exercicios.update({dia: []}) %}
-                {% endif %}
-                {% set _ = dias_exercicios[dia].append(exercicio) %}
-            {% endfor %}
-    
-            {% for dia, exercicios_do_dia in dias_exercicios.items() %}
-                <div class="col-md-6 mb-4">
-                    <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
-                        <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
-                        <div class="card-body">
-                            <ul class="list-group text-left">
-                                <li class="list-group-item">
-                                    <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
-                                    {% for exercicio in exercicios_do_dia %}
-                                        <hr class="mb-3">
-                                        <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
-                                        <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
-                                        <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
-                                        <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }} Seg</p>
-                                        <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>
-                                        <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>
-
-                                    {% endfor %}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+             
             </div>
-           
           </div>
-        </div>
-
 
     <script>
         function marcarConcluido(botao) {
@@ -101,15 +102,8 @@
             botao.style.color = '#ffffff';  // Texto branco após clicar
             botao.disabled = true;  // Desativa o botão após ser concluído
             }
-        </script>
+    </script>
    
-   
-        <script>
-          function concluirTreino(dia_semana) {
-              // Implemente a lógica para marcar o treino como concluído no banco de dados
-              console.log('Treino concluído para:', dia_semana);
-          }
-        </script>
 
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>

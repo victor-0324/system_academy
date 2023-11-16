@@ -3,7 +3,7 @@ from src.database.models import Aluno, ExerciciosAluno
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.database.config import db_connector, DBConnectionHandler
 from sqlalchemy.orm import joinedload, load_only
-
+from datetime import datetime
 
 class Querys():
     # def __init__(self, connection):
@@ -64,22 +64,27 @@ class Querys():
         return exercicios
 
     def verificar_credenciais(self, login, senha):
-        # aluno = connection.query(Aluno).filter_by(login=login).first()
         aluno = (
             self.session.query(Aluno)
-            .filter_by(login=login)
+            .filter_by(login=login, senha=senha)  
             .first()
         )
-        if aluno and aluno.senha:
-            return aluno, aluno.permissao  # Agora retorna o aluno e sua permissão
 
-        return None, None 
+        if aluno:
+            return aluno, aluno.permissao
+
+        return None, None
 
 
-    def cadastrar_aluno(self, nome, idade, sexo, altura, peso, email, telefone, login, senha, dia_semana, horario, inicio, obj, permissao, exercicios):
+    def cadastrar_aluno(self, nome, idade, sexo, altura, peso, ombro, torax, braco, ant, cintura, abdome, quadril, coxa, pant, observacao, telefone, login, senha, data_entrada, data_pagamento, jatreino, permissao, exercicios):
         aluno = Aluno(
-            nome=nome, idade=idade, sexo=sexo, altura=altura, peso=peso, email=email, telefone=telefone,
-            login=login, senha=senha, dia_semana=dia_semana, horario=horario,  inicio=inicio, obj=obj, permissao=permissao
+            nome=nome, idade=idade, sexo=sexo, altura=altura, peso=peso,
+            ombro=ombro, torax=torax, braco=braco, ant=ant, cintura=cintura,
+            abdome=abdome, quadril=quadril, coxa=coxa, pant=pant,
+            observacao=observacao, telefone=telefone, login=login, senha=senha,
+            data_entrada=datetime.strptime(data_entrada, '%Y-%m-%d') if data_entrada else None,
+            data_pagamento=datetime.strptime(data_pagamento, '%Y-%m-%d') if data_pagamento else None,
+            jatreino=jatreino, permissao=permissao
         )
 
         self.session.add(aluno)

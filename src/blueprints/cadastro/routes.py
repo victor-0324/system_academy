@@ -36,14 +36,22 @@ def cadastrar():
             sexo = request.form.get('sexo')
             altura = request.form.get('altura')
             peso = request.form.get('peso')
-            email = request.form.get('email')
+            ombro = request.form.get('ombro')
+            torax = request.form.get('torax')
+            braco = request.form.get('braco')
+            ant = request.form.get('ant')
+            cintura = request.form.get('cintura')
+            abdome = request.form.get('abdome')
+            quadril = request.form.get('quadril')
+            coxa = request.form.get('coxa')
+            pant = request.form.get('pant')
+            observacao = request.form.get('observacao')
             telefone = request.form.get('telefone')
             login = request.form.get('login')
             senha = request.form.get('senha')
-            dia_semana = request.form.get('dia_semana')
-            horario = request.form.get('horario')
-            inicio = request.form.get('inicio')
-            obj = request.form.get('obj')
+            data_entrada = request.form.get('data_entrada')
+            data_pagamento = request.form.get('data_pagamento')
+            jatreino = request.form.get('jatreino')
             permissao = request.form.get('permissao')
 
             session = current_app.db.session
@@ -52,8 +60,9 @@ def cadastrar():
 
             # Chame o método cadastrar_aluno na instância
             querys_instance.cadastrar_aluno(
-                nome, idade, sexo, altura, peso, email, telefone,
-                login, senha, dia_semana, horario, inicio, obj, permissao,
+                nome, idade, sexo, altura, peso, ombro, torax, braco, ant, cintura,
+                abdome, quadril, coxa, pant, observacao, telefone, login, senha,
+                data_entrada, data_pagamento, jatreino, permissao,
                 exercicios
             )
 
@@ -62,7 +71,6 @@ def cadastrar():
         except Exception as e:
             print(f'Erro no servidor: {str(e)}')
             return jsonify({'error': 'Erro no servidor'}), 500
-
 
     return render_template("cadastro.html")
 

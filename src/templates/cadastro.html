@@ -50,144 +50,177 @@
             <h1>Novo Aluno</h1>
         </div>  
 
-        <div class="conteudo"> 
+        <div class="conteudo">
             <form method="post" onsubmit="return enviarExerciciosParaServidor()">
                 <div class="dados-pessoais">
                     <h3 class="titulo-secao">Cadastro</h3>
-                        <div class="input-wrapper">
-                            <label for="nome">Nome:</label>
-                            <input type="text" name="nome" id="nome" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="idade">Idade:</label>
-                            <input type="number" name="idade" id="idade" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="sexo">Sexo:</label>
-                            <select name="sexo" id="sexo" required>
-                                <option value="" disabled selected>Selecione...</option>
-                                <option value="masculino">Masculino</option>
-                                <option value="feminino">Feminino</option>
-                            </select>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="altura">Altura (cm):</label>
-                            <input type="number" name="altura" id="altura" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="peso">Peso (kg):</label>
-                            <input type="number" name="peso" id="peso" required>
-                        </div>
-                </div>
-                <div class="contato">
-                    <h3 class="titulo-secao">Contatos</h3>
-                        <div class="input-wrapper">
-                            <label for="email">Email:</label>
-                            <input type="email" name="email" id="email" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="telefone">Telefone:</label>
-                            <input type="tel" name="telefone" id="telefone" required>
-                        </div>
-                        <h5 class="titulo-secao">Senha do Aluno</h5>
-                        <div class="input-wrapper">
-                            <label for="login">Login:</label>
-                            <input type="text" name="login" id="login" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="senha">Senha:</label>
-                            <input type="password" name="senha" id="senha" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="dia">Data de Pagamento:</label>
-                            <input type="text" name="dia_semana" id="dia" required>
-                        </div>
-                </div>
-                <div class="dados-pessoais">
-                    <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
-                        <h3 class="titulo-secao">Cadastro de Treino</h3>
-                            <div class="input-wrapper">
-                                <label for="tipoTreino">Dias da semana:</label>
-                                <select id="tipoTreino"  required>
-                                    <option value="" disabled selected>Dia do treino</option>
-                                    <option value="segunda&sexta">Segunda & Sexta</option>
-                                    <option value="terca&quinta">Terça & Quinta</option>
-                                    <option value="quarta">Quarta</option>
-                                </select>
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="tipoTreino">Adicionar Exercício:</label>
-                                <input type="text" id="exercicio" >
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="tipoTreino">Adicionar serie:</label>
-                                <input type="number"  id="serie" >
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="tipoTreino">Adicionar Repetição:</label>
-                                <input type="number"  id="repeticao" >
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="tipoTreino">Adicionar Descanso:</label>
-                                <input type="text"  id="descanso" >
-                            </div>
-                            <div class="input-wrapper">
-                                <label for="tipoTreino">Adicionar Carga:</label>
-                                <input type="text"  id="carga" >
-                            </div>
-                            <div class="input-wrapper">
-                                <div class="enviar">
-                                    <button type="button" onclick="adicionarExercicio()">Adicionar Exercício</button>
-                                </div>
-                            </div>
+                    <div class="input-wrapper">
+                        <label for="nome">Nome:</label>
+                        <input type="text" name="nome" id="nome" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="idade">Idade:</label>
+                        <input type="number" name="idade" id="idade" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="sexo">Sexo:</label>
+                        <select name="sexo" id="sexo" required>
+                            <option value="" disabled selected>Selecione...</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="feminino">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="altura">Altura (cm):</label>
+                        <input type="number" name="altura" id="altura" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="peso">Peso (kg):</label>
+                        <input type="number" name="peso" id="peso" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="ombro">Ombro:</label>
+                        <input type="number" name="ombro" id="ombro" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="torax">Tórax:</label>
+                        <input type="number" name="torax" id="torax" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="braco">braço:</label>
+                        <input type="number" name="braco" id="braco" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="ant">ant,:</label>
+                        <input type="number" name="ant" id="ant" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="cintura">Cintura:</label>
+                        <input type="number" name="cintura" id="cintura" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="abdome">Abdome:</label>
+                        <input type="number" name="abdome" id="abdome" required>
                     </div>
                 </div>
-                    <!-- Lista de exercícios adicionados -->
                 <div class="contato">
-                    <h3 class="titulo-secao" >Exercícios Adicionados:</h3>
-                        <div class="input-wrapper">
-                            <ul class="titulo-secao" id="exerciciosAdicionados">
-                                <!-- Aqui serão exibidos os exercícios adicionados -->
-                            </ul>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="horario">Horário:</label>
-                            <select id="horario" name="horario" required>
-                                <option value="" disabled selected>Selecione o horário</option>
-                                <option value="manha">Manhã</option>
-                                <option value="tarde">Tarde</option>
-                                <option value="noite">Noite</option>
-                            </select>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="data">Inicio:</label>
-                            <input type="text" name="inicio" id="data" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="objetivo">Objetivo:</label>
-                            <input type="text" name="obj" id="objetivo" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="permissao">ATENÇÂO:</label>
-                            <select id="permissao" name="permissao" required>
-                                <option value="" disabled selected>Seleciona a permissão</option>
-                                <option value="admin">ADMINISTRADOR</option>
-                                <option value="treino">ALUNO</option>
-                            </select>
-                        </div>
-                    
-                        <!-- Aviso para admin -->
-                        <div id="aviso-admin" class="alert alert-warning">
-                            Você está prestes a adicionar um admin. Tem certeza?
-                        </div>
-
-                        <div class="enviar">
-                            <input type="submit" name="cadastrar"  value="Cadastrar">
-                        </div>
+                    <h3 class="titulo-secao">Cadastro</h3>
+                    <div class="input-wrapper">
+                        <label for="quadril">Quadril:</label>
+                        <input type="number" name="quadril" id="quadril" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="coxa">Coxa:</label>
+                        <input type="number" name="coxa" id="coxa" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="pant">Pant,:</label>
+                        <input type="number" name="pant" id="pant" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="observacao">Observação:</label>
+                        <input type="text" name="observacao" id="observacao" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="telefone">Telefone:</label>
+                        <input type="tel" name="telefone" id="telefone" required>
+                    </div>
+                    <h5 class="titulo-secao">Senha do Aluno</h5>
+                    <div class="input-wrapper">
+                        <label for="login">Login:</label>
+                        <input type="text" name="login" id="login" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="senha">Senha:</label>
+                        <input type="password" name="senha" id="senha" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="dia">Data de entrada:</label>
+                        <input type="date" name="data_entrada" id="dia" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="dia">Data de Pagamento:</label>
+                        <input type="date" name="data_pagamento" id="dia" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="jatreino">já treino:</label>
+                        <select id="jatreino" name="jatreino" required>
+                            <option value="" disabled selected>Selecione o horário</option>
+                            <option value="Sim">Sim</option>
+                            <option value="Não">Não</option>
+                        </select>
+                    </div>
                 </div>
-            </form>   
+        
+                <div class="dados-pessoais">
+                    <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
+                        <h3 class="titulo-secao">Cadastra o Treino</h3>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Dias da semana:</label>
+                            <select id="tipoTreino" required>
+                                <option value="" disabled selected>Dia do treino</option>
+                                <option value="segunda&sexta">Segunda & Sexta</option>
+                                <option value="terca&quinta">Terça & Quinta</option>
+                                <option value="quarta">Quarta</option>
+                            </select>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar Exercício:</label>
+                            <input type="text" id="exercicio">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar serie:</label>
+                            <input type="number" id="serie">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar Repetição:</label>
+                            <input type="text" id="repeticao">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar Descanso:</label>
+                            <input type="text" id="descanso">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar Carga:</label>
+                            <input type="text" id="carga">
+                        </div>
+                        <div class="input-wrapper">
+                            <div class="enviar">
+                                <button type="button" onclick="adicionarExercicio()">Adicionar Exercício</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Lista de exercícios adicionados -->
+                <div class="contato">
+                    <h3 class="titulo-secao">Exercícios Adicionados:</h3>
+                    <div class="input-wrapper">
+                        <ul class="titulo-secao" id="exerciciosAdicionados">
+                            <!-- Aqui serão exibidos os exercícios adicionados -->
+                        </ul>
+                    </div>
+                   
+                    <div class="input-wrapper">
+                        <label for="permissao">ATENÇÃO:</label>
+                        <select id="permissao" name="permissao" required>
+                            <option value="" disabled selected>Seleciona a permissão</option>
+                            <option value="admin">ADMINISTRADOR</option>
+                            <option value="treino">ALUNO</option>
+                        </select>
+                    </div>
+                    <!-- Aviso para admin -->
+                    <div id="aviso-admin" class="alert alert-warning">
+                        Você está prestes a adicionar um admin. Tem certeza?
+                    </div>
+        
+                    <div class="enviar">
+                        <input type="submit" name="cadastrar" value="Cadastrar">
+                    </div>
+                </div>
+            </form>
         </div>
-        </div>
+    </div>
 
     <script>
 
