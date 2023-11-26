@@ -1,14 +1,1 @@
-web: python src/run.py
-
-FROM python:3.10.0
-
-WORKDIR /app
-
-COPY . .
-
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
-EXPOSE 5000
-
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "run:app"]
+web: gunicorn -b 0.0.0.0:$PORT run:app
