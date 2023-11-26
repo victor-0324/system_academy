@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+</head>
+<body class="detalhes-page">
+
+<div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
+
+    <nav class="navbar navbar-expand-md navbar-dark">
+        
+        <div class="container"> 
+        <!-- Brand --> 
+        <a class="navbar-brand mr-auto" href="/">
+            <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
+        </a>
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
+        
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav ml-auto">
+                <br>
+                <li class="nav-item"> <a class="nav-link" href="/">Inicio</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="/alunos">Alunos</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="/cadastro">Cadastrar</a> </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="/login/logout">
+                        Sair
+                    </a>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </nav>
+    <form method="post" onsubmit="return enviarExerciciosParaServidor()">
+    <main>
+        {% for aluno in aluno %}
+        <div class="registro-formulario">
+            <h3>Atualizar {{aluno.nome}}</h3>
+        </div> 
+        <div class="dados-pessoais">
+
+           
+            <div class="input-wrapper">
+                <label for="peso">Peso:</label>
+                <input type="number" id="peso" name="peso"  value="{{ aluno.peso }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="ombro">Ombro D:</label>
+                <input type="number" name="ombro_d" id="ombro_d"   value="{{ aluno.ombro_d }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="ombro">Ombro E:</label>
+                <input type="number" name="ombro_e" id="ombro_e"   value="{{ aluno.ombro_e }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="torax">Tórax:</label>
+                <input type="number" name="torax" id="torax"  value="{{ aluno.torax }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="braco">braço D:</label>
+                <input type="number" name="braco_d" id="braco_d"  value="{{ aluno.braco_d }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="braco">braço E:</label>
+                <input type="number" name="braco_e" id="braco_e"  value="{{ aluno.braco_e }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="cintura">Cintura:</label>
+                <input type="number" name="cintura" id="cintura"  value="{{ aluno.cintura }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="ant">Ante braço D:</label>
+                <input type="number" name="ant_d" id="ant_d"  value="{{ aluno.ant_d }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="ant">Ante braço E:</label>
+                <input type="number" name="ant_e" id="ant_e"  value="{{ aluno.ant_e }}">
+            </div>
+             <div class="input-wrapper">
+                <label for="abdome">Abdome:</label>
+                <input type="number" name="abdome" id="abdome"  value="{{ aluno.abdome }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="coxa">Coxa D:</label>
+                <input type="number" name="coxa_d" id="coxa_d"  value="{{ aluno.coxa_d }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="coxa">Coxa E:</label>
+                <input type="number" name="coxa_e" id="coxa_e"  value="{{ aluno.coxa_e }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="quadril">Quadril:</label>
+                <input type="number" name="quadril" id="quadril"  value="{{ aluno.abdome }}">
+            </div>
+            
+            <div class="input-wrapper">
+                <label for="pant">Panturrilha D:</label>
+                <input type="number" name="pant_d" id="pant_d"  value="{{ aluno.pant_d }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="pant">Panturrilha E:</label>
+                <input type="number" name="pant_e" id="pant_e"  value="{{ aluno.pant_e }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="observacao">Observação:</label>
+                <input type="text" name="observacao" id="observacao" value="{{ aluno.observacao }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="telefone">Telefone:</label>
+                <input type="tel" name="telefone" id="telefone" value="{{ aluno.telefone }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="login">Login:</label>
+                <input type="text" name="login" id="login" value="{{ aluno.login }}">
+            </div>
+            <div class="input-wrapper">
+                <label for="senha">Senha:</label>
+                <input type="password" name="senha" id="senha" value="{{ aluno.senha }}">
+            </div>
+            
+            <div class="input-wrapper">
+                <label for="dia">Data de Pagamento:</label>
+                <input type="" name="data_pagamento" id="dia" value="{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}">
+            </div>
+            
+            <div class="dados-pessoais">
+                <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
+                    <h3 class="titulo-secao">Cadastra o Treino</h3>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Dias da semana:</label>
+                        <select id="tipoTreino" required>
+                            <option value="" disabled selected>Dia do treino</option>
+                            <option value="segunda&sexta">Segunda & Sexta</option>
+                            <option value="terca&quinta">Terça & Quinta</option>
+                            <option value="quarta">Quarta</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar Exercício:</label>
+                        <input type="text" id="exercicio">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar serie:</label>
+                        <input type="number" id="serie">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar Repetição:</label>
+                        <input type="text" id="repeticao">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar Descanso:</label>
+                        <input type="text" id="descanso">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar Carga:</label>
+                        <input type="text" id="carga">
+                    </div>
+                    <div class="input-wrapper">
+                        <div class="enviar">
+                            <button type="button" onclick="adicionarExercicio()">Adicionar Exercício</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Lista de exercícios adicionados -->
+            <div class="contato">
+                <h3 class="titulo-secao">Exercícios Adicionados:</h3>
+                <div class="input-wrapper">
+                    <ul class="titulo-secao" id="exerciciosAdicionados">
+                        <!-- Aqui serão exibidos os exercícios adicionados -->
+                    </ul>
+                </div>
+        </div>
+        <div class="dados-pessoais">
+             <div  class="enviar">
+                <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Atualizar</button>
+            </div>
+           
+        </div>
+        {% endfor %}
+    </main>
+    </form>
+</div>
+
+<script>
+
+    // Escopo local para evitar variáveis globais desnecessárias
+    var exercicios = [];
+    
+    function adicionarExercicio()  {
+    
+    var tipoTreino = document.getElementById('tipoTreino').value;
+    var exercicio = document.getElementById('exercicio').value;
+    var serie = document.getElementById('serie').value;
+    var repeticao = document.getElementById('repeticao').value;
+    var descanso = document.getElementById('descanso').value;
+    var carga = document.getElementById('carga').value;
+    
+    // Verifica se todos os campos estão preenchidos
+    if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
+        alert('Por favor, preencha todos os campos do exercício.');
+        return;
+    }
+    
+    var exercicioInfo = {
+        'tipoTreino': tipoTreino,
+        'exercicio': exercicio,
+        'serie': serie,
+        'repeticao': repeticao,
+        'descanso': descanso,
+        'carga': carga,
+    };
+    
+    exercicios.push(exercicioInfo);
+    
+    // Adicione logs para verificar o que está sendo adicionado
+    console.log('Exercício adicionado:', exercicioInfo);
+    console.log('Lista de exercícios atualizada:', exercicios);
+    // Atualiza a lista de exercícios na página
+    atualizarListaExercicios();
+    
+    // Limpa os campos de treino
+    limparCamposTreino();
+    
+    }
+    
+    function atualizarListaExercicios() {
+    
+    var listaExercicios = document.getElementById('exerciciosAdicionados');
+    listaExercicios.innerHTML = '';
+    
+    exercicios.forEach(function (exercicio, index) {
+        var itemLista = document.createElement('li');
+        itemLista.textContent = `Dia: ${exercicio.tipoTreino}, Exercício: ${exercicio.exercicio}, Série: ${exercicio.serie}, Repetição: ${exercicio.repeticao}, Descanso: ${exercicio.descanso}, Carga: ${exercicio.carga}`;
+        listaExercicios.appendChild(itemLista);
+    });
+    return exercicios;
+    }
+    
+    function limparCamposTreino() {
+    
+    document.getElementById('exercicio').value = '';
+    document.getElementById('serie').value = '';
+    document.getElementById('repeticao').value = '';
+    document.getElementById('descanso').value = '';
+    document.getElementById('carga').value = '';
+    }
+    
+    function enviarExerciciosParaServidor() {
+        // Obtenha os dados dos exercícios
+        var exercicios = atualizarListaExercicios();
+    
+        // Verifique se há exercícios antes de enviar
+        if (exercicios.length === 0) {
+            alert('Adicione pelo menos um exercício antes de cadastrar.');
+            return false; // Impede o envio do formulário
+        }
+
+        // Adicione os exercícios ao formData
+        var formData = new FormData(document.querySelector('form'));
+        formData.append('exercicios', JSON.stringify(exercicios));
+    
+        // Obtenha o ID do aluno da URL
+        var alunoId = window.location.pathname.split('/').pop();
+        var url = '/alunos/atualizar/' + alunoId;
+    
+        // Faça a solicitação POST para o servidor
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Lida com a resposta do servidor
+                console.log(data);
+                // Limpa os exercícios após o envio
+                exercicios = [];
+                atualizarListaExercicios();
+                // Redireciona para a outra página após o cadastro
+                window.location.href = '/alunos';
+            })
+            .catch(error => {
+                // Lida com erros
+                console.error(error);
+            });
+    
+        return false; // Impede o envio do formulário
+    }
+    
+    </script>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>

@@ -1,15 +1,18 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 db = SQLAlchemy()
 
 class Config:
-    SECRET_KEY = "vitorvitoriaeyaramariaauvesdacosta"
+    SECRET_KEY = os.getenv("SECRET_KEY")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = "mariadb+mariadbconnector://bingogn:bingo_game@127.0.0.1:3306/innovare"
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
 
 class DBConnectionHandler:
     """Sqlalchemy database connection"""

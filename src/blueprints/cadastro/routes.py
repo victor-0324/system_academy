@@ -23,28 +23,30 @@ def admin_required(func):
 @cadastro_app.route("/", methods=["GET", "POST"])
 @admin_required
 def cadastrar():
-  
     if request.method == 'POST':
         try:
-            print(f'Recebendo dados: {request.form}')
-            
             data = request.form.get('exercicios')
             exercicios = json.loads(data) if data else []
             
             nome = request.form.get('nome')
             idade = request.form.get('idade')
             sexo = request.form.get('sexo')
-            altura = request.form.get('altura')
+           
             peso = request.form.get('peso')
-            ombro = request.form.get('ombro')
+            ombro_d = request.form.get('ombro_d')
+            ombro_e = request.form.get('ombro_e')
             torax = request.form.get('torax')
-            braco = request.form.get('braco')
-            ant = request.form.get('ant')
+            braco_d = request.form.get('braco_d')
+            braco_e = request.form.get('braco_e')
+            ant_d = request.form.get('ant_d')
+            ant_e = request.form.get('ant_e')
             cintura = request.form.get('cintura')
             abdome = request.form.get('abdome')
             quadril = request.form.get('quadril')
-            coxa = request.form.get('coxa')
-            pant = request.form.get('pant')
+            coxa_d = request.form.get('coxa_d')
+            coxa_e = request.form.get('coxa_e')
+            pant_d = request.form.get('pant_d')
+            pant_e = request.form.get('pant_e')
             observacao = request.form.get('observacao')
             telefone = request.form.get('telefone')
             login = request.form.get('login')
@@ -60,8 +62,8 @@ def cadastrar():
 
             # Chame o método cadastrar_aluno na instância
             querys_instance.cadastrar_aluno(
-                nome, idade, sexo, altura, peso, ombro, torax, braco, ant, cintura,
-                abdome, quadril, coxa, pant, observacao, telefone, login, senha,
+                nome, idade, sexo, peso, ombro_d, ombro_e, torax, braco_d, braco_e, ant_d, ant_e, cintura,
+                abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, senha,
                 data_entrada, data_pagamento, jatreino, permissao,
                 exercicios
             )

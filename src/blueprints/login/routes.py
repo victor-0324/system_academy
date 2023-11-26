@@ -15,7 +15,7 @@ def login():
         querys_instance = Querys(session)   
 
         aluno, permissao = querys_instance.verificar_credenciais(login, senha) 
-        print(aluno, permissao)
+       
         if aluno:
             if permissao == 'admin':
                 login_user(aluno)

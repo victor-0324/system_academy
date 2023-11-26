@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Treinos</title>
+    <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            
+            color: #000000; /* Cor do texto (preto) */
+        }
+    
+        main {
+            background-color: #ffffff; /* Cor de fundo do main (branco) */
+            color: #000000; /* Cor do texto (preto) */
+            padding: 20px; /* Adicione algum espaçamento interno ao main */
+            margin-top: 20px; /* Adicione algum espaçamento superior ao main */
+        }
+    
+        .table-responsive {
+            overflow-x: auto;
+        }
+    
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+    
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+    
+        .table th {
+            background-color: #f2f2f2;
+        }
+    
+        .badge {
+            margin-left: 5px;
+        }
+    
+       
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll">
+
+        <nav class="navbar navbar-expand-md navbar-dark">
+          <div class="container"> 
+            <!-- Brand --> 
+            <a class="navbar-brand mr-auto" href="/">
+              <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
+            </a>
+            <!-- Toggler/collapsible Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
+            
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item"> <a class="nav-link" href="/treino/">Treino</a> </li>
+              </ul>
+              <ul class="navbar-nav ml-5">
+                <li class="nav-item">
+                    <a class="nav-link " href="/login/logout">
+                        Sair
+                    </a>
+                </li>
+            </ul>            
+            </div>
+          </div>
+        </nav>
+        <br>
+        
+        <main>
+            <div class="registro-formulario">
+                <h3>Dados Antes e Depois da Atualização</h3>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Medida</th>
+                            <th scope="col">Antes</th>
+                            <th scope="col">Depois</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if historico_medidas_peso %}
+                            {% for key, value_antes in historico_medidas_peso[-1].items() if key not in ['descricao', 'data_entrada'] %}
+                                <tr>
+                                    <th scope="row">{{ key.capitalize() }}</th>
+                                    <td>{{ value_antes }} <span class="badge bg-info">Antes</span></td>
+                                    <td>{{ historico_depois[0][key] }} <span class="badge bg-success">Depois</span></td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3">Nenhuma medida registrada ainda.</td>
+                            </tr>
+                        {% endif %}
+        
+                    </tbody>
+                </table>
+                <canvas id="graficoPeso" width="400" height="200"></canvas>
+            </div>
+        </main>
+            <!-- Adicione o seguinte bloco de código para o gráfico -->
+            
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var ctxPeso = document.getElementById('graficoPeso').getContext('2d');
+            
+                    var data = {
+                        labels: ['Peso', 'Ombro D', 'Ombro E', 'Torax', 'Braço D', 'Braço E', 'Ant D', 'Ant E', 'Cintura', 'Abdome', 'Quadril', 'Coxa D', 'Coxa E', 'Pant D', 'Pant E'],
+                        datasets: [
+                            {
+                                label: 'Antes',
+                                backgroundColor: 'rgba(75, 192, 192, 1)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                data: [
+                                    {% if historico_medidas_peso[0] %}
+                                        {{ historico_medidas_peso[0]['peso'] }},
+                                        {{ historico_medidas_peso[0]['ombro_d'] }},
+                                        {{ historico_medidas_peso[0]['ombro_e'] }},
+                                        {{ historico_medidas_peso[0]['torax'] }},
+                                        {{ historico_medidas_peso[0]['braco_d'] }},
+                                        {{ historico_medidas_peso[0]['braco_e'] }},
+                                        {{ historico_medidas_peso[0]['ant_d'] }},
+                                        {{ historico_medidas_peso[0]['ant_e'] }},
+                                        {{ historico_medidas_peso[0]['cintura'] }},
+                                        {{ historico_medidas_peso[0]['abdome'] }},
+                                        {{ historico_medidas_peso[0]['quadril'] }},
+                                        {{ historico_medidas_peso[0]['coxa_d'] }},
+                                        {{ historico_medidas_peso[0]['coxa_e'] }},
+                                        {{ historico_medidas_peso[0]['pant_d'] }},
+                                        {{ historico_medidas_peso[0]['pant_e'] }}
+                                    {% else %}
+                                        // Valor padrão se historico_medidas_peso[-1] não existir
+                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                                    {% endif %}
+                                ]
+                            },
+                            {
+                                label: 'Depois',
+                                backgroundColor: 'rgb(32, 134, 55)',
+                                borderColor: 'rgb(32, 134, 55)',
+                                borderWidth: 1,
+                                data: [
+                                    {{ historico_depois[0]['peso'] }},
+                                    {{ historico_depois[0]['ombro_d'] }},
+                                    {{ historico_depois[0]['ombro_e'] }},
+                                    {{ historico_depois[0]['torax'] }},
+                                    {{ historico_depois[0]['braco_d'] }},
+                                    {{ historico_depois[0]['braco_e'] }},
+                                    {{ historico_depois[0]['ant_d'] }},
+                                    {{ historico_depois[0]['ant_e'] }},
+                                    {{ historico_depois[0]['cintura'] }},
+                                    {{ historico_depois[0]['abdome'] }},
+                                    {{ historico_depois[0]['quadril'] }},
+                                    {{ historico_depois[0]['coxa_d'] }},
+                                    {{ historico_depois[0]['coxa_e'] }},
+                                    {{ historico_depois[0]['pant_d'] }},
+                                    {{ historico_depois[0]['pant_e'] }}
+                                ]
+                            }
+                        ]
+                    };
+            
+                    var options = {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    };
+            
+                    var graficoPeso = new Chart(ctxPeso, {
+                        type: 'bar',
+                        data: data,
+                        options: options
+                    });
+                });
+            </script>
+        
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/parallax.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/wow.js') }}"></script>
+</body>
+</html>

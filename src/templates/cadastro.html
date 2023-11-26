@@ -15,9 +15,10 @@
     <title>Cadastro de Aluno</title>
 
 <body>
-    <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
+<div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
 
-        <nav class="navbar navbar-expand-md navbar-dark">
+    <nav class="navbar navbar-expand-md navbar-dark">
+        
         <div class="container"> 
         <!-- Brand --> 
         <a class="navbar-brand mr-auto" href="/">
@@ -25,322 +26,330 @@
         </a>
         <!-- Toggler/collapsibe Button -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
-
+        
         <!-- Navbar links -->
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav ml-auto">
-            <br>
-            <li class="nav-item"> <a class="nav-link" href="/">Inicio</a> </li>
-            <li class="nav-item"> <a class="nav-link" href="/alunos">Alunos</a> </li>
-            <li class="nav-item">
+                <br>
+                <li class="nav-item"> <a class="nav-link" href="/">Inicio</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="/alunos">Alunos</a> </li>
+                <li class="nav-item">
                     <a class="nav-link " href="/login/logout">
                         Sair
                     </a>
                 </li>
-
             </ul>
+        </div>
+        </div>
+    </nav>
+    <br>
+    
+    <div class="container">
 
-            
-        </div>
-        </div>
-        </nav>
-        <br>
-        <div class="container">
         <div class="registro-formulario">
             <h1>Novo Aluno</h1>
         </div>  
 
-        <div class="conteudo">
-            <form method="post" onsubmit="return enviarExerciciosParaServidor()">
-                <div class="dados-pessoais">
-                    <h3 class="titulo-secao">Cadastro</h3>
-                    <div class="input-wrapper">
-                        <label for="nome">Nome:</label>
-                        <input type="text" name="nome" id="nome" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="idade">Idade:</label>
-                        <input type="number" name="idade" id="idade" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="sexo">Sexo:</label>
-                        <select name="sexo" id="sexo" required>
-                            <option value="" disabled selected>Selecione...</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="feminino">Feminino</option>
-                        </select>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="altura">Altura (cm):</label>
-                        <input type="number" name="altura" id="altura" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="peso">Peso (kg):</label>
-                        <input type="number" name="peso" id="peso" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="ombro">Ombro:</label>
-                        <input type="number" name="ombro" id="ombro" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="torax">Tórax:</label>
-                        <input type="number" name="torax" id="torax" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="braco">braço:</label>
-                        <input type="number" name="braco" id="braco" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="ant">ant,:</label>
-                        <input type="number" name="ant" id="ant" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="cintura">Cintura:</label>
-                        <input type="number" name="cintura" id="cintura" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="abdome">Abdome:</label>
-                        <input type="number" name="abdome" id="abdome" required>
-                    </div>
+    <div class="conteudo">
+        <form method="post" onsubmit="return enviarExerciciosParaServidor()">
+            <div class="dados-pessoais">
+                <h3 class="titulo-secao"></h3>
+                <div class="input-wrapper">
+                    <label for="nome">Nome:</label>
+                    <input type="text" name="nome" id="nome" required>
                 </div>
-                <div class="contato">
-                    <h3 class="titulo-secao">Cadastro</h3>
-                    <div class="input-wrapper">
-                        <label for="quadril">Quadril:</label>
-                        <input type="number" name="quadril" id="quadril" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="coxa">Coxa:</label>
-                        <input type="number" name="coxa" id="coxa" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="pant">Pant,:</label>
-                        <input type="number" name="pant" id="pant" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="observacao">Observação:</label>
-                        <input type="text" name="observacao" id="observacao" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="telefone">Telefone:</label>
-                        <input type="tel" name="telefone" id="telefone" required>
-                    </div>
-                    <h5 class="titulo-secao">Senha do Aluno</h5>
-                    <div class="input-wrapper">
-                        <label for="login">Login:</label>
-                        <input type="text" name="login" id="login" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="senha">Senha:</label>
-                        <input type="password" name="senha" id="senha" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="dia">Data de entrada:</label>
-                        <input type="date" name="data_entrada" id="dia" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="dia">Data de Pagamento:</label>
-                        <input type="date" name="data_pagamento" id="dia" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="jatreino">já treino:</label>
-                        <select id="jatreino" name="jatreino" required>
-                            <option value="" disabled selected>Selecione o horário</option>
-                            <option value="Sim">Sim</option>
-                            <option value="Não">Não</option>
-                        </select>
-                    </div>
+                <div class="input-wrapper">
+                    <label for="idade">Idade:</label>
+                    <input type="number" name="idade" id="idade" required>
                 </div>
-        
-                <div class="dados-pessoais">
-                    <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
-                        <h3 class="titulo-secao">Cadastra o Treino</h3>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Dias da semana:</label>
-                            <select id="tipoTreino" required>
-                                <option value="" disabled selected>Dia do treino</option>
-                                <option value="segunda&sexta">Segunda & Sexta</option>
-                                <option value="terca&quinta">Terça & Quinta</option>
-                                <option value="quarta">Quarta</option>
-                            </select>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar Exercício:</label>
-                            <input type="text" id="exercicio">
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar serie:</label>
-                            <input type="number" id="serie">
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar Repetição:</label>
-                            <input type="text" id="repeticao">
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar Descanso:</label>
-                            <input type="text" id="descanso">
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar Carga:</label>
-                            <input type="text" id="carga">
-                        </div>
-                        <div class="input-wrapper">
-                            <div class="enviar">
-                                <button type="button" onclick="adicionarExercicio()">Adicionar Exercício</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="input-wrapper">
+                    <label for="sexo">Sexo:</label>
+                    <select name="sexo" id="sexo" required>
+                        <option value="" disabled selected>Selecione...</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                    </select>
                 </div>
-        
-                <!-- Lista de exercícios adicionados -->
-                <div class="contato">
-                    <h3 class="titulo-secao">Exercícios Adicionados:</h3>
-                    <div class="input-wrapper">
-                        <ul class="titulo-secao" id="exerciciosAdicionados">
-                            <!-- Aqui serão exibidos os exercícios adicionados -->
-                        </ul>
-                    </div>
-                   
-                    <div class="input-wrapper">
-                        <label for="permissao">ATENÇÃO:</label>
-                        <select id="permissao" name="permissao" required>
-                            <option value="" disabled selected>Seleciona a permissão</option>
-                            <option value="admin">ADMINISTRADOR</option>
-                            <option value="treino">ALUNO</option>
-                        </select>
-                    </div>
-                    <!-- Aviso para admin -->
-                    <div id="aviso-admin" class="alert alert-warning">
-                        Você está prestes a adicionar um admin. Tem certeza?
-                    </div>
-        
-                    <div class="enviar">
-                        <input type="submit" name="cadastrar" value="Cadastrar">
-                    </div>
+               
+                <div class="input-wrapper">
+                    <label for="peso">Peso:</label>
+                    <input type="number" name="peso" id="peso" required>
                 </div>
-            </form>
-        </div>
-    </div>
+                <div class="input-wrapper">
+                    <label for="ombro">Ombro D:</label>
+                    <input type="number" name="ombro_d" id="ombro"  required>
+                    <label for="ombro">Ombro E:</label>
+                    <input type="number" name="ombro_e" id="ombro"  required>
+                </div>
 
-    <script>
-
-    // Escopo local para evitar variáveis globais desnecessárias
-    var exercicios = [];
-
-    function adicionarExercicio()  {
-
-    var tipoTreino = document.getElementById('tipoTreino').value;
-    var exercicio = document.getElementById('exercicio').value;
-    var serie = document.getElementById('serie').value;
-    var repeticao = document.getElementById('repeticao').value;
-    var descanso = document.getElementById('descanso').value;
-    var carga = document.getElementById('carga').value;
-
-    // Verifica se todos os campos estão preenchidos
-    if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
-        alert('Por favor, preencha todos os campos do exercício.');
-        return;
-    }
-
-    var exercicioInfo = {
-        'tipoTreino': tipoTreino,
-        'exercicio': exercicio,
-        'serie': serie,
-        'repeticao': repeticao,
-        'descanso': descanso,
-        'carga': carga,
-    };
-
-    exercicios.push(exercicioInfo);
-
-    // Adicione logs para verificar o que está sendo adicionado
-    console.log('Exercício adicionado:', exercicioInfo);
-    console.log('Lista de exercícios atualizada:', exercicios);
-    // Atualiza a lista de exercícios na página
-    atualizarListaExercicios();
-
-    // Limpa os campos de treino
-    limparCamposTreino();
-
-    }
-
-    function atualizarListaExercicios() {
-
-    var listaExercicios = document.getElementById('exerciciosAdicionados');
-    listaExercicios.innerHTML = '';
-
-    exercicios.forEach(function (exercicio, index) {
-        var itemLista = document.createElement('li');
-        itemLista.textContent = `Dia: ${exercicio.tipoTreino}, Exercício: ${exercicio.exercicio}, Série: ${exercicio.serie}, Repetição: ${exercicio.repeticao}, Descanso: ${exercicio.descanso}, Carga: ${exercicio.carga}`;
-        listaExercicios.appendChild(itemLista);
-    });
-    return exercicios;
-    }
-
-    function limparCamposTreino() {
-
-    document.getElementById('exercicio').value = '';
-    document.getElementById('serie').value = '';
-    document.getElementById('repeticao').value = '';
-    document.getElementById('descanso').value = '';
-    document.getElementById('carga').value = '';
-    }
-
-    function enviarExerciciosParaServidor() {
-    // Obtenha os dados dos exercícios
-    var exercicios = atualizarListaExercicios();
-
-    // Verifique se há exercícios antes de enviar
-    if (exercicios.length === 0) {
-        alert('Adicione pelo menos um exercício antes de cadastrar.');
-        return false; // Impede o envio do formulário
-    }
-
-    // Adicione os exercícios ao formData
-    var formData = new FormData(document.querySelector('form'));
-    formData.append('exercicios', JSON.stringify(exercicios));
-
-    // Faça a solicitação POST para o servidor
-    fetch('/cadastro', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            // Lida com a resposta do servidor
-            console.log(data);
-            // Limpa os exercícios após o envio
-            exercicios = [];
-            atualizarListaExercicios();
-            // Redireciona para a outra página após o cadastro
-            window.location.href = '/alunos';
-        })
-        .catch(error => {
-            // Lida com erros
-            console.error(error);
-        });
-
-    return false; // Impede o envio do formulário
-    }
-    </script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-    $(document).ready(function () {
-    // Ocultar o aviso quando a página é carregada
-    $('#aviso-admin').hide();
-
-    // Exibir ou ocultar o aviso com base na escolha do usuário
-    $('#permissao').change(function () {
-        if ($(this).val() === 'admin') {
-            $('#aviso-admin').show();
-        } else {
-            $('#aviso-admin').hide();
-        }
-    });
-    });
-    </script>
-
+                <div class="input-wrapper">
+                    <label for="torax">Tórax:</label>
+                    <input type="number" name="torax" id="torax" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="braco">Braço D:</label>
+                    <input type="number" name="braco_d" id="braco" required>
+                    <label for="braco">Braço E:</label>
+                    <input type="number" name="braco_e" id="braco" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="ant">Ante Braço D:</label>
+                    <input type="number" name="ant_d" id="ant" required>
+                    <label for="ant">Ante Braço E:</label>
+                    <input type="number" name="ant_e" id="ant" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="cintura">Cintura:</label>
+                    <input type="number" name="cintura" id="cintura" required>
+                </div>
+                
+            </div>
+            <div class="contato">
+                <h3 class="titulo-secao"></h3>
+                <div class="input-wrapper">
+                    <label for="abdome">Abdome:</label>
+                    <input type="number" name="abdome" id="abdome" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="quadril">Quadril:</label>
+                    <input type="number" name="quadril" id="quadril" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="coxa">Coxa D:</label>
+                    <input type="number" name="coxa_d" id="coxa" required>
+                    <label for="coxa">Coxa E:</label>
+                    <input type="number" name="coxa_e" id="coxa" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="pant">Panturrilha D:</label>
+                    <input type="number" name="pant_d" id="pant_d" required>
+                    <label for="pant">Panturrilha E:</label>
+                    <input type="number" name="pant_e" id="pant_e" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="observacao">Observação:</label>
+                    <input type="text" name="observacao" id="observacao" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" name="telefone" id="telefone" required>
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="login">Login:</label>
+                    <input type="text" name="login" id="login" required>
+                    <label for="senha">Senha:</label>
+                    <input type="password" name="senha" id="senha" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="dia">Data de entrada:</label>
+                    <input type="date" name="data_entrada" id="dia" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="dia">Data de Pagamento:</label>
+                    <input type="date" name="data_pagamento" id="dia" required>
+                </div>
+                <div class="input-wrapper">
+                    <label for="jatreino">já treino:</label>
+                    <select id="jatreino" name="jatreino" required>
+                        <option value="" disabled selected>já treino</option>
+                        <option value="Sim">Sim</option>
+                        <option value="Não">Não</option>
+                    </select>
+                </div>
+            </div>
     
+            <div class="dados-pessoais">
+                <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
+                    <h3 class="titulo-secao">Cadastra o Treino</h3>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Dias da semana:</label>
+                        <select id="tipoTreino" required>
+                            <option value="" disabled selected>Dia do treino</option>
+                            <option value="segunda&sexta">Segunda & Sexta</option>
+                            <option value="terca&quinta">Terça & Quinta</option>
+                            <option value="quarta">Quarta</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar Exercício:</label>
+                        <input type="text" id="exercicio">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar serie:</label>
+                        <input type="number" id="serie">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar Repetição:</label>
+                        <input type="text" id="repeticao">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar Descanso:</label>
+                        <input type="text" id="descanso">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="tipoTreino">Adicionar Carga:</label>
+                        <input type="text" id="carga">
+                    </div>
+                    <div class="input-wrapper">
+                        <div class="enviar">
+                            <button type="button" onclick="adicionarExercicio()">Adicionar Exercício</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Lista de exercícios adicionados -->
+            <div class="contato">
+                <h3 class="titulo-secao">Exercícios Adicionados:</h3>
+                <div class="input-wrapper">
+                    <ul class="titulo-secao" id="exerciciosAdicionados">
+                        <!-- Aqui serão exibidos os exercícios adicionados -->
+                    </ul>
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="permissao">ATENÇÃO:</label>
+                    <select id="permissao" name="permissao" required>
+                        <option value="permissao"  selected>Seleciona a permissão</option>
+                        <option value="treino">ALUNO</option>
+                        <option value="admin">ADMINISTRADOR</option>
+                    </select>
+                </div>
+                <!-- Aviso para admin -->
+                <div id="aviso-admin" class="alert alert-warning">
+                    Você está prestes a adicionar um admin. Tem certeza?
+                </div>
+    
+                <div class="enviar">
+                    <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Cadastrar</button>
+
+                    <!-- <input type="submit" name="cadastrar" value="Cadastrar"> -->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+// Escopo local para evitar variáveis globais desnecessárias
+var exercicios = [];
+
+function adicionarExercicio()  {
+
+var tipoTreino = document.getElementById('tipoTreino').value;
+var exercicio = document.getElementById('exercicio').value;
+var serie = document.getElementById('serie').value;
+var repeticao = document.getElementById('repeticao').value;
+var descanso = document.getElementById('descanso').value;
+var carga = document.getElementById('carga').value;
+
+// Verifica se todos os campos estão preenchidos
+if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
+    alert('Por favor, preencha todos os campos do exercício.');
+    return;
+}
+
+var exercicioInfo = {
+    'tipoTreino': tipoTreino,
+    'exercicio': exercicio,
+    'serie': serie,
+    'repeticao': repeticao,
+    'descanso': descanso,
+    'carga': carga,
+};
+
+exercicios.push(exercicioInfo);
+
+// Adicione logs para verificar o que está sendo adicionado
+console.log('Exercício adicionado:', exercicioInfo);
+console.log('Lista de exercícios atualizada:', exercicios);
+// Atualiza a lista de exercícios na página
+atualizarListaExercicios();
+
+// Limpa os campos de treino
+limparCamposTreino();
+
+}
+
+function atualizarListaExercicios() {
+
+var listaExercicios = document.getElementById('exerciciosAdicionados');
+listaExercicios.innerHTML = '';
+
+exercicios.forEach(function (exercicio, index) {
+    var itemLista = document.createElement('li');
+    itemLista.textContent = `Dia: ${exercicio.tipoTreino}, Exercício: ${exercicio.exercicio}, Série: ${exercicio.serie}, Repetição: ${exercicio.repeticao}, Descanso: ${exercicio.descanso}, Carga: ${exercicio.carga}`;
+    listaExercicios.appendChild(itemLista);
+});
+return exercicios;
+}
+
+function limparCamposTreino() {
+
+document.getElementById('exercicio').value = '';
+document.getElementById('serie').value = '';
+document.getElementById('repeticao').value = '';
+document.getElementById('descanso').value = '';
+document.getElementById('carga').value = '';
+}
+
+function enviarExerciciosParaServidor() {
+// Obtenha os dados dos exercícios
+var exercicios = atualizarListaExercicios();
+
+// Verifique se há exercícios antes de enviar
+if (exercicios.length === 0) {
+    alert('Adicione pelo menos um exercício antes de cadastrar.');
+    return false; // Impede o envio do formulário
+}
+
+// Adicione os exercícios ao formData
+var formData = new FormData(document.querySelector('form'));
+formData.append('exercicios', JSON.stringify(exercicios));
+
+// Faça a solicitação POST para o servidor
+fetch('/cadastro', {
+    method: 'POST',
+    body: formData
+})
+    .then(response => response.json())
+    .then(data => {
+        // Lida com a resposta do servidor
+        console.log(data);
+        // Limpa os exercícios após o envio
+        exercicios = [];
+        atualizarListaExercicios();
+        // Redireciona para a outra página após o cadastro
+        window.location.href = '/alunos';
+    })
+    .catch(error => {
+        // Lida com erros
+        console.error(error);
+    });
+
+return false; // Impede o envio do formulário
+}
+</script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+$(document).ready(function () {
+// Ocultar o aviso quando a página é carregada
+$('#aviso-admin').hide();
+
+// Exibir ou ocultar o aviso com base na escolha do usuário
+$('#permissao').change(function () {
+    if ($(this).val() === 'admin') {
+        $('#aviso-admin').show();
+    } else {
+        $('#aviso-admin').hide();
+    }
+});
+});
+</script>
+
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
