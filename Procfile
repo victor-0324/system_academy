@@ -1,4 +1,4 @@
-web: python run.py
+web: gunicorn -b 0.0.0.0:5000 run:app
 
 FROM python:3.10.0
 
