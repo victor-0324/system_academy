@@ -1,4 +1,6 @@
 # Use uma imagem base
+web: python run.py
+
 FROM python:3.10.0
 
 # Defina o diretório de trabalho
