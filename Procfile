@@ -1,3 +1,5 @@
+web: python run.py
+
 FROM python:3.10.0
 
 # Defina o diretório de trabalho
@@ -14,4 +16,4 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 # Comando para iniciar o aplicativo
-CMD ["python3", "run.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "run:app"]
