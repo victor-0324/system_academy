@@ -14,7 +14,6 @@ cattrs==22.2.0
 certifi==2022.12.7
 chardet==4.0.0
 charset-normalizer==3.0.1
-chrome-gnome-shell==0.0.0
 click==8.1.7
 contourpy==1.0.7
 cryptography==3.3.2
