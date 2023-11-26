@@ -1,4 +1,4 @@
-python-apt==2.2.1
+
 python-dateutil==2.8.2
 python-debian==0.1.39
 python-debianbts==3.1.0
