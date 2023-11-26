@@ -11,8 +11,6 @@ app, login_manager = init_app()
 # Carregar as configurações
 app.config.from_object(DevelopmentConfig)
 
-# Inicializar o banco de dados
-
 
 # Iniciar o Servidor
 if __name__ == "__main__":
