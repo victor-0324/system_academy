@@ -122,7 +122,6 @@ tqdm==4.64.1
 trio==0.22.0
 trio-websocket==0.9.2
 typing_extensions==4.4.0
-unattended-upgrades==0.1
 url-normalize==1.4.3
 urllib3==1.26.5
 virtualenv==20.24.5
