@@ -9,7 +9,7 @@ COPY . /app
 
 # Install MariaDB Connector/C dependencies
 RUN apt-get update && apt-get install -y build-essential cmake
-
+RUN apt-get install -y libcups2-dev
 RUN apt-get install -y libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-3.0
 
 # Instale qualquer pacote adicional necessário antes dos requisitos
