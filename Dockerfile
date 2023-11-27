@@ -11,7 +11,8 @@ COPY . /app
 RUN apt-get update && apt-get install -y build-essential cmake
 RUN apt-get install -y libcups2-dev
 RUN apt-get install -y libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-3.0
-
+RUN apt-get install -y libdbus-1-dev libdbus-glib-1-dev
+RUN /usr/local/bin/python -m pip install --upgrade pip
 # Instale qualquer pacote adicional necessário antes dos requisitos
 RUN pip install --no-cache-dir docopt future jsonify lazy-object-proxy mariadb mysqlclient olefile pycairo pycurl pyinotify PySimpleSOAP PyYAML scour tinycss
 
