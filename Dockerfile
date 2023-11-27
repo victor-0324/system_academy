@@ -4,14 +4,11 @@ FROM python:3.9.2
 # Set the working directory to /app
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
-
-# Install MariaDB Connector/C dependencies
-RUN apt-get update && apt-get install -y build-essential cmake
-RUN apt-get install -y libcups2-dev
-RUN apt-get install -y libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-3.0
-RUN apt-get install -y libdbus-1-dev libdbus-glib-1-dev
+# Install MariaDB Connector/C dependencies and cleanup
+RUN apt-get update && \
+    apt-get install -y build-essential cmake libcups2-dev libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-3.0 libdbus-1-dev libdbus-glib-1-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Download and install MariaDB Connector/C
 RUN mkdir /mariadb-connector-c && \
@@ -25,12 +22,16 @@ RUN mkdir /mariadb-connector-c && \
     ldconfig
 
 # Install any needed packages specified in requirements.txt
+COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Configure MariaDB user
 RUN echo "default-authentication-plugin = mysql_native_password" >> /etc/mysql/my.cnf
 
-# Make port 80 available to the world outside this container
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Make port 5000 available to the world outside this container
 EXPOSE 5000
 
 # Define environment variable
