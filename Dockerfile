@@ -7,8 +7,19 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install MariaDB Connector/C
-RUN apt-get update && apt-get install -y libmariadb3 libmariadb-dev
+# Install MariaDB Connector/C dependencies
+RUN apt-get update && apt-get install -y build-essential cmake
+
+# Download and install MariaDB Connector/C
+RUN mkdir /mariadb-connector-c && \
+    cd /mariadb-connector-c && \
+    wget https://downloads.mariadb.com/Connectors/c/connector-c-3.3.1/mariadb-connector-c-3.3.1-src.tar.gz && \
+    tar -xzvf mariadb-connector-c-3.3.1-src.tar.gz && \
+    cd mariadb-connector-c-3.3.1-src && \
+    cmake . && \
+    make && \
+    make install && \
+    ldconfig
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
