@@ -17,7 +17,7 @@ class DevelopmentConfig(Config):
 class DBConnectionHandler:
     """Sqlalchemy database connection"""
 
-    def __init__(self, db=None): 
+    def __init__(self, db=None):
         self.db = db
 
     def init_app(self, app):
