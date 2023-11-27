@@ -12,7 +12,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = os.getenv("MYSQL_PRIVATE_URL")
 
 class DBConnectionHandler:
     """Sqlalchemy database connection"""
@@ -24,7 +24,7 @@ class DBConnectionHandler:
         self.app = app
         self.db.init_app(app)
         app.db = self.db  
-        
+
     def get_connection(self):
         return self.db
 
