@@ -223,8 +223,7 @@
     
                 <div class="enviar">
                     <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Cadastrar</button>
-
-                    <!-- <input type="submit" name="cadastrar" value="Cadastrar"> -->
+                    
                 </div>
             </div>
         </form>
@@ -311,7 +310,7 @@ var formData = new FormData(document.querySelector('form'));
 formData.append('exercicios', JSON.stringify(exercicios));
 
 // Faça a solicitação POST para o servidor
-fetch('https://innovare.up.railway.app/cadastro', {
+fetch('/cadastro', {
     method: 'POST',
     body: formData
 })
