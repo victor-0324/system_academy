@@ -77,9 +77,9 @@
                 </div>
                 <div class="input-wrapper">
                     <label for="ombro">Ombro D:</label>
-                    <input type="number" name="ombro_d" id="ombro"  required>
+                    <input type="number" name="ombro_d" id="ombro_d"  required>
                     <label for="ombro">Ombro E:</label>
-                    <input type="number" name="ombro_e" id="ombro"  required>
+                    <input type="number" name="ombro_e" id="ombro_e"  required>
                 </div>
 
                 <div class="input-wrapper">
@@ -88,15 +88,15 @@
                 </div>
                 <div class="input-wrapper">
                     <label for="braco">Braço D:</label>
-                    <input type="number" name="braco_d" id="braco" required>
+                    <input type="number" name="braco_d" id="braco_d" required>
                     <label for="braco">Braço E:</label>
-                    <input type="number" name="braco_e" id="braco" required>
+                    <input type="number" name="braco_e" id="braco_e" required>
                 </div>
                 <div class="input-wrapper">
                     <label for="ant">Ante Braço D:</label>
-                    <input type="number" name="ant_d" id="ant" required>
+                    <input type="number" name="ant_d" id="ant_d" required>
                     <label for="ant">Ante Braço E:</label>
-                    <input type="number" name="ant_e" id="ant" required>
+                    <input type="number" name="ant_e" id="ant_e" required>
                 </div>
                 <div class="input-wrapper">
                     <label for="cintura">Cintura:</label>
@@ -116,9 +116,9 @@
                 </div>
                 <div class="input-wrapper">
                     <label for="coxa">Coxa D:</label>
-                    <input type="number" name="coxa_d" id="coxa" required>
+                    <input type="number" name="coxa_d" id="coxa_d" required>
                     <label for="coxa">Coxa E:</label>
-                    <input type="number" name="coxa_e" id="coxa" required>
+                    <input type="number" name="coxa_e" id="coxa_e" required>
                 </div>
                 <div class="input-wrapper">
                     <label for="pant">Panturrilha D:</label>
@@ -143,11 +143,11 @@
                 </div>
                 <div class="input-wrapper">
                     <label for="dia">Data de entrada:</label>
-                    <input type="date" name="data_entrada" id="dia" required>
+                    <input type="date" name="data_entrada" id="dia_ent" required>
                 </div>
                 <div class="input-wrapper">
                     <label for="dia">Data de Pagamento:</label>
-                    <input type="date" name="data_pagamento" id="dia" required>
+                    <input type="date" name="data_pagamento" id="dia_pag" required>
                 </div>
                 <div class="input-wrapper">
                     <label for="jatreino">já treino:</label>
@@ -222,8 +222,8 @@
                 </div>
     
                 <div class="enviar">
-                   
-                    <button class="registro-formulario" type="submit">Cadastrar</button>
+                    <button class="registro-formulario" type="submit" onclick="enviarExerciciosParaServidor()">Cadastrar</button>
+
                     <!-- <input type="submit" name="cadastrar" value="Cadastrar"> -->
                 </div>
             </div>
@@ -311,7 +311,7 @@ var formData = new FormData(document.querySelector('form'));
 formData.append('exercicios', JSON.stringify(exercicios));
 
 // Faça a solicitação POST para o servidor
-fetch('/cadastro', {
+fetch('https://innovare.up.railway.app/cadastro', {
     method: 'POST',
     body: formData
 })
