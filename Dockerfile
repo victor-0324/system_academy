@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9.2
+FROM python:3.10.11
 
 # Set the working directory to /app
 WORKDIR /app
@@ -35,7 +35,7 @@ COPY . /app
 EXPOSE 5000
 
 # Define environment variable
-ENV NAME World
+ENV NAME Flask
 
 # Run app.py when the container launches
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "run:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "--reload", "main:app"]

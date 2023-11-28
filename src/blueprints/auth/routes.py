@@ -28,7 +28,7 @@ def login():
         else:
             flash('Credenciais inválidas. Tente novamente.', 'danger')
 
-    return render_template('login.html')
+    return render_template('pages/auth/login.html')
 
 @login_app.route('/logout')
 @login_required

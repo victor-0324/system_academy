@@ -1,13 +1,8 @@
 """Inicia a aplicação flask"""
 
-from src.app import init_app
-from src.database.config import DevelopmentConfig
-
+from src import init_app
 
 app, login_manager = init_app()
-
-app.config.from_object(DevelopmentConfig)
-
 
 if __name__ == "__main__":
     # app.run()

@@ -1,2 +1,1 @@
-from .app import init_app, load_user
-
+from .app import init_app
