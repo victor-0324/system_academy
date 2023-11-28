@@ -308,9 +308,12 @@ if (exercicios.length === 0) {
 // Adicione os exercícios ao formData
 var formData = new FormData(document.querySelector('form'));
 formData.append('exercicios', JSON.stringify(exercicios));
+var currentProtocol = window.location.protocol;
+var requestURL = currentProtocol + '//' + window.location.host + '/cadastro';
+
 
 // Faça a solicitação POST para o servidor
-fetch('/cadastro', {
+fetch(requestURL, {
     method: 'POST',
     body: formData
 })
