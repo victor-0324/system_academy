@@ -224,7 +224,6 @@
                 <div class="enviar">
                     <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Cadastrar</button>
                     
-                    <!-- <input type="submit" name="cadastrar" value="Cadastrar"> -->
                 </div>
             </div>
         </form>
@@ -310,8 +309,14 @@ if (exercicios.length === 0) {
 var formData = new FormData(document.querySelector('form'));
 formData.append('exercicios', JSON.stringify(exercicios));
 
+// Verifica se a página foi carregada via HTTPS
+var isHttps = window.location.protocol === 'https:';
+
+// Construa a URL da solicitação ajustando o protocolo conforme necessário
+var url = isHttps ? '/cadastro' : 'http://innovare.up.railway.app/cadastro';
+
 // Faça a solicitação POST para o servidor
-fetch('/cadastro', {
+fetch(url, {
     method: 'POST',
     body: formData
 })
@@ -333,7 +338,7 @@ fetch('/cadastro', {
 return false; // Impede o envio do formulário
 }
 </script>
-<script src="http://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
 $(document).ready(function () {
 // Ocultar o aviso quando a página é carregada
