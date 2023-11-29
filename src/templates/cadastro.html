@@ -309,9 +309,11 @@ if (exercicios.length === 0) {
 var formData = new FormData(document.querySelector('form'));
 formData.append('exercicios', JSON.stringify(exercicios));
 
+var alunoId = window.location.pathname.split('/').pop();
+var url = '' + alunoId;
 
 // Faça a solicitação POST para o servidor
-fetch('/cadastro', {
+fetch(url, {
     method: 'POST',
     body: formData
 })
