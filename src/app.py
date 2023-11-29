@@ -4,7 +4,6 @@ from src.database.querys import Querys
 from src.database.config import db, DBConnectionHandler, DevelopmentConfig
 from src.database import Base
 from src.database.models import Aluno
-from flask_cors import CORS
 
 login_manager = LoginManager()
 
@@ -18,7 +17,7 @@ def init_app():
     """Construindo o app"""
     app = Flask(__name__)
     app.config.from_object("src.database.config.DevelopmentConfig")
-    CORS(app)
+   
     login_manager.init_app(app)
     login_manager.login_view = 'login_app.login'
     login_manager.user_loader(load_user)
