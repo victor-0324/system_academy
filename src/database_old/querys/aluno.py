@@ -73,13 +73,13 @@ class Querys():
 
         return None, None
 
-    def cadastrar_aluno(self, nome, idade, sexo, peso, ombro_d, ombro_e, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, senha, data_entrada, data_pagamento, jatreino, permissao, exercicios):
+    def cadastrar_aluno(self, nome, idade, sexo, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, senha, data_entrada, data_pagamento, jatreino, permissao, exercicios):
         data_entrada = datetime.strptime(data_entrada, '%Y-%m-%d') if data_entrada else None
         data_pagamento = datetime.strptime(data_pagamento, '%Y-%m-%d') if data_pagamento else None
 
         aluno = Aluno(
             nome=nome, idade=idade, sexo=sexo, peso=peso,
-            ombro_d=ombro_d, ombro_e=ombro_e,torax=torax, braco_d=braco_d, braco_e=braco_e, ant_d=ant_d, ant_e=ant_e,cintura=cintura,
+            ombro=ombro,torax=torax, braco_d=braco_d, braco_e=braco_e, ant_d=ant_d, ant_e=ant_e,cintura=cintura,
             abdome=abdome, quadril=quadril, coxa_d=coxa_d, coxa_e=coxa_e, pant_d=pant_d, pant_e=pant_e,
             observacao=observacao, telefone=telefone, login=login, senha=senha,
             data_entrada=data_entrada,
@@ -108,7 +108,7 @@ class Querys():
 
         return aluno
    
-    def atualizar_dados(self, aluno_id, peso, ombro_d, ombro_e, torax, braco_d, braco_e, ant_d, ant_e, cintura,
+    def atualizar_dados(self, aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
                     abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios):
         aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
         historico_antes = aluno.medidas_historico()
@@ -119,9 +119,9 @@ class Querys():
             aluno_antes.medidas_antes = historico_antes[:-1]
 
             # Restringir a atualização apenas para medidas válidas
-            if peso is not None and ombro_d is not None:
+            if peso is not None and ombro is not None:
                 aluno.peso = peso
-                aluno.ombro_d = ombro_d
+                aluno.ombro = ombro
                 aluno.ombro_e = ombro_e
                 aluno.torax = torax
                 aluno.braco_d = braco_d
