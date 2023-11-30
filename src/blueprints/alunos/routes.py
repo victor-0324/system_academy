@@ -76,8 +76,8 @@ def atualizar(aluno_id):
             exercicios = json.loads(data) if data else []
 
             peso = request.form.get("peso")
-            ombro_d = request.form.get("ombro_d")
-            ombro_e = request.form.get("ombro_e")
+            ombro = request.form.get("ombro")
+            
             torax = request.form.get("torax")
             braco_d = request.form.get("braco_d")
             braco_e = request.form.get("braco_e")
@@ -96,7 +96,7 @@ def atualizar(aluno_id):
             senha = request.form.get("senha")
             data_pagamento = request.form.get("data_pagamento")
 
-            if not all([ peso, ombro_d, ombro_e, torax, braco_d, braco_e, ant_d, ant_e, cintura,
+            if not all([ peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
                         abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, telefone, login]):
                 raise ValueError("Preencha todos os campos obrigatórios.")
 
@@ -105,7 +105,7 @@ def atualizar(aluno_id):
             # Use a função atualizar_dados para atualizar as informações do aluno
             aluno_antes = deepcopy(aluno)  # Crie uma cópia profunda do aluno antes da atualização
             historico_antes, historico_depois = querys_instance.atualizar_dados(
-                aluno_id, peso, ombro_d, ombro_e, torax, braco_d, braco_e, ant_d, ant_e, cintura,
+                aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
                 abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios
             )
             

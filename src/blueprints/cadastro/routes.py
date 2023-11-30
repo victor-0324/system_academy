@@ -33,8 +33,8 @@ def cadastrar():
             sexo = request.form.get('sexo')
            
             peso = request.form.get('peso')
-            ombro_d = request.form.get('ombro_d')
-            ombro_e = request.form.get('ombro_e')
+            ombro = request.form.get('ombro')
+            
             torax = request.form.get('torax')
             braco_d = request.form.get('braco_d')
             braco_e = request.form.get('braco_e')
@@ -62,7 +62,7 @@ def cadastrar():
 
             # Chame o método cadastrar_aluno na instância
             querys_instance.cadastrar_aluno(
-                nome, idade, sexo, peso, ombro_d, ombro_e, torax, braco_d, braco_e, ant_d, ant_e, cintura,
+                nome, idade, sexo, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
                 abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, senha,
                 data_entrada, data_pagamento, jatreino, permissao,
                 exercicios

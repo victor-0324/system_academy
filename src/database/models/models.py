@@ -9,11 +9,10 @@ class Aluno(Base):
     __tablename__ = "alunos"
     id = Column(Integer, primary_key=True)
     nome = Column(String(80), nullable=False)
-    idade = Column(String(80), nullable=False)
+    idade = Column(DateTime, nullable=True)
     sexo = Column(String(80), nullable=False)
     peso = Column(String(80), nullable=False)
-    ombro_d = Column(String(80), nullable=False)
-    ombro_e = Column(String(80), nullable=False)
+    ombro = Column(String(80), nullable=False)
     torax = Column(String(80), nullable=False)
     braco_d = Column(String(80), nullable=False)
     braco_e = Column(String(80), nullable=False)
@@ -75,8 +74,7 @@ class Aluno(Base):
         medidas_dict = {
             
             'peso': (self.peso),
-            'ombro_d': (self.ombro_d),
-            'ombro_e': (self.ombro_e),
+            'ombro': (self.ombro_d),
             'torax': (self.torax),
             'braco_d': (self.braco_d),
             'braco_e': (self.braco_e),
@@ -99,7 +97,7 @@ class Aluno(Base):
     def __repr__(self):
         return (
         f"{self.id} {self.nome} {self.idade} {self.sexo} {self.peso} "
-        f"{self.ombro_d} {self.ombro_e} {self.torax} {self.braco_d} {self.braco_e} {self.ant_d} {self.ant_e} {self.cintura} {self.abdome} "
+        f"{self.ombro} {self.torax} {self.braco_d} {self.braco_e} {self.ant_d} {self.ant_e} {self.cintura} {self.abdome} "
         f"{self.quadril} {self.coxa_d} {self.coxa_e} {self.pant_d} {self.pant_e} {self.observacao} {self.telefone} "
         f"{self.login} {self.senha} {self.data_entrada} {self.data_pagamento} {self.jatreino} {self.permissao}"
          )
