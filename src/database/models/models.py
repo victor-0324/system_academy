@@ -74,7 +74,7 @@ class Aluno(Base):
         medidas_dict = {
             
             'peso': (self.peso),
-            'ombro': (self.ombro_d),
+            'ombro': (self.ombro),
             'torax': (self.torax),
             'braco_d': (self.braco_d),
             'braco_e': (self.braco_e),
