@@ -127,68 +127,85 @@
                 <label for="dia">Data de Pagamento:</label>
                 <input type="" name="data_pagamento" id="dia" value="{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}">
             </div>
-            
-            <div class="dados-pessoais">
-                <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
-                    <h3 class="titulo-secao">Cadastra o Treino</h3>
-                    <div class="input-wrapper">
-                        <label for="tipoTreino">Dias da semana:</label>
-                        <select id="tipoTreino" required>
-                            <option value="" disabled selected>Dia do treino</option>
-                            <option value="segunda&sexta">Segunda & Sexta</option>
-                            <option value="terca&quinta">Terça & Quinta</option>
-                            <option value="quarta">Quarta</option>
-                        </select>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="tipoTreino">Adicionar Exercício:</label>
-                        <input type="text" id="exercicio">
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="tipoTreino">Adicionar serie:</label>
-                        <input type="number" id="serie">
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="tipoTreino">Adicionar Repetição:</label>
-                        <input type="text" id="repeticao">
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="tipoTreino">Adicionar Descanso:</label>
-                        <input type="text" id="descanso">
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="tipoTreino">Adicionar Carga:</label>
-                        <input type="text" id="carga">
-                    </div>
-                    <div class="input-wrapper">
-                        <div class="enviar">
-                            <button type="button" onclick="adicionarExercicio()">Adicionar Exercício</button>
+
+            <div class="input-wrapper">
+                <label for="opcaoExercicio">Escolha uma opção:</label>
+                <select id="opcaoExercicio" onchange="atualizarCamposExercicio()">
+                    <option  value="manterCadastrado">Manter Exercícios Cadastrados</option>
+                    <option value="adicionarNovo">Adicionar Novo Exercício</option>
+                    
+                </select>
+            </div>
+
+            <div class="input-wrapper" >
+                <div class="dados-pessoais">
+                    <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm" style="display: none;">
+                        <h3 class="titulo-secao">Cadastra o Treino</h3>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Dias da semana:</label>
+                            <select id="tipoTreino" required>
+                                <option value="" disabled selected>Dia do treino</option>
+                                <option value="segunda&sexta">Segunda & Sexta</option>
+                                <option value="terca&quinta">Terça & Quinta</option>
+                                <option value="quarta">Quarta</option>
+                            </select>
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar Exercício:</label>
+                            <input type="text" id="exercicio">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar serie:</label>
+                            <input type="number" id="serie">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar Repetição:</label>
+                            <input type="text" id="repeticao">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar Descanso:</label>
+                            <input type="text" id="descanso">
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="tipoTreino">Adicionar Carga:</label>
+                            <input type="text" id="carga">
+                        </div>
+                        <div class="input-wrapper">
+                            <div class="enviar">
+                                <button type="button" onclick="adicionarExercicio()">Adicionar Exercício</button>
+                            </div>
+                        </div>
+                        
+                        <h3 class="titulo-secao">Exercícios Adicionados:</h3>
+                        <div class="input-wrapper">
+                            <ul class="titulo-secao" id="exerciciosAdicionados">
+                                <!-- Aqui serão exibidos os exercícios adicionados -->
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </div>
-    
-            <!-- Lista de exercícios adicionados -->
-            <div class="contato">
-                <h3 class="titulo-secao">Exercícios Adicionados:</h3>
-                <div class="input-wrapper">
-                    <ul class="titulo-secao" id="exerciciosAdicionados">
-                        <!-- Aqui serão exibidos os exercícios adicionados -->
-                    </ul>
+                
+                <div class="input-wrapper" >
+                    
+                    <div  class="enviar">
+                        <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Atualizar</button>
+                    </div>
                 </div>
-        </div>
-        <div class="dados-pessoais">
-             <div  class="enviar">
-                <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Atualizar</button>
             </div>
-           
-        </div>
         {% endfor %}
     </main>
     </form>
 </div>
 
 <script>
+
+    function atualizarCamposExercicio() {
+        var opcaoExercicio = document.getElementById('opcaoExercicio').value;
+        var cadastroTreinoForm = document.getElementById('cadastroTreinoForm');
+    
+        // Mostra ou oculta os elementos com base na escolha do administrador
+        cadastroTreinoForm.style.display = opcaoExercicio === 'adicionarNovo' ? 'block' : 'none';
+    }
 
     // Escopo local para evitar variáveis globais desnecessárias
     var exercicios = [];
@@ -256,13 +273,18 @@
         // Obtenha os dados dos exercícios
         var exercicios = atualizarListaExercicios();
     
-        // Verifique se há exercícios antes de enviar
-        if (exercicios.length === 0) {
-            alert('Adicione pelo menos um exercício antes de cadastrar.');
-            return false; // Impede o envio do formulário
-        }
+        var opcaoExercicio = document.getElementById('opcaoExercicio').value;
 
-        // Adicione os exercícios ao formData
+        if (opcaoExercicio === 'manterCadastrado') {
+            enviarMedidasParaServidor();
+            // Redireciona para a outra página após o cadastro
+            window.location.href = '/alunos';
+            return false; // Impede o envio do formulário
+            
+            
+        }
+        else {
+            // Adicione os exercícios ao formData
         var formData = new FormData(document.querySelector('form'));
         formData.append('exercicios', JSON.stringify(exercicios));
     
@@ -291,9 +313,39 @@
             });
     
         return false; // Impede o envio do formulário
+        }
+        
     }
+    function enviarMedidasParaServidor() {
+        // Obtenha os dados das medidas, excluindo os exercícios
+        var formData = new FormData(document.querySelector('form'));
+        formData.delete('exercicios');
     
-    </script>
+        // Adicione qualquer lógica adicional necessária para enviar apenas as medidas
+        // ...
+    
+        // Obtenha o ID do aluno da URL
+        var alunoId = window.location.pathname.split('/').pop();
+        var url = '/alunos/atualizar/' + alunoId;
+    
+        // Faça a solicitação POST para o servidor
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Lida com a resposta do servidor
+                console.log(data);
+                // Redireciona para a outra página após o cadastro
+                window.location.href = '/alunos';
+            })
+            .catch(error => {
+                // Lida com erros
+                console.error(error);
+            });
+    }
+</script>
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>

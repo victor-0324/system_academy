@@ -74,10 +74,8 @@ def atualizar(aluno_id):
         if request.method == "POST":
             data = request.form.get('exercicios')
             exercicios = json.loads(data) if data else []
-
             peso = request.form.get("peso")
             ombro = request.form.get("ombro")
-            
             torax = request.form.get("torax")
             braco_d = request.form.get("braco_d")
             braco_e = request.form.get("braco_e")
@@ -95,7 +93,8 @@ def atualizar(aluno_id):
             login = request.form.get("login")
             senha = request.form.get("senha")
             data_pagamento = request.form.get("data_pagamento")
-
+            opcaoExercicio = request.form.get("opcaoExercicio")
+            
             if not all([ peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
                         abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, telefone, login]):
                 raise ValueError("Preencha todos os campos obrigatórios.")

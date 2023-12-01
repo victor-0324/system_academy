@@ -56,7 +56,7 @@
                     </div>
                     <div class="input-wrapper">
                         <label for="idade">Idade:</label>
-                        <p>{{ aluno.idade }}</p>
+                        <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
                     </div>
                     <div class="input-wrapper">
                         <label for="sexo">Sexo:</label>

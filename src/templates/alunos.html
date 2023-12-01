@@ -134,7 +134,7 @@
                 var listItem = document.createElement('li');
                 listItem.textContent = resultado.nome;
                 listItem.onclick = function () {
-                    window.open('detalhes/' + resultado.id, '_blank');
+                    window.open('detalhes/' + resultado.id);
                 };
                 listaPesquisa.appendChild(listItem);
             });
@@ -155,10 +155,20 @@
                 var detalhesButton = document.createElement('button');
                 detalhesButton.textContent = 'Detalhes';
                 detalhesButton.onclick = function () {
-                    window.open('detalhes/' + resultado.id, '_blank');
+                    window.open('detalhes/' + resultado.id);
                 };
-    
+
                 cellAcoes.appendChild(detalhesButton);
+
+                var deletarButton = document.createElement('button');
+                deletarButton.textContent = 'Deletar';
+                deletarButton.className = 'registro-formulario'; 
+                deletarButton.onclick = function () {
+                    window.open('/alunos/deletar/' + resultado.id);
+                };
+
+                cellAcoes.appendChild(deletarButton);
+
             });
         }
     </script>

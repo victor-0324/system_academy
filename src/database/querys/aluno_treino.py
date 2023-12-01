@@ -108,16 +108,15 @@ class Querys():
 
         return aluno
    
-    def atualizar_dados(self, aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
-                    abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios):
+    def atualizar_dados(self, aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios):
         aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
         historico_antes = aluno.medidas_historico()
-        
+
         if aluno:
             aluno_antes = Aluno()
             aluno_antes.__dict__.update(aluno.__dict__)
             aluno_antes.medidas_antes = historico_antes[:-1]
-
+            print(exercicios)
             # Restringir a atualização apenas para medidas válidas
             if peso is not None and ombro is not None:
                 aluno.peso = peso
@@ -141,18 +140,19 @@ class Querys():
                 aluno.senha = senha
                 aluno.data_atualizacao = datetime.utcnow()
 
-                aluno.exercicios.clear()
-
-                for exercicio_info in exercicios:
-                    exercicio = ExerciciosAluno(
-                        tipoTreino=exercicio_info['tipoTreino'],
-                        exercicio=exercicio_info['exercicio'],
-                        serie=exercicio_info['serie'],
-                        repeticao=exercicio_info['repeticao'],
-                        descanso=exercicio_info['descanso'],
-                        carga=exercicio_info['carga']
-                    )
-                    aluno.exercicios.append(exercicio)
+                print(exercicios)
+                if exercicios:
+                    aluno.exercicios.clear()
+                    for exercicio_info in exercicios:
+                        exercicio = ExerciciosAluno(
+                            tipoTreino=exercicio_info['tipoTreino'],
+                            exercicio=exercicio_info['exercicio'],
+                            serie=exercicio_info['serie'],
+                            repeticao=exercicio_info['repeticao'],
+                            descanso=exercicio_info['descanso'],
+                            carga=exercicio_info['carga']
+                        )
+                        aluno.exercicios.append(exercicio)
 
                 historico_antes = aluno_antes.medidas_historico()
                 historico_depois = aluno.medidas_historico()
@@ -169,10 +169,11 @@ class Querys():
         else:
             # Lógica para lidar com o aluno não encontrado
             return None, None
-            
+
     def _converter_datas_para_string(self, historico):
         historico_str = []
         for medida in historico:
             medida_str = {key: value.strftime('%Y-%m-%d') if isinstance(value, datetime) else value for key, value in medida.items()}
             historico_str.append(medida_str)
         return historico_str
+
