@@ -160,7 +160,7 @@ a, a:hover {
 }
 
 .fh5co-content-box {
-  background: #464646;
+  background: #000;
   padding-bottom: 100px;
 }
 .fh5co-content-box .pr-0 img {
@@ -244,7 +244,7 @@ a, a:hover {
 .fh5co-content-box .trainers::before, .fh5co-content-box .trainers::after {
   content: "";
   position: absolute;
-  border: 5px solid #ff8013;
+  border: 1px solid #ff8013;
   width: 100%;
   top: -10px;
 }

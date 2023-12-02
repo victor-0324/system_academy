@@ -1,0 +1,65 @@
+.desafio-container {
+    background-color: #ffffffe1; /* Cor de fundo dark */
+    display: flex; /* Habilita o Flexbox */
+    flex-direction: column; /* Organiza os elementos em uma coluna */
+    align-items: center; /* Centraliza os elementos horizontalmente */
+    justify-content: center; /* Centraliza os elementos verticalmente */
+    gap: 10px; /* Adiciona um espaço entre os elementos */
+    padding: 20px; /* Espaçamento interno */
+  }
+  
+  
+  h2, h4 {
+    color: #F28907; /* Cor do texto laranja escuro */
+  }
+  
+  h5 {
+    color: #000; /* Cor do texto laranja escuro */
+    border: 2px solid #F28907; /* Borda com a cor #F28907 */
+    text-align: left; /* Alinha o texto para a esquerda */
+  }
+  
+  #cronometro {
+    font-size: 2em;
+    color: #F28907; /* Cor do texto laranja escuro */
+    border: 2px solid #F28907; /* Borda laranja escuro */
+    padding: 5px; /* Espaçamento interno */
+    border-radius: 50px; /* Cantos arredondados */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  }
+  
+  
+  .botoes {
+    display: flex;
+    justify-content: space-between;
+}
+
+.botoes button {
+    padding: 10px;
+    background-color: #F28907; /* Nova cor do botão */
+    color: white;
+    border: none;
+    border-radius: 50px; /* Bordas mais arredondadas */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 15px; /* Adiciona um pequeno espaço entre os botões */
+}
+
+.botoes button:last-child {
+    margin-right: 0; /* Remove a margem direita do último botão para evitar excesso de espaço */
+}
+
+.botoes button:hover {
+    background-color: #D57706; /* Cor de fundo mais escura ao passar o mouse */
+}
+  
+  .table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    text-align: center;
+    padding: 10px 0;
+    color: #000; /* Cor do texto laranja escuro */
+  }

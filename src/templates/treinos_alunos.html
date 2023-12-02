@@ -10,91 +10,301 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-   
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/treinos.css') }}">
+
 </head>
 
 <body>
     <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll">
 
-        <nav class="navbar navbar-expand-md navbar-dark">
-          <div class="container"> 
-            <!-- Brand --> 
-            <a class="navbar-brand mr-auto" href="/">
-              <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
-            </a>
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
-            
-            <!-- Navbar links -->
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item"> <a class="nav-link" href="/treino/evolucao/{{ current_user.id }}">Evolução</a> </li>
-              </ul>
-              <ul class="navbar-nav ml-5">
-                <li class="nav-item">
-                    <a class="nav-link " href="/login/logout">
-                        Sair
-                    </a>
-                </li>
-            </ul>            
-              <!-- <ul class="navbar-nav ml-5">
-                <li class="nav-item"> <a class="nav-link btn btn-danger" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> </li>
-              </ul> -->
+      <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container"> 
+          <!-- Brand --> 
+          <a class="navbar-brand mr-auto" href="/">
+            <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
+          </a>
+          <!-- Toggler/collapsibe Button -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
+          
+          <!-- Navbar links -->
+          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item"> <a class="nav-link" href="/treino/evolucao/{{ current_user.id }}">Evolução</a> </li>
+            </ul>
+            <ul class="navbar-nav ml-5">
+              <li class="nav-item">
+                  <a class="nav-link " href="/login/logout">
+                      Sair
+                  </a>
+              </li>
+          </ul>            
+            <!-- <ul class="navbar-nav ml-5">
+              <li class="nav-item"> <a class="nav-link btn btn-danger" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> </li>
+            </ul> -->
+          </div>
+        </div>
+      </nav>
+   
+      <br>
+      <div class="container-fluid fh5co-content-box">
+     
+        <div class="row trainers pl-0 pr-0">
+          <div class="col-12 bg-50">
+            <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
+              <h3> TREINOS </h3>
+              <h4 class="card-title">{{ current_user.nome }} </h4>
+            </div>
+            <div class="desafio-container">
+              <h4>Progresso Semanal</h4>
+                <div class="botoes">
+                  
+                  <button id="btnIniciarTreino" onclick="iniciarTreino()">INICIAR</button>
+                  <button onclick="concluirTreino()">FINALIZAR</button>
+                </div>
+            <div id="cronometro"></div>
+            <div class="container">
+              <h5 id="resultadoDia"></h5>
+              <h5 id="resultadoSemana"></h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Seg</th>
+                            <th scope="col">Ter</th>
+                            <th scope="col">Qua</th>
+                            <th scope="col">Qui</th>
+                            <th scope="col">Sex</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaProgresso">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
           </div>
-        </nav>
-        <br>
-        
-        <div class="container-fluid fh5co-content-box">
-            <div class="container">
-              
-              <div class="row trainers pl-0 pr-0">
-                <div class="col-12 bg-50">
-                  <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
-                    <h2> TREINOS </h2>
-                    <h4 class="card-title">{{ current_user.nome }} </h4>
-                  </div>
-                </div>
-                {% set dias_exercicios = {} %}
-              {% for exercicio in exercicios %}
-                  {% set dia = exercicio.tipoTreino %}
-                  {% if dias_exercicios[dia] is not defined %}
-                      {% set _ = dias_exercicios.update({dia: []}) %}
-                  {% endif %}
-                  {% set _ = dias_exercicios[dia].append(exercicio) %}
-              {% endfor %}
-        
-              {% for dia, exercicios_do_dia in dias_exercicios.items() %}
-                  <div class="col-md-6 mb-4">
-                      <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
-                          <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
-                          <div class="card-body">
-                              <ul class="list-group text-left">
-                                  <li class="list-group-item">
-                                      <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
-                                      {% for exercicio in exercicios_do_dia %}
-                                          <hr class="mb-3">
-                                          <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
-                                          <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
-                                          <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
-                                          <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }}</p>
-                                          <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>        
-                                        <br>
-                                      <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>                                  
-                                      {% endfor %}
-                                      
-                                  </li>
-                              </ul>
-                          </div>
+        </div>
+          
+            {% set dias_exercicios = {} %}
+          {% for exercicio in exercicios %}
+              {% set dia = exercicio.tipoTreino %}
+              {% if dias_exercicios[dia] is not defined %}
+                  {% set _ = dias_exercicios.update({dia: []}) %}
+              {% endif %}
+              {% set _ = dias_exercicios[dia].append(exercicio) %}
+          {% endfor %}
+          {% for dia, exercicios_do_dia in dias_exercicios.items() %}
+              <div class="col-md-6 mb-4">
+                  <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
+                      <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
+                      <div class="card-body">
+                          <ul class="list-group text-left">
+                              <li class="list-group-item">
+                                  <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
+                                  {% for exercicio in exercicios_do_dia %}
+                                      <hr class="mb-3">
+                                      <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
+                                      <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
+                                      <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
+                                      <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }}</p>
+                                      <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>        
+                                    <br>
+                                  <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>                                  
+                                  {% endfor %}
+                                  
+                              </li>
+                          </ul>
                       </div>
                   </div>
-              {% endfor %}
               </div>
-             
-            </div>
+          {% endfor %}
           </div>
-
+      </div>
+    
+    
+    <script>
+        function obterDesafio() {
+            let desafio = JSON.parse(localStorage.getItem('desafio'));
+        
+            if (!desafio) {
+                desafio = {
+                    objetivo: 5,
+                    progresso: 0,
+                    treinoEmAndamento: false,
+                    tempoInicio: null,
+                    tempoTotalDia: 0,
+                    tempoTotalSemana: 0,
+                    ultimaSemana: obterNumeroDaSemana()
+                };
+        
+                localStorage.setItem('desafio', JSON.stringify(desafio));
+            }
+        
+            return desafio;
+        }
+        
+        function obterNumeroDaSemana() {
+            const agora = new Date();
+            const inicioDoAno = new Date(agora.getFullYear(), 0, 1);
+            const diff = agora - inicioDoAno;
+            const umDiaEmMilissegundos = 24 * 60 * 60 * 1000;
+            const numeroDaSemana = Math.ceil(diff / umDiaEmMilissegundos / 7);
+        
+            return numeroDaSemana;
+        }
+        
+        function resetarDesafio() {
+            const desafio = obterDesafio();
+            desafio.progresso = 0;
+            desafio.tempoTotalDia = 0;
+            desafio.tempoTotalSemana = 0;
+            desafio.ultimaSemana = obterNumeroDaSemana();
+            localStorage.setItem('desafio', JSON.stringify(desafio));
+        }
+        
+        function verificarNovaSemana() {
+            const desafio = obterDesafio();
+            const numeroDaSemanaAtual = obterNumeroDaSemana();
+        
+            if (numeroDaSemanaAtual !== desafio.ultimaSemana) {
+                resetarDesafio();
+            }
+        }
+        
+        function reiniciarDesafio() {
+            const desafio = obterDesafio();
+            desafio.progresso = 0;
+            desafio.tempoTotalDia = 0;
+            desafio.tempoTotalSemana = 0;
+            localStorage.setItem('desafio', JSON.stringify(desafio));
+        }
+        
+        function atualizarProgresso() {
+          verificarNovaSemana();
+      
+          const desafio = obterDesafio();
+          const progressoElemento = document.getElementById('progresso');
+          const tabelaProgresso = document.getElementById('tabelaProgresso').getElementsByTagName('td');
+          const resultadoDiaElemento = document.getElementById('resultadoDia');
+          const resultadoSemanaElemento = document.getElementById('resultadoSemana');
+      
+          if (progressoElemento) {
+              progressoElemento.textContent = `Progresso: ${desafio.progresso}/${desafio.objetivo}`;
+          }
+      
+          // Zerar todos os dias na tabela
+          for (let i = 0; i < tabelaProgresso.length; i++) {
+              tabelaProgresso[i].textContent = '';
+          }
+      
+          // Marcar apenas o dia atual
+          if (desafio.diaAtual && desafio.diaAtual > 0 && desafio.diaAtual <= tabelaProgresso.length) {
+              tabelaProgresso[desafio.diaAtual - 1].textContent = '✓';
+          }
+      
+          if (desafio.progresso === desafio.objetivo) {
+              reiniciarDesafio();
+          }
+      
+          // Exibir resultado do dia
+          if (resultadoDiaElemento) {
+              resultadoDiaElemento.textContent = `Treino hoje: ${formatarTempo(desafio.tempoTotalDia)}`;
+          }
+      
+          // Exibir resultado da semana
+          if (resultadoSemanaElemento) {
+              resultadoSemanaElemento.textContent = `Treino da semana: ${formatarTempo(desafio.tempoTotalSemana)}`;
+          }
+      }
+      
+        function formatarTempo(tempoSegundos) {
+            const minutos = Math.floor(tempoSegundos / 60);
+            const segundos = Math.floor(tempoSegundos % 60);
+            return `${minutos}m ${segundos}s`;
+        }
+        
+        function atualizarCronometro() {
+          const desafio = obterDesafio();
+          const cronometroElemento = document.getElementById('cronometro');
+          const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
+      
+          if (desafio.treinoEmAndamento) {
+              const tempoAtual = new Date().getTime();
+              const tempoDecorrido = (tempoAtual - desafio.tempoInicio) / 1000;
+      
+              const minutos = Math.floor(tempoDecorrido / 60);
+              const segundos = Math.floor(tempoDecorrido % 60);
+      
+              cronometroElemento.textContent = `Em treino: ${minutos}m ${segundos}s`;
+      
+              // Desabilitar o botão "Iniciar Treino" durante o treino
+              if (botaoIniciarTreino) {
+                  botaoIniciarTreino.disabled = true;
+              }
+          } else {
+              cronometroElemento.textContent = '';
+      
+              // Habilitar o botão "Iniciar Treino" após concluir o treino
+              if (botaoIniciarTreino) {
+                  botaoIniciarTreino.disabled = false;
+              }
+          }
+      }
+        
+        function iniciarTreino() {
+          const desafio = obterDesafio();
+      
+          if (!desafio.treinoEmAndamento) {
+              desafio.treinoEmAndamento = true;
+              desafio.tempoInicio = new Date().getTime();
+              localStorage.setItem('desafio', JSON.stringify(desafio));
+              setInterval(atualizarCronometro, 1000);
+      
+              // Desabilitar o botão "Iniciar Treino" ao iniciar o treino
+              const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
+              if (botaoIniciarTreino) {
+                  botaoIniciarTreino.disabled = true;
+              }
+          }
+      }
+      window.onload = function () {
+          console.log('Página Carregada');
+          atualizarProgresso();
+          setInterval(atualizarCronometro, 1000);
+      };
+        
+        function concluirTreino() {
+            const desafio = obterDesafio();
+        
+            if (desafio.treinoEmAndamento) {
+                const tempoFinal = new Date().getTime();
+                const tempoDecorrido = (tempoFinal - desafio.tempoInicio) / 1000;
+        
+                localStorage.setItem('tempoTreino', tempoDecorrido);
+        
+                desafio.tempoTotalDia += tempoDecorrido;
+                desafio.tempoTotalSemana += tempoDecorrido;
+        
+                desafio.progresso++;
+                desafio.treinoEmAndamento = false;
+                desafio.tempoInicio = null;
+        
+                localStorage.setItem('desafio', JSON.stringify(desafio));
+                atualizarProgresso();
+            }
+        }
+        
+        window.onload = function () {
+            atualizarProgresso();
+            setInterval(atualizarCronometro, 1000);
+        };
+    </script>
+    
+    
     <script>
         function marcarConcluido(botao) {
             botao.innerHTML = 'Concluído';
@@ -102,15 +312,13 @@
             botao.style.color = '#ffffff';  // Texto branco após clicar
             botao.disabled = true;  // Desativa o botão após ser concluído
             }
+
     </script>
    
-
-        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/parallax.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/wow.js') }}"></script>
-
-
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/parallax.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/wow.js') }}"></script>
+</div>
 </body>
-
 </html>
