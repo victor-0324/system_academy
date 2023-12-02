@@ -35,11 +35,11 @@
 }
 
 .botoes button {
-    padding: 10px;
+    padding: 5px;
     background-color: #F28907; /* Nova cor do botão */
     color: white;
     border: none;
-    border-radius: 50px; /* Bordas mais arredondadas */
+    border-radius: 5px; /* Bordas mais arredondadas */
     cursor: pointer;
     transition: background-color 0.3s;
     margin-right: 15px; /* Adiciona um pequeno espaço entre os botões */

@@ -55,15 +55,17 @@
               <h4 class="card-title">{{ current_user.nome }} </h4>
             </div>
             <div class="desafio-container">
-              <h4>Progresso Semanal</h4>
-                <div class="botoes">
-                  
+              <div id="cronometro"></div>
+              <h2>Progresso Semanal</h2>
+                
+            
+            <div class="container">
+              <div class="botoes">
                   <button id="btnIniciarTreino" onclick="iniciarTreino()">INICIAR</button>
                   <button onclick="concluirTreino()">FINALIZAR</button>
                 </div>
-            <div id="cronometro"></div>
-            <div class="container">
               <h5 id="resultadoDia"></h5>
+              
               <h5 id="resultadoSemana"></h5>
                 <table class="table">
                     <thead>
