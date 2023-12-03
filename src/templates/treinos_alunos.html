@@ -284,6 +284,14 @@
                 cronometroElemento.textContent = '';
             }
         }
+
+        function obterDiaAtual() {
+            const agora = new Date();
+            const fusoHorarioServidor = agora.getTimezoneOffset();
+            const diaAtual = new Date(agora.getTime() - fusoHorarioServidor * 60000).getDate();
+            return diaAtual;
+        }
+        
         function zeroEsquerda(numero) {
             return numero < 10 ? `0${numero}` : numero;
         }
