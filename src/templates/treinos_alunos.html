@@ -55,18 +55,11 @@
               <h4 class="card-title">{{ current_user.nome }} </h4>
             </div>
             <div class="desafio-container">
-              <div id="cronometro"></div>
+              
               <h2>Progresso Semanal</h2>
                 
             
             <div class="container">
-              <div class="botoes">
-                  <button id="btnIniciarTreino" onclick="iniciarTreino()">INICIAR</button>
-                  <button onclick="concluirTreino()">FINALIZAR</button>
-                </div>
-              <h5 id="resultadoDia"></h5>
-              
-              <h5 id="resultadoSemana"></h5>
                 <table class="table">
                     <thead>
                         <tr>
@@ -87,6 +80,18 @@
                         </tr>
                     </tbody>
                 </table>
+             
+              <h5 id="resultadoDia"></h5>
+                <div class="cronometro-estiloso">
+                   <div id="tempo-cronometro">00:00:00</div>
+                </div>
+              <h5 id="resultadoSemana"></h5>
+                 <div class="botoes">
+                  <button id="btnIniciarTreino" onclick="iniciarTreino()">INICIAR</button>
+                  <button onclick="concluirTreino()">FINALIZAR</button>
+                  
+                </div>
+               
             </div>
           </div>
         </div>
@@ -100,29 +105,49 @@
               {% set _ = dias_exercicios[dia].append(exercicio) %}
           {% endfor %}
           {% for dia, exercicios_do_dia in dias_exercicios.items() %}
-              <div class="col-md-6 mb-4">
-                  <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
-                      <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
-                      <div class="card-body">
-                          <ul class="list-group text-left">
-                              <li class="list-group-item">
-                                  <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
-                                  {% for exercicio in exercicios_do_dia %}
-                                      <hr class="mb-3">
-                                      <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
-                                      <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
-                                      <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
-                                      <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }}</p>
-                                      <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>        
-                                    <br>
-                                  <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>                                  
-                                  {% endfor %}
-                                  
-                              </li>
-                          </ul>
-                      </div>
-                  </div>
-              </div>
+          <div class="col-md-6 mb-4">
+            <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
+                <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
+                <div class="card-body">
+                    <table class="table text-left">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="text-center dia-treino"><strong>{{ dia }}</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exercicio in exercicios_do_dia %}
+                                <tr>
+                                    <td><strong>Exercício:</strong></td>
+                                    <td>{{ exercicio.exercicio|capitalize }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Série:</strong></td>
+                                    <td>{{ exercicio.serie }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Repetição:</strong></td>
+                                    <td>{{ exercicio.repeticao }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Descanso:</strong></td>
+                                    <td>{{ exercicio.descanso }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Carga:</strong></td>
+                                    <td>{{ exercicio.carga }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
           {% endfor %}
           </div>
       </div>
@@ -164,6 +189,7 @@
             desafio.progresso = 0;
             desafio.tempoTotalDia = 0;
             desafio.tempoTotalSemana = 0;
+            desafio.diaAtual = obterDiaAtual(); // Adicione a reinicialização do dia atual
             desafio.ultimaSemana = obterNumeroDaSemana();
             localStorage.setItem('desafio', JSON.stringify(desafio));
         }
@@ -221,42 +247,46 @@
           if (resultadoSemanaElemento) {
               resultadoSemanaElemento.textContent = `Treino da semana: ${formatarTempo(desafio.tempoTotalSemana)}`;
           }
-      }
-      
+        }
+        
+        function obterDiaAtual() {
+            const agora = new Date();
+            return agora.getDate();
+        }
+
         function formatarTempo(tempoSegundos) {
             const minutos = Math.floor(tempoSegundos / 60);
             const segundos = Math.floor(tempoSegundos % 60);
             return `${minutos}m ${segundos}s`;
         }
+        function verificarNovaSemana() {
+            const desafio = obterDesafio();
+            const numeroDaSemanaAtual = obterNumeroDaSemana();
         
+            // Verificar se mudou a semana ou se é um novo dia
+            if (numeroDaSemanaAtual !== desafio.ultimaSemana || !desafio.diaAtual) {
+                resetarDesafio();
+            }
+        }
         function atualizarCronometro() {
-          const desafio = obterDesafio();
-          const cronometroElemento = document.getElementById('cronometro');
-          const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
-      
-          if (desafio.treinoEmAndamento) {
-              const tempoAtual = new Date().getTime();
-              const tempoDecorrido = (tempoAtual - desafio.tempoInicio) / 1000;
-      
-              const minutos = Math.floor(tempoDecorrido / 60);
-              const segundos = Math.floor(tempoDecorrido % 60);
-      
-              cronometroElemento.textContent = `Em treino: ${minutos}m ${segundos}s`;
-      
-              // Desabilitar o botão "Iniciar Treino" durante o treino
-              if (botaoIniciarTreino) {
-                  botaoIniciarTreino.disabled = true;
-              }
-          } else {
-              cronometroElemento.textContent = '';
-      
-              // Habilitar o botão "Iniciar Treino" após concluir o treino
-              if (botaoIniciarTreino) {
-                  botaoIniciarTreino.disabled = false;
-              }
-          }
-      }
+            const desafio = obterDesafio();
+            const cronometroElemento = document.getElementById('tempo-cronometro');
+            
+            if (desafio.treinoEmAndamento) {
+                const tempoAtual = new Date().getTime();
+                const tempoDecorrido = (tempoAtual - desafio.tempoInicio) / 1000;
         
+                const minutos = Math.floor(tempoDecorrido / 60);
+                const segundos = Math.floor(tempoDecorrido % 60);
+        
+                cronometroElemento.textContent = `${zeroEsquerda(minutos)}:${zeroEsquerda(segundos)}`;
+            } else {
+                cronometroElemento.textContent = '';
+            }
+        }
+        function zeroEsquerda(numero) {
+            return numero < 10 ? `0${numero}` : numero;
+        }
         function iniciarTreino() {
           const desafio = obterDesafio();
       
@@ -272,12 +302,12 @@
                   botaoIniciarTreino.disabled = true;
               }
           }
-      }
-      window.onload = function () {
-          console.log('Página Carregada');
-          atualizarProgresso();
-          setInterval(atualizarCronometro, 1000);
-      };
+        }
+        window.onload = function () {
+            console.log('Página Carregada');
+            atualizarProgresso();
+            setInterval(atualizarCronometro, 1000);
+        };
         
         function concluirTreino() {
             const desafio = obterDesafio();
@@ -297,9 +327,15 @@
         
                 localStorage.setItem('desafio', JSON.stringify(desafio));
                 atualizarProgresso();
+        
+                // Habilitar o botão "Iniciar Treino" ao concluir o treino
+                const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
+                if (botaoIniciarTreino) {
+                    botaoIniciarTreino.disabled = false;
+                }
             }
         }
-        
+            
         window.onload = function () {
             atualizarProgresso();
             setInterval(atualizarCronometro, 1000);

@@ -22,10 +22,10 @@
   #cronometro {
     font-size: 2em;
     color: #F28907; /* Cor do texto laranja escuro */
-    border: 2px solid #F28907; /* Borda laranja escuro */
-    padding: 5px; /* Espaçamento interno */
-    border-radius: 50px; /* Cantos arredondados */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    border: 0.12rem solid #F28907; /* Borda laranja escuro */
+    padding: 0.12rem; /* Espaçamento interno */
+    border-radius: 10px; /* Cantos arredondados */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
   }
   
   
@@ -35,7 +35,7 @@
 }
 
 .botoes button {
-    padding: 5px;
+    padding: 10px;
     background-color: #F28907; /* Nova cor do botão */
     color: white;
     border: none;
@@ -63,3 +63,13 @@
     padding: 10px 0;
     color: #000; /* Cor do texto laranja escuro */
   }
+
+
+  .cronometro-estiloso {
+    text-align: center;
+}
+
+#tempo-cronometro {
+    font-size: 2em;
+    color: #4CAF50; /* Cor verde para destacar */
+}
