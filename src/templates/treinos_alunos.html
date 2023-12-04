@@ -49,54 +49,48 @@
       <div class="container-fluid fh5co-content-box">
      
         <div class="row trainers pl-0 pr-0">
-          <div class="col-12 bg-50">
-            <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
-              <h3> TREINOS </h3>
-              <h4 class="card-title">{{ current_user.nome }} </h4>
-            </div>
-            <div class="desafio-container">
-              
-              <h2>Progresso Semanal</h2>
-                
-            
-            <div class="container">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Seg</th>
-                            <th scope="col">Ter</th>
-                            <th scope="col">Qua</th>
-                            <th scope="col">Qui</th>
-                            <th scope="col">Sex</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaProgresso">
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-             
-              <h5 id="resultadoDia"></h5>
-                <div class="cronometro-estiloso">
-                   <div id="tempo-cronometro">00:00:00</div>
+            <div class="col-12 bg-50">
+                <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
+                <h3> TREINOS </h3>
+                <h4 class="card-title">{{ current_user.nome }} </h4>
                 </div>
-              <h5 id="resultadoSemana"></h5>
-                 <div class="botoes">
-                  <button id="btnIniciarTreino" onclick="iniciarTreino()">INICIAR</button>
-                  <button onclick="concluirTreino()">FINALIZAR</button>
-                  
+                <div class="desafio-container">
+                    <h2>Progresso Semanal</h2>
+                    <div class="container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Seg</th>
+                                    <th scope="col">Ter</th>
+                                    <th scope="col">Qua</th>
+                                    <th scope="col">Qui</th>
+                                    <th scope="col">Sex</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaProgresso">
+                                <tr id="rowProgresso">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5 id="resultadoDia"></h5>
+                        <div class="cronometro-estiloso">
+                            <div id="tempo-cronometro">00:00:00</div>
+                        </div>
+                        <h5 id="resultadoSemana"></h5>
+                        <div class="botoes">
+                            <button id="btnIniciarTreino" onclick="iniciarTreino()">INICIAR</button>
+                            <button onclick="concluirTreino()">FINALIZAR</button>
+                        </div>
+                    </div>
                 </div>
-               
-            </div>
-          </div>
-        </div>
+            </div> 
           
-            {% set dias_exercicios = {} %}
+        {% set dias_exercicios = {} %}
           {% for exercicio in exercicios %}
               {% set dia = exercicio.tipoTreino %}
               {% if dias_exercicios[dia] is not defined %}
@@ -149,207 +143,245 @@
             </div>
         </div>
           {% endfor %}
-          </div>
-      </div>
-    
-    
-    <script>
-        function obterDesafio() {
-            let desafio = JSON.parse(localStorage.getItem('desafio'));
-        
-            if (!desafio) {
-                desafio = {
-                    objetivo: 5,
-                    progresso: 0,
-                    treinoEmAndamento: false,
-                    tempoInicio: null,
-                    tempoTotalDia: 0,
-                    tempoTotalSemana: 0,
-                    ultimaSemana: obterNumeroDaSemana()
-                };
-        
-                localStorage.setItem('desafio', JSON.stringify(desafio));
-            }
-        
-            return desafio;
-        }
-        
-        function obterNumeroDaSemana() {
-            const agora = new Date();
-            const inicioDoAno = new Date(agora.getFullYear(), 0, 1);
-            const diff = agora - inicioDoAno;
-            const umDiaEmMilissegundos = 24 * 60 * 60 * 1000;
-            const numeroDaSemana = Math.ceil(diff / umDiaEmMilissegundos / 7);
-        
-            return numeroDaSemana;
-        }
-        
-        function resetarDesafio() {
-            const desafio = obterDesafio();
-            desafio.progresso = 0;
-            desafio.tempoTotalDia = 0;
-            desafio.tempoTotalSemana = 0;
-            desafio.diaAtual = obterDiaAtual(); // Adicione a reinicialização do dia atual
-            desafio.ultimaSemana = obterNumeroDaSemana();
+    </div>      
+</div>    
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@2.0.2/build/global/luxon.min.js"></script>
+<script>
+    window.onload = function () {
+        atualizarProgresso();
+        setInterval(atualizarCronometro, 1000);
+    }
+
+    function obterDesafio() {
+        let desafio = JSON.parse(localStorage.getItem('desafio'));
+
+        if (!desafio) {
+            desafio = {
+                objetivo: 5,
+                progresso: 0,
+                treinosDiarios: [],
+                treinoEmAndamento: false,
+                tempoInicio: null,
+                tempoTotalDia: 0,
+                tempoTotalSemana: 0,
+                ultimaSemana: obterNumeroDaSemana(),
+                diaAtual: obterDiaAtual(),
+            };
+
             localStorage.setItem('desafio', JSON.stringify(desafio));
-        }
-        
-        function verificarNovaSemana() {
-            const desafio = obterDesafio();
-            const numeroDaSemanaAtual = obterNumeroDaSemana();
-        
-            if (numeroDaSemanaAtual !== desafio.ultimaSemana) {
-                resetarDesafio();
-            }
-        }
-        
-        function reiniciarDesafio() {
-            const desafio = obterDesafio();
-            desafio.progresso = 0;
-            desafio.tempoTotalDia = 0;
-            desafio.tempoTotalSemana = 0;
-            localStorage.setItem('desafio', JSON.stringify(desafio));
-        }
-        
-        function atualizarProgresso() {
-          verificarNovaSemana();
-      
-          const desafio = obterDesafio();
-          const progressoElemento = document.getElementById('progresso');
-          const tabelaProgresso = document.getElementById('tabelaProgresso').getElementsByTagName('td');
-          const resultadoDiaElemento = document.getElementById('resultadoDia');
-          const resultadoSemanaElemento = document.getElementById('resultadoSemana');
-      
-          if (progressoElemento) {
-              progressoElemento.textContent = `Progresso: ${desafio.progresso}/${desafio.objetivo}`;
-          }
-      
-          // Zerar todos os dias na tabela
-          for (let i = 0; i < tabelaProgresso.length; i++) {
-              tabelaProgresso[i].textContent = '';
-          }
-      
-          // Marcar apenas o dia atual
-          if (desafio.diaAtual && desafio.diaAtual > 0 && desafio.diaAtual <= tabelaProgresso.length) {
-              tabelaProgresso[desafio.diaAtual - 1].textContent = '✓';
-          }
-      
-          if (desafio.progresso === desafio.objetivo) {
-              reiniciarDesafio();
-          }
-      
-          // Exibir resultado do dia
-          if (resultadoDiaElemento) {
-              resultadoDiaElemento.textContent = `Treino hoje: ${formatarTempo(desafio.tempoTotalDia)}`;
-          }
-      
-          // Exibir resultado da semana
-          if (resultadoSemanaElemento) {
-              resultadoSemanaElemento.textContent = `Treino da semana: ${formatarTempo(desafio.tempoTotalSemana)}`;
-          }
-        }
-        
-        function obterDiaAtual() {
-            const agora = new Date();
-            return agora.getDate();
         }
 
-        function formatarTempo(tempoSegundos) {
-            const minutos = Math.floor(tempoSegundos / 60);
-            const segundos = Math.floor(tempoSegundos % 60);
-            return `${minutos}m ${segundos}s`;
+        return desafio;
+    }
+
+    function obterNumeroDaSemana() {
+        const agora = luxon.DateTime.local();
+        return agora.weekNumber;
+    }
+
+    function resetarDesafio() {
+        const desafio = obterDesafio();
+        desafio.progresso = 0;
+        desafio.tempoTotalSemana = 0;
+        desafio.diaAtual = obterDiaAtual();
+        desafio.ultimaSemana = obterNumeroDaSemana();
+        localStorage.setItem('desafio', JSON.stringify(desafio));
+    }
+
+   function verificarNovaSemana() {
+    const desafio = obterDesafio();
+    const numeroDaSemanaAtual = obterNumeroDaSemana();
+
+    // Verificar se mudou a semana ou se é um novo dia
+    if (numeroDaSemanaAtual !== desafio.ultimaSemana || !desafio.diaAtual) {
+        resetarDesafio();
+    }
+
+    // Reiniciar a semana no início de cada semana (domingo)
+    if (desafio.ultimaSemana !== numeroDaSemanaAtual && luxon.DateTime.local().weekday === 7) {
+        if (luxon.DateTime.local().hour === 0 && luxon.DateTime.local().minute === 0 && luxon.DateTime.local().second === 0) {
+            desafio.tempoTotalSemana = 0;
         }
-        function verificarNovaSemana() {
-            const desafio = obterDesafio();
-            const numeroDaSemanaAtual = obterNumeroDaSemana();
-        
-            // Verificar se mudou a semana ou se é um novo dia
-            if (numeroDaSemanaAtual !== desafio.ultimaSemana || !desafio.diaAtual) {
-                resetarDesafio();
+    }
+}function verificarNovaSemana() {
+    const desafio = obterDesafio();
+    const numeroDaSemanaAtual = obterNumeroDaSemana();
+    
+    // Verificar se mudou a semana ou se é um novo dia
+    if (numeroDaSemanaAtual !== desafio.ultimaSemana || !desafio.diaAtual) {
+        resetarDesafio();
+    }
+
+    // Reiniciar a semana no início de cada semana (domingo)
+    const agora = luxon.DateTime.local();
+    if (desafio.ultimaSemana !== numeroDaSemanaAtual && agora.weekday === 7 && agora.hour === 0 && agora.minute === 0 && agora.second === 0) {
+        desafio.tempoTotalSemana = 0;
+        localStorage.setItem('desafio', JSON.stringify(desafio));  // Adicione essa linha para salvar a alteração no localStorage
+    }
+}
+
+    function reiniciarDesafio() {
+        const desafio = obterDesafio();
+        const hoje = luxon.DateTime.local();
+    
+        // Verificar se é sábado para reiniciar o desafio
+        if (hoje.weekday === 6) {
+            desafio.progresso = 0;
+            desafio.tempoTotalSemana = 0;
+            localStorage.setItem('desafio', JSON.stringify(desafio));
+        }
+    
+        // Sempre reinicie o dia atual
+        desafio.diaAtual = obterDiaAtual();
+        localStorage.setItem('desafio', JSON.stringify(desafio));
+    }
+    
+    
+    function atualizarProgresso() {
+        verificarNovaSemana();
+    
+        const desafio = obterDesafio();
+        const progressoElemento = document.getElementById('progresso');
+        const tabelaProgresso = document.getElementById('tabelaProgresso');
+        const resultadoDiaElemento = document.getElementById('resultadoDia');
+        const resultadoSemanaElemento = document.getElementById('resultadoSemana');
+    
+        if (progressoElemento) {
+            progressoElemento.textContent = `Progresso: ${desafio.progresso}/${desafio.objetivo}`;
+        }
+    
+        // Zerar todos os dias na tabela
+        if (tabelaProgresso) {
+            const cells = tabelaProgresso.getElementsByTagName('td');
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].textContent = '';
             }
         }
-        function atualizarCronometro() {
-            const desafio = obterDesafio();
-            const cronometroElemento = document.getElementById('tempo-cronometro');
+    
+        // Marcar apenas o dia em que o treino foi iniciado
+        const diaTreino = desafio.diaAtual;
+        if (diaTreino && tabelaProgresso && desafio.treinoEmAndamento) {
+            const row = tabelaProgresso.getElementsByTagName('tr')[0];
+            const cells = row.getElementsByTagName('td');
+    
+            // Ajuste para começar a marcação a partir do índice 1 (Segunda-feira)
+            if (diaTreino > 0 && diaTreino <= cells.length) {
+                cells[diaTreino % 7].textContent = '✓';
+            }
+        }
+    
+        if (desafio.progresso === desafio.objetivo) {
+            resetarDesafio();
+           
+        }
+    
+        // Exibir resultado do dia
+        if (resultadoDiaElemento) {
+            resultadoDiaElemento.textContent = `Treino hoje: ${formatarTempo(desafio.tempoTotalDia)}`;
+        }
+    
+        // Exibir resultado da semana
+        if (resultadoSemanaElemento) {
+            resultadoSemanaElemento.textContent = `Treino da semana: ${formatarTempo(desafio.tempoTotalSemana)}`;
+        }
+    }
+    function obterDiaAtual() {
+        const agora = luxon.DateTime.local();
+        return agora.weekday === 7 ? 1 : agora.weekday + 1;
+    }
+
+    function zeroEsquerda(numero) {
+        return numero < 10 ? `0${numero}` : numero;
+    }
+
+    function atualizarCronometro() {
+        const desafio = obterDesafio();
+        const cronometroElemento = document.getElementById('tempo-cronometro');
+
+        if (desafio.treinoEmAndamento) {
+            const tempoAtual = new Date().getTime();
+            const tempoDecorrido = (tempoAtual - desafio.tempoInicio) / 1000;
+
+            const minutos = Math.floor(tempoDecorrido / 60);
+            const segundos = Math.floor(tempoDecorrido % 60);
+
+            cronometroElemento.textContent = `${zeroEsquerda(minutos)}:${zeroEsquerda(segundos)}`;
+        } else {
+            cronometroElemento.textContent = '';
+        }
+    }
+
+    function formatarTempo(tempoSegundos) {
+        const minutos = Math.floor(tempoSegundos / 60);
+        const segundos = Math.floor(tempoSegundos % 60);
+        return `${minutos}m ${segundos}s`;
+    }
+
+   
+
+    function iniciarTreino() {
+        const desafio = obterDesafio();
+    
+        if (!desafio.treinoEmAndamento) {
+            const hoje = luxon.DateTime.local().weekday;
             
-            if (desafio.treinoEmAndamento) {
-                const tempoAtual = new Date().getTime();
-                const tempoDecorrido = (tempoAtual - desafio.tempoInicio) / 1000;
-        
-                const minutos = Math.floor(tempoDecorrido / 60);
-                const segundos = Math.floor(tempoDecorrido % 60);
-        
-                cronometroElemento.textContent = `${zeroEsquerda(minutos)}:${zeroEsquerda(segundos)}`;
+            // Verificar se é sábado para reiniciar o tempo
+            if (hoje === 6 && desafio.tempoInicio) {
+                reiniciarDesafio();
+            }
+    
+            desafio.treinoEmAndamento = true;
+            desafio.tempoInicio = luxon.DateTime.local().toMillis();
+            localStorage.setItem('desafio', JSON.stringify(desafio));
+            setInterval(atualizarCronometro, 1000);
+    
+            // Desabilitar o botão "Iniciar Treino" ao iniciar o treino
+            const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
+            if (botaoIniciarTreino) {
+                botaoIniciarTreino.disabled = true;
+            }
+        }
+    }
+
+    function concluirTreino() {
+        const desafio = obterDesafio();
+    
+        if (desafio.treinoEmAndamento) {
+            const tempoFinal = new Date().getTime();
+            const tempoDecorrido = (tempoFinal - desafio.tempoInicio) / 1000;
+    
+            localStorage.setItem('tempoTreino', tempoDecorrido);
+    
+            desafio.tempoTotalDia += tempoDecorrido;
+    
+            // Verificar se é sábado para reiniciar a semana
+            const hoje = luxon.DateTime.local();
+            if (hoje.weekday === 6) {
+                desafio.tempoTotalSemana = 0; // Reiniciar a semana apenas no sábado
             } else {
-                cronometroElemento.textContent = '';
-            }
-        }
-
-        function obterDiaAtual() {
-            const agora = new Date();
-            const fusoHorarioServidor = agora.getTimezoneOffset();
-            const diaAtual = new Date(agora.getTime() - fusoHorarioServidor * 60000).getDate();
-            return diaAtual;
-        }
-        
-        function zeroEsquerda(numero) {
-            return numero < 10 ? `0${numero}` : numero;
-        }
-        function iniciarTreino() {
-          const desafio = obterDesafio();
-      
-          if (!desafio.treinoEmAndamento) {
-              desafio.treinoEmAndamento = true;
-              desafio.tempoInicio = new Date().getTime();
-              localStorage.setItem('desafio', JSON.stringify(desafio));
-              setInterval(atualizarCronometro, 1000);
-      
-              // Desabilitar o botão "Iniciar Treino" ao iniciar o treino
-              const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
-              if (botaoIniciarTreino) {
-                  botaoIniciarTreino.disabled = true;
-              }
-          }
-        }
-        window.onload = function () {
-            console.log('Página Carregada');
-            atualizarProgresso();
-            setInterval(atualizarCronometro, 1000);
-        };
-        
-        function concluirTreino() {
-            const desafio = obterDesafio();
-        
-            if (desafio.treinoEmAndamento) {
-                const tempoFinal = new Date().getTime();
-                const tempoDecorrido = (tempoFinal - desafio.tempoInicio) / 1000;
-        
-                localStorage.setItem('tempoTreino', tempoDecorrido);
-        
-                desafio.tempoTotalDia += tempoDecorrido;
                 desafio.tempoTotalSemana += tempoDecorrido;
-        
-                desafio.progresso++;
-                desafio.treinoEmAndamento = false;
-                desafio.tempoInicio = null;
-        
-                localStorage.setItem('desafio', JSON.stringify(desafio));
-                atualizarProgresso();
-        
-                // Habilitar o botão "Iniciar Treino" ao concluir o treino
-                const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
-                if (botaoIniciarTreino) {
-                    botaoIniciarTreino.disabled = false;
-                }
+            }
+    
+            desafio.progresso++;
+            desafio.treinoEmAndamento = false;
+            desafio.tempoInicio = null;
+    
+            localStorage.setItem('desafio', JSON.stringify(desafio));
+            atualizarProgresso();
+    
+            // Habilitar o botão "Iniciar Treino" ao concluir o treino
+            const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
+            if (botaoIniciarTreino) {
+                botaoIniciarTreino.disabled = false;
             }
         }
-            
-        window.onload = function () {
-            atualizarProgresso();
-            setInterval(atualizarCronometro, 1000);
-        };
-    </script>
-    
+    }
+
+</script>
+   
+  
+  
     
     <script>
         function marcarConcluido(botao) {

@@ -19,16 +19,6 @@
     text-align: left; /* Alinha o texto para a esquerda */
   }
   
-  #cronometro {
-    font-size: 2em;
-    color: #F28907; /* Cor do texto laranja escuro */
-    border: 0.12rem solid #F28907; /* Borda laranja escuro */
-    padding: 0.12rem; /* Espaçamento interno */
-    border-radius: 10px; /* Cantos arredondados */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  }
-  
-  
   .botoes {
     display: flex;
     justify-content: space-between;
