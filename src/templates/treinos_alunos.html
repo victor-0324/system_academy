@@ -69,11 +69,11 @@
                             </thead>
                             <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
                                 <tr id="rowProgresso">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td id="segunda"></td>
+                                    <td id="terca"></td>
+                                    <td id="quarta"></td>
+                                    <td id="quinta"></td>
+                                    <td id="sexta"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -88,6 +88,7 @@
                         </div>
                     </div>
                 </div>
+            
                 
           
         {% set dias_exercicios = {} %}
@@ -145,248 +146,131 @@
           {% endfor %}
     </div>      
 </div>    
-
-<script src="https://cdn.jsdelivr.net/npm/luxon@2.0.2/build/global/luxon.min.js"></script>
 <script>
-    let diaAtual;
+        // Inicializando o cronômetro
+        let cronometro;
+        let segundos = 0;
+        let minutos = 0;
+        let horas = 0;
 
-    function iniciarTreino() {
-        console.log('Iniciando função iniciarTreino');
-        const desafio = obterDesafio();
-        
-        if (!desafio.treinoEmAndamento) {
-            desafio.treinoEmAndamento = true;
-            desafio.tempoInicio = new Date().getTime();
-            localStorage.setItem('desafio', JSON.stringify(desafio));
-            setInterval(atualizarCronometro, 1000);
-    
-            // Desabilitar o botão "Iniciar Treino" ao iniciar o treino
-            const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
-            if (botaoIniciarTreino) {
-                botaoIniciarTreino.disabled = true;
+        // Função para formatar o tempo
+        function formatarTempo(tempo) {
+            return tempo < 10 ? `0${tempo}` : tempo;
+        }
+
+        // Função para iniciar o treino
+        function iniciarTreino() {
+            cronometro = setInterval(() => {
+                segundos++;
+                if (segundos === 60) {
+                    segundos = 0;
+                    minutos++;
+                }
+                if (minutos === 60) {
+                    minutos = 0;
+                    horas++;
+                }
+                document.getElementById('tempo-cronometro').textContent = `${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
+            }, 1000);
+            document.getElementById('btnIniciarTreino').disabled = true;
+        }
+
+        // Função para concluir o treino
+        function concluirTreino() {
+            clearInterval(cronometro);
+            document.getElementById('btnIniciarTreino').disabled = false;
+            let diaDaSemana = new Date().getDay();
+            let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+            document.getElementById(dias[diaDaSemana]).textContent = '✔️';
+            document.getElementById(dias[diaDaSemana]).style.color = 'green';
+            let tempoAnterior = localStorage.getItem(`${dias[diaDaSemana]}Tempo`) || '00:00:00';
+            let partesAnteriores = tempoAnterior.split(':');
+            let partesAtuais = document.getElementById('tempo-cronometro').textContent.split(':');
+            let totalSegundos = parseInt(partesAnteriores[2]) + parseInt(partesAtuais[2]);
+            let totalMinutos = parseInt(partesAnteriores[1]) + parseInt(partesAtuais[1]);
+            let totalHoras = parseInt(partesAnteriores[0]) + parseInt(partesAtuais[0]);
+            if (totalSegundos >= 60) {
+                totalSegundos -= 60;
+                totalMinutos++;
+            }
+            if (totalMinutos >= 60) {
+                totalMinutos -= 60;
+                totalHoras++;
+            }
+            let tempoTotal = `${formatarTempo(totalHoras)}:${formatarTempo(totalMinutos)}:${formatarTempo(totalSegundos)}`;
+            localStorage.setItem(`${dias[diaDaSemana]}Tempo`, tempoTotal);
+            document.getElementById('resultadoDia').textContent = `Treino Hoje: ${tempoTotal}`;
+            calcularTempoSemana();
+            segundos = 0;
+            minutos = 0;
+            horas = 0;
+        }
+
+        // Função para calcular o tempo total de treino na semana
+        function calcularTempoSemana() {
+            let totalSegundos = 0;
+            let dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+            dias.forEach(dia => {
+                let tempo = localStorage.getItem(`${dia}Tempo`);
+                if (tempo) {
+                    let partes = tempo.split(':');
+                    totalSegundos += parseInt(partes[0]) * 3600 + parseInt(partes[1]) * 60 + parseInt(partes[2]);
+                }
+            });
+            let horas = Math.floor(totalSegundos / 3600);
+            totalSegundos %= 3600;
+            let minutos = Math.floor(totalSegundos / 60);
+            let segundos = totalSegundos % 60;
+            document.getElementById('resultadoSemana').textContent = `Tempo da Semana: ${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
+        }
+
+        // Marcar dias não treinados com um X
+        function marcarDiasNaoTreinados() {
+            let diaDaSemana = new Date().getDay();
+            let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+            for (let i = 1; i < diaDaSemana; i++) {
+                if (!localStorage.getItem(dias[i])) {
+                    document.getElementById(dias[i]).textContent = 'X';
+                    document.getElementById(dias[i]).style.color = 'red';
+                    localStorage.setItem(dias[i], 'X');
+                }
             }
         }
-    }
-    
-    function concluirTreino() {
-        console.log('finalizando treino');
-        const desafio = obterDesafio();
-    
-        if (desafio.treinoEmAndamento) {
-            const tempoFinal = new Date().getTime();
-            const tempoDecorrido = (tempoFinal - desafio.tempoInicio) / 1000;
-    
-            localStorage.setItem('tempoTreino', tempoDecorrido);
-    
-            desafio.tempoTotalDia += tempoDecorrido;
-            desafio.tempoTotalSemana += tempoDecorrido;
-    
-            desafio.progresso++;
-            desafio.treinoEmAndamento = false;
-            desafio.tempoInicio = null;
-    
-            // Verificar se já passou um novo dia
-            const agora = luxon.DateTime.local();
-            if (agora.day !== desafio.ultimoDiaRegistrado) {
-                desafio.tempoTotalDia = 0;
-                desafio.ultimoDiaRegistrado = agora.day;
-    
-                // Marcar o dia atual na tabela ao concluir o treino
-               
-            }
-            marcarDiaAtualNaTabela();
-            localStorage.setItem('desafio', JSON.stringify(desafio));
-            atualizarProgresso();
-    
-            // Habilitar o botão "Iniciar Treino" ao concluir o treino
-            const botaoIniciarTreino = document.getElementById('btnIniciarTreino');
-            if (botaoIniciarTreino) {
-                botaoIniciarTreino.disabled = false;
+
+        // Reiniciar o progresso no final da semana
+        function reiniciarProgresso() {
+            let diaDaSemana = new Date().getDay();
+            if (diaDaSemana === 0) {
+                let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+                dias.forEach(dia => {
+                    localStorage.removeItem(dia);
+                    localStorage.removeItem(`${dia}Tempo`);
+                    document.getElementById(dia).textContent = '';
+                });
+                document.getElementById('resultadoDia').textContent = '';
+                document.getElementById('resultadoSemana').textContent = '';
             }
         }
-    }
-    
-    function limparTabela() {
-        const tabelaProgresso = document.getElementById('tabelaProgresso');
-        if (tabelaProgresso) {
-            const row = tabelaProgresso.getElementsByTagName('tr')[0];
-            const cells = row.getElementsByTagName('td');
-            for (let i = 0; i < cells.length; i++) {
-                cells[i].textContent = '';
-            }
-        }
-    }
 
-    function marcarDiaAtualNaTabela() {
-        const tabelaProgresso = document.getElementById('tabelaProgresso');
-    
-        if (tabelaProgresso) {
-            const row = tabelaProgresso.getElementsByTagName('tr')[0];
-            const cells = row.getElementsByTagName('td');
-    
-            const diaAtual = obterDiaAtual(); // Obter o dia atual novamente
-    
-            // Ajuste para começar a marcação a partir do índice 0 (Domingo)
-            const indiceCelula = (diaAtual + 6) % 7;
-    
-            // Verificar se o dia já foi marcado
-            if (cells[indiceCelula].textContent.trim() === '') {
-                cells[indiceCelula].textContent = '✓';
-            }
-        }
-    }
-    
-
-    window.onload = function () {
-        atualizarProgresso();
-        setInterval(atualizarCronometro, 1000);
-        
-    }
-
-    
-    function obterDesafio() {
-        let desafio = JSON.parse(localStorage.getItem('desafio'));
-
-        if (!desafio) {
-            desafio = {
-                objetivo: 5,
-                progresso: 0,
-                treinosDiarios: [],
-                treinoEmAndamento: false,
-                tempoInicio: null,
-                tempoTotalDia: 0,
-                tempoTotalSemana: 0,
-                ultimaSemana: obterNumeroDaSemana(),
-                diaAtual: obterDiaAtual(),
-            };
-
-            localStorage.setItem('desafio', JSON.stringify(desafio));
-        }
-
-        return desafio;
-    }
-
-    function obterNumeroDaSemana() {
-        const agora = luxon.DateTime.local();
-        return agora.weekNumber;
-    }
-
-    
-    function resetarDesafio() {
-        const desafio = obterDesafio();
-        desafio.progresso = 0;
-        desafio.tempoTotalSemana = 0;
-        desafio.tempoTotalDia = 0;
-        desafio.diaAtual = obterDiaAtual();
-        desafio.ultimaSemana = obterNumeroDaSemana();
-        desafio.treinosDiarios = [];
-        localStorage.setItem('desafio', JSON.stringify(desafio));
-    
-        // Limpar a tabela ao resetar o desafio
-        limparTabela();
-    }
-
-
-    function verificarNovaSemana() {
-        const desafio = obterDesafio();
-        const numeroDaSemanaAtual = obterNumeroDaSemana();
-        const diaAtual = obterDiaAtual();
-    
-        // Verificar se mudou a semana ou se é um novo dia
-        if (numeroDaSemanaAtual !== desafio.ultimaSemana || desafio.diaAtual !== diaAtual) {
-            resetarDesafio();
-        }
-    
-        // Reiniciar a semana no início de cada semana (Domingo)
-        if (desafio.ultimaSemana !== numeroDaSemanaAtual && diaAtual === 7) {
-            desafio.tempoTotalSemana = 0;
-            localStorage.setItem('desafio', JSON.stringify(desafio));
-            // Limpar a tabela ao iniciar nova semana
-            limparTabela();
-        }
-    }
-
-
-    function zerarTabelaProgresso() {
-        const tabelaProgresso = document.getElementById('tabelaProgresso');
-    
-        if (tabelaProgresso) {
-            const row = tabelaProgresso.getElementsByTagName('tr')[0];
-            const cells = row.getElementsByTagName('td');
-    
-            // Zerar todos os dias na tabela
-            for (let i = 0; i < cells.length; i++) {
-                cells[i].textContent = '';
-            }
-        }
-    }
-
-    function atualizarProgresso() {
-        verificarNovaSemana();
-    
-        const desafio = obterDesafio();
-        const progressoElemento = document.getElementById('progresso');
-        const cronometroElemento = document.getElementById('tempo-cronometro');
-        const resultadoDiaElemento = document.getElementById('resultadoDia');
-        const resultadoSemanaElemento = document.getElementById('resultadoSemana');
-    
-        if (progressoElemento) {
-            progressoElemento.textContent = `Progresso: ${desafio.progresso}/${desafio.objetivo}`;
-        }
-    
-        if (cronometroElemento) {
-            cronometroElemento.textContent = desafio.treinoEmAndamento ? formatarTempo(desafio.tempoTotalDia) : '';
-        }
-    
-        if (resultadoDiaElemento) {
-            resultadoDiaElemento.textContent = `Dia Atual: ${desafio.treinoEmAndamento ? '' : formatarTempo(desafio.tempoTotalDia)}`;
-        }
-    
-        if (resultadoSemanaElemento) {
-            resultadoSemanaElemento.textContent = `Tempo da Semana: ${formatarTempo(desafio.tempoTotalSemana)}`;
-        }
-    }
-
-
-    function obterDiaAtual() {
-        const agora = new Date();
-        return agora.getDay() === 0 ? 7 : agora.getDay();
-    }
-
-    function zeroEsquerda(numero) {
-        return numero < 10 ? `0${numero}` : numero;
-    }
-
-    function atualizarCronometro() {
-        const desafio = obterDesafio();
-        const cronometroElemento = document.getElementById('tempo-cronometro');
-
-        if (desafio.treinoEmAndamento) {
-            const tempoAtual = new Date().getTime();
-            const tempoDecorrido = (tempoAtual - desafio.tempoInicio) / 1000;
-
-            const minutos = Math.floor(tempoDecorrido / 60);
-            const segundos = Math.floor(tempoDecorrido % 60);
-
-            cronometroElemento.textContent = `${zeroEsquerda(minutos)}:${zeroEsquerda(segundos)}`;
-        } else {
-            cronometroElemento.textContent = '';
-        }
-    }
-
-    
-    function formatarTempo(tempoSegundos) {
-        const minutos = Math.floor(tempoSegundos / 60);
-        const segundos = Math.floor(tempoSegundos % 60);
-        return `${minutos}m ${segundos}s`;
-    }
-
-  
-
+        // Carregar progresso do LocalStorage ao recarregar a página
+        window.onload = function() {
+            let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+            dias.forEach(dia => {
+                let progresso = localStorage.getItem(dia);
+                if (progresso) {
+                    document.getElementById(dia).textContent = progresso;
+                    if (progresso === '✔️') {
+                        document.getElementById(dia).style.color = 'green';
+                    } else {
+                        document.getElementById(dia).style.color = 'red';
+                    }
+                }
+            });
+            calcularTempoSemana();
+            marcarDiasNaoTreinados();
+            reiniciarProgresso();
+        };
 </script>
-   
-  
-  
     
     <script>
         function marcarConcluido(botao) {
