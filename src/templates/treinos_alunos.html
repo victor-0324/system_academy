@@ -15,47 +15,44 @@
 </head>
 
 <body>
-    <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll">
-
-      <nav class="navbar navbar-expand-md navbar-dark">
+<div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll">
+    <nav class="navbar navbar-expand-md navbar-dark">
         <div class="container"> 
-          <!-- Brand --> 
-          <a class="navbar-brand mr-auto" href="/">
+        <!-- Brand --> 
+        <a class="navbar-brand mr-auto" href="/">
             <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
-          </a>
-          <!-- Toggler/collapsibe Button -->
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
-          
-          <!-- Navbar links -->
-          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        </a>
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
+        
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav ml-auto">
-              <li class="nav-item"> <a class="nav-link" href="/treino/evolucao/{{ current_user.id }}">Evolução</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="/treino/evolucao/{{ current_user.id }}">Evolução</a> </li>
             </ul>
             <ul class="navbar-nav ml-5">
-              <li class="nav-item">
-                  <a class="nav-link " href="/login/logout">
-                      Sair
-                  </a>
-              </li>
-          </ul>            
+            <li class="nav-item">
+                <a class="nav-link " href="/login/logout">
+                    Sair
+                </a>
+            </li>
+        </ul>            
             <!-- <ul class="navbar-nav ml-5">
-              <li class="nav-item"> <a class="nav-link btn btn-danger" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> </li>
+            <li class="nav-item"> <a class="nav-link btn btn-danger" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> </li>
             </ul> -->
-          </div>
         </div>
-      </nav>
-   
-      <br>
-      <div class="container-fluid fh5co-content-box">
-     
+        </div>
+    </nav>
+    <br>
+    <div class="container-fluid fh5co-content-box">
         <div class="row trainers pl-0 pr-0">
             <div class="col-12 bg-50">
                 <div class="quote-box2 wow bounceInDown" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInDown;">
-                <h3> TREINOS </h3>
-                <h4 class="card-title">{{ current_user.nome }} </h4>
+                    <h3> TREINOS </h3>
+                    <h4 class="card-title">{{ current_user.nome }} </h4>
                 </div>
                 <div class="desafio-container">
-                    <h2>Progresso Semanal</h2>
+                <h2>Progresso Semanal</h2>
                     <div class="container">
                         <table class="table" aria-labelledby="tabelaProgressoLabel">
                             <thead>
@@ -88,255 +85,266 @@
                         </div>
                     </div>
                 </div>
-            
+                {% set dias_exercicios = {} %}
+                {% for exercicio in exercicios %}
+                    {% set dia = exercicio.tipoTreino %}
+                    {% if dias_exercicios[dia] is not defined %}
+                        {% set _ = dias_exercicios.update({dia: []}) %}
+                    {% endif %}
+                    {% set _ = dias_exercicios[dia].append(exercicio) %}
+                {% endfor %}
+                {% for dia, exercicios_do_dia in dias_exercicios.items() %}
+        
+                    <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
+                        <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
+                        <div class="card-body">
+                            <table class="table text-left">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="text-center dia-treino"><strong>{{ dia }}</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for exercicio in exercicios_do_dia %}
+                                        <tr>
+                                            <td><strong>Exercício:</strong></td>
+                                            <td>{{ exercicio.exercicio|capitalize }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Série:</strong></td>
+                                            <td>{{ exercicio.serie }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Repetição:</strong></td>
+                                            <td>{{ exercicio.repeticao }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Descanso:</strong></td>
+                                            <td>{{ exercicio.descanso }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Carga:</strong></td>
+                                            <td>{{ exercicio.carga }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 
-          
-        {% set dias_exercicios = {} %}
-          {% for exercicio in exercicios %}
-              {% set dia = exercicio.tipoTreino %}
-              {% if dias_exercicios[dia] is not defined %}
-                  {% set _ = dias_exercicios.update({dia: []}) %}
-              {% endif %}
-              {% set _ = dias_exercicios[dia].append(exercicio) %}
-          {% endfor %}
-          {% for dia, exercicios_do_dia in dias_exercicios.items() %}
-          <div class="col-md-6 mb-4">
-            <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
-                <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
-                <div class="card-body">
-                    <table class="table text-left">
-                        <thead>
-                            <tr>
-                                <th colspan="2" class="text-center dia-treino"><strong>{{ dia }}</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for exercicio in exercicios_do_dia %}
-                                <tr>
-                                    <td><strong>Exercício:</strong></td>
-                                    <td>{{ exercicio.exercicio|capitalize }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Série:</strong></td>
-                                    <td>{{ exercicio.serie }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Repetição:</strong></td>
-                                    <td>{{ exercicio.repeticao }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Descanso:</strong></td>
-                                    <td>{{ exercicio.descanso }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Carga:</strong></td>
-                                    <td>{{ exercicio.carga }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <button type="button" class="btn btn-warning" onclick="marcarConcluido(this)">Concluir Treino</button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-          {% endfor %}
-    </div>      
-</div>    
+                {% endfor %}
+            </div>      
+        </div>   
+    </div> 
 <script>
-       // Inicializando o cronômetro
-let cronometro;
-let segundos = 0;
-let minutos = 0;
-let horas = 0;
-// Variável para verificar se o cronômetro foi iniciado anteriormente
-let cronometroIniciado = localStorage.getItem('cronometroIniciado') === 'true';
+        // Inicializando o cronômetro
+    let cronometro;
+    let segundos = 0;
+    let minutos = 0;
+    let horas = 0;
+    // Variável para verificar se o cronômetro foi iniciado anteriormente
+    let cronometroIniciado = localStorage.getItem('cronometroIniciado') === 'true';
+    // Adicionar variáveis para armazenar a hora de início e ajustar o tempo decorrido
+    let horaInicio;
 
-
-// Função para formatar o tempo
-function formatarTempo(tempo) {
-    if (tempo >= 100) {
-        return tempo.toString(); // Se for maior que 99 horas, retornar diretamente
-    } else {
-        return tempo < 10 ? `0${tempo}` : tempo.toString();
+    // Função para formatar o tempo
+    function formatarTempo(tempo) {
+        if (tempo >= 100) {
+            return tempo.toString(); // Se for maior que 99 horas, retornar diretamente
+        } else {
+            return tempo < 10 ? `0${tempo}` : tempo.toString();
+        }
     }
-}
 
 
 
-// Função para atualizar o display do tempo
-function atualizarTempoDisplay() {
-    document.getElementById('tempo-cronometro').textContent = `${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
-}
+    // Função para atualizar o display do tempo
+    function atualizarTempoDisplay() {
+        document.getElementById('tempo-cronometro').textContent = `${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
+    }
 
 
-// Função para iniciar o treino
+    // Função para iniciar o treino
 function iniciarTreino() {
+    // Obter a hora de início armazenada
+    horaInicio = parseInt(localStorage.getItem('horaInicio')) || new Date().getTime();
+
+    // Atualizar o display do tempo ao retomar
+    let tempoDecorrido = new Date().getTime() - horaInicio;
+    horas = Math.floor(tempoDecorrido / 3600000);
+    minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
+    segundos = Math.floor((tempoDecorrido % 60000) / 1000);
+    atualizarTempoDisplay();
+
     cronometro = setInterval(() => {
-        segundos++;
-        if (segundos === 60) {
-            segundos = 0;
-            minutos++;
-        }
-        if (minutos === 60) {
-            minutos = 0;
-            horas++;
-        }
+        // Calcular o tempo decorrido desde o início
+        let tempoDecorrido = new Date().getTime() - horaInicio;
+
+        // Calcular horas, minutos e segundos
+        horas = Math.floor(tempoDecorrido / 3600000);
+        minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
+        segundos = Math.floor((tempoDecorrido % 60000) / 1000);
+
+        // Atualizar o display do tempo
         atualizarTempoDisplay();
     }, 1000);
+
     document.getElementById('btnIniciarTreino').disabled = true;
 
     // Atualizar a variável de controle e o localStorage
     cronometroIniciado = true;
     localStorage.setItem('cronometroIniciado', 'true');
+    localStorage.setItem('horaInicio', horaInicio);
 }
+    
 
-// Função para concluir o treino
-function concluirTreino() {
-    clearInterval(cronometro);
-    document.getElementById('btnIniciarTreino').disabled = false;
-    let diaDaSemana = new Date().getDay();
-    let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-
-    // Marcar como concluído
-    document.getElementById(dias[diaDaSemana]).textContent = '✅';
-    document.getElementById(dias[diaDaSemana]).style.color = 'green';
-
-    // Restante do código...
-
-    // Atualizar o LocalStorage
-    let tempoAnterior = localStorage.getItem(`${dias[diaDaSemana]}Tempo`) || '00:00:00';
-    let partesAnteriores = tempoAnterior.split(':');
-    let partesAtuais = document.getElementById('tempo-cronometro').textContent.split(':');
-    let totalSegundos = parseInt(partesAnteriores[2]) + parseInt(partesAtuais[2]);
-    let totalMinutos = parseInt(partesAnteriores[1]) + parseInt(partesAtuais[1]);
-    let totalHoras = parseInt(partesAnteriores[0]) + parseInt(partesAtuais[0]);
-    if (totalSegundos >= 60) {
-        totalSegundos -= 60;
-        totalMinutos++;
-    }
-    if (totalMinutos >= 60) {
-        totalMinutos -= 60;
-        totalHoras++;
-    }
-    let tempoTotal = `${formatarTempo(totalHoras)}:${formatarTempo(totalMinutos)}:${formatarTempo(totalSegundos)}`;
-    localStorage.setItem(`${dias[diaDaSemana]}Tempo`, tempoTotal);
-    document.getElementById('resultadoDia').textContent = `Treino Hoje: ${tempoTotal}`;
-    calcularTempoSemana();
-    segundos = 0;
-    minutos = 0;
-    horas = 0;
-
-    // Marcar no localStorage que o treino foi concluído
-    localStorage.setItem(dias[diaDaSemana], '✅');
-
-    // Chamar a função para marcar os dias não treinados com X
-    marcarDiasNaoTreinados();
-}
-
-// Função para calcular o tempo total de treino na semana
-function calcularTempoSemana() {
-    let totalSegundos = 0;
-    let dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
-    dias.forEach(dia => {
-        let tempo = localStorage.getItem(`${dia}Tempo`);
-        if (tempo) {
-            let partes = tempo.split(':');
-            totalSegundos += parseInt(partes[0]) * 3600 + parseInt(partes[1]) * 60 + parseInt(partes[2]);
-        }
-    });
-    let horas = Math.floor(totalSegundos / 3600);
-    totalSegundos %= 3600;
-    let minutos = Math.floor(totalSegundos / 60);
-    let segundos = totalSegundos % 60;
-    document.getElementById('resultadoSemana').textContent = `Tempo da Semana: ${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
-}
-
-
-// Função para marcar dias não treinados com um X
-function marcarDiasNaoTreinados() {
-    let diaDaSemana = new Date().getDay();
-    let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-    for (let i = 1; i < diaDaSemana; i++) {
-        let progresso = localStorage.getItem(dias[i]);
-        if (!progresso || progresso !== '✅') {
-            document.getElementById(dias[i]).textContent = 'X';
-            document.getElementById(dias[i]).style.color = 'red';
-            localStorage.setItem(dias[i], 'X');
-        }
-    }
-}
-
-// Reiniciar o progresso no final da semana
-function reiniciarProgresso() {
-    let diaDaSemana = new Date().getDay();
-    if (diaDaSemana === 0) {
+    // Função para concluir o treino
+    function concluirTreino() {
+        clearInterval(cronometro);
+        document.getElementById('btnIniciarTreino').disabled = false;
+        let diaDaSemana = new Date().getDay();
         let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-        dias.forEach(dia => {
-            localStorage.removeItem(dia);
-            localStorage.removeItem(`${dia}Tempo`);
-            document.getElementById(dia).textContent = '';
-        });
-        document.getElementById('resultadoDia').textContent = '';
-        document.getElementById('resultadoSemana').textContent = '';
+
+        // Marcar como concluído
+        document.getElementById(dias[diaDaSemana]).textContent = '✅';
+        document.getElementById(dias[diaDaSemana]).style.color = 'green';
+
+        // Restante do código...
+
+        // Atualizar o LocalStorage
+        let tempoAnterior = localStorage.getItem(`${dias[diaDaSemana]}Tempo`) || '00:00:00';
+        let partesAnteriores = tempoAnterior.split(':');
+        let partesAtuais = document.getElementById('tempo-cronometro').textContent.split(':');
+        let totalSegundos = parseInt(partesAnteriores[2]) + parseInt(partesAtuais[2]);
+        let totalMinutos = parseInt(partesAnteriores[1]) + parseInt(partesAtuais[1]);
+        let totalHoras = parseInt(partesAnteriores[0]) + parseInt(partesAtuais[0]);
+        if (totalSegundos >= 60) {
+            totalSegundos -= 60;
+            totalMinutos++;
+        }
+        if (totalMinutos >= 60) {
+            totalMinutos -= 60;
+            totalHoras++;
+        }
+        let tempoTotal = `${formatarTempo(totalHoras)}:${formatarTempo(totalMinutos)}:${formatarTempo(totalSegundos)}`;
+        localStorage.setItem(`${dias[diaDaSemana]}Tempo`, tempoTotal);
+        document.getElementById('resultadoDia').textContent = `Treino Hoje: ${tempoTotal}`;
+        calcularTempoSemana();
+        segundos = 0;
+        minutos = 0;
+        horas = 0;
+
+        // Marcar no localStorage que o treino foi concluído
+        localStorage.setItem(dias[diaDaSemana], '✅');
+
+        // Chamar a função para marcar os dias não treinados com X
+        marcarDiasNaoTreinados();
     }
-}
 
-// Carregar progresso do LocalStorage ao recarregar a página
-window.onload = function() {
-    let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+    // Função para calcular o tempo total de treino na semana
+    function calcularTempoSemana() {
+        let totalSegundos = 0;
+        let dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+        dias.forEach(dia => {
+            let tempo = localStorage.getItem(`${dia}Tempo`);
+            if (tempo) {
+                let partes = tempo.split(':');
+                totalSegundos += parseInt(partes[0]) * 3600 + parseInt(partes[1]) * 60 + parseInt(partes[2]);
+            }
+        });
+        let horas = Math.floor(totalSegundos / 3600);
+        totalSegundos %= 3600;
+        let minutos = Math.floor(totalSegundos / 60);
+        let segundos = totalSegundos % 60;
+        document.getElementById('resultadoSemana').textContent = `Tempo da Semana: ${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
+    }
 
-    dias.forEach(dia => {
-        let progresso = localStorage.getItem(dia);
-        if (progresso) {
-            document.getElementById(dia).textContent = progresso;
-            if (progresso === '✅') {
-                document.getElementById(dia).style.color = 'green';
-            } else if (progresso === 'X') {
-                document.getElementById(dia).style.color = 'red';
+
+    // Função para marcar dias não treinados com um X
+    function marcarDiasNaoTreinados() {
+        let diaDaSemana = new Date().getDay();
+        let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+        for (let i = 1; i < diaDaSemana; i++) {
+            let progresso = localStorage.getItem(dias[i]);
+            if (!progresso || progresso !== '✅') {
+                document.getElementById(dias[i]).textContent = 'X';
+                document.getElementById(dias[i]).style.color = 'red';
+                localStorage.setItem(dias[i], 'X');
             }
         }
-    });
-
-    // Chamar a função para iniciar o cronômetro se estiver ativo
-    iniciarCronometroSeAtivo();
-
-    // Marcar os dias não treinados com X
-    marcarDiasNaoTreinados();
-};
-
-function iniciarCronometroSeAtivo() {
-    let estadoArmazenado = localStorage.getItem('tempoEstado');
-    if (estadoArmazenado && estadoArmazenado !== 'null' && !cronometroIniciado) {
-        let estado = JSON.parse(estadoArmazenado);
-        segundos = estado.segundos;
-        minutos = estado.minutos;
-        horas = estado.horas;
-        atualizarTempoDisplay();
-        iniciarTreino(); // Iniciar o cronômetro se o estado estiver ativo
-        cronometroIniciado = true; // Atualizar a variável de controle
-        localStorage.setItem('cronometroIniciado', 'true'); // Armazenar o estado do cronômetro
     }
-}
+
+    // Reiniciar o progresso no final da semana
+    function reiniciarProgresso() {
+        let diaDaSemana = new Date().getDay();
+        if (diaDaSemana === 0) {
+            let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+            dias.forEach(dia => {
+                localStorage.removeItem(dia);
+                localStorage.removeItem(`${dia}Tempo`);
+                document.getElementById(dia).textContent = '';
+            });
+            document.getElementById('resultadoDia').textContent = '';
+            document.getElementById('resultadoSemana').textContent = '';
+        }
+    }
+
+    // Carregar progresso do LocalStorage ao recarregar a página
+    window.onload = function() {
+        let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+
+        dias.forEach(dia => {
+            let progresso = localStorage.getItem(dia);
+            if (progresso) {
+                document.getElementById(dia).textContent = progresso;
+                if (progresso === '✅') {
+                    document.getElementById(dia).style.color = 'green';
+                } else if (progresso === 'X') {
+                    document.getElementById(dia).style.color = 'red';
+                }
+            }
+        });
+
+        // Chamar a função para iniciar o cronômetro se estiver ativo
+        iniciarCronometroSeAtivo();
+
+        // Marcar os dias não treinados com X
+        marcarDiasNaoTreinados();
+    };
+
+    function iniciarCronometroSeAtivo() {
+        let estadoArmazenado = localStorage.getItem('tempoEstado');
+        if (estadoArmazenado && estadoArmazenado !== 'null' && !cronometroIniciado) {
+            let estado = JSON.parse(estadoArmazenado);
+            segundos = estado.segundos;
+            minutos = estado.minutos;
+            horas = estado.horas;
+            atualizarTempoDisplay();
+            iniciarTreino(); // Iniciar o cronômetro se o estado estiver ativo
+            cronometroIniciado = true; // Atualizar a variável de controle
+            localStorage.setItem('cronometroIniciado', 'true'); // Armazenar o estado do cronômetro
+        }
+    }
+</script>
+
+<script>
+    function marcarConcluido(botao) {
+        botao.innerHTML = 'Concluído';
+        botao.style.backgroundColor = '#008000';  // Cor verde após clicar
+        botao.style.color = '#ffffff';  // Texto branco após clicar
+        botao.disabled = true;  // Desativa o botão após ser concluído
+        }
+
 </script>
     
-    <script>
-        function marcarConcluido(botao) {
-            botao.innerHTML = 'Concluído';
-            botao.style.backgroundColor = '#008000';  // Cor verde após clicar
-            botao.style.color = '#ffffff';  // Texto branco após clicar
-            botao.disabled = true;  // Desativa o botão após ser concluído
-            }
-
-    </script>
-   
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/parallax.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/wow.js') }}"></script>
-</div>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/parallax.js') }}"></script>
+<script src="{{ url_for('static', filename='js/wow.js') }}"></script>
 </body>
 </html>
