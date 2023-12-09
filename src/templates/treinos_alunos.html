@@ -142,39 +142,27 @@
         </div>   
     </div> 
 <script>
-        // Inicializando o cronômetro
-    let cronometro;
-    let segundos = 0;
-    let minutos = 0;
-    let horas = 0;
-    // Variável para verificar se o cronômetro foi iniciado anteriormente
-    let cronometroIniciado = localStorage.getItem('cronometroIniciado') === 'true';
-    // Adicionar variáveis para armazenar a hora de início e ajustar o tempo decorrido
-    let horaInicio;
+   // Variáveis do cronômetro
+let cronometro;
+let segundos = 0;
+let minutos = 0;
+let horas = 0;
+let cronometroIniciado = localStorage.getItem('cronometroIniciado') === 'true';
+let horaInicio;
 
-    // Função para formatar o tempo
-    function formatarTempo(tempo) {
-        if (tempo >= 100) {
-            return tempo.toString(); // Se for maior que 99 horas, retornar diretamente
-        } else {
-            return tempo < 10 ? `0${tempo}` : tempo.toString();
-        }
-    }
+// Função para formatar o tempo
+function formatarTempo(tempo) {
+    return tempo < 10 ? `0${tempo}` : tempo.toString();
+}
 
+// Função para atualizar o display do tempo
+function atualizarTempoDisplay() {
+    document.getElementById('tempo-cronometro').textContent = `${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
+}
 
-
-    // Função para atualizar o display do tempo
-    function atualizarTempoDisplay() {
-        document.getElementById('tempo-cronometro').textContent = `${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
-    }
-
-
-    // Função para iniciar o treino
+// Função para iniciar o treino
 function iniciarTreino() {
-    // Obter a hora de início armazenada
     horaInicio = parseInt(localStorage.getItem('horaInicio')) || new Date().getTime();
-
-    // Atualizar o display do tempo ao retomar
     let tempoDecorrido = new Date().getTime() - horaInicio;
     horas = Math.floor(tempoDecorrido / 3600000);
     minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
@@ -182,161 +170,178 @@ function iniciarTreino() {
     atualizarTempoDisplay();
 
     cronometro = setInterval(() => {
-        // Calcular o tempo decorrido desde o início
-        let tempoDecorrido = new Date().getTime() - horaInicio;
-
-        // Calcular horas, minutos e segundos
         horas = Math.floor(tempoDecorrido / 3600000);
         minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
         segundos = Math.floor((tempoDecorrido % 60000) / 1000);
-
-        // Atualizar o display do tempo
         atualizarTempoDisplay();
+        tempoDecorrido += 1000;
     }, 1000);
 
     document.getElementById('btnIniciarTreino').disabled = true;
 
-    // Atualizar a variável de controle e o localStorage
     cronometroIniciado = true;
     localStorage.setItem('cronometroIniciado', 'true');
     localStorage.setItem('horaInicio', horaInicio);
 }
-    
 
-   // Função para concluir o treino
+// Função para concluir o treino
 function concluirTreino() {
     clearInterval(cronometro);
     document.getElementById('btnIniciarTreino').disabled = false;
     let diaDaSemana = new Date().getDay();
-    let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+    let dias = [ 'segunda', 'terca', 'quarta', 'quinta', 'sexta'];
 
-    // Marcar como concluído
-    document.getElementById(dias[diaDaSemana]).textContent = '✅';
-    document.getElementById(dias[diaDaSemana]).style.color = 'green';
-
-    // Restante do código...
-
-    // Atualizar o LocalStorage
-    let tempoAnterior = localStorage.getItem(`${dias[diaDaSemana]}Tempo`) || '00:00:00';
-    let partesAnteriores = tempoAnterior.split(':');
-    let partesAtuais = document.getElementById('tempo-cronometro').textContent.split(':');
-    let totalSegundos = parseInt(partesAnteriores[2]) + parseInt(partesAtuais[2]);
-    let totalMinutos = parseInt(partesAnteriores[1]) + parseInt(partesAtuais[1]);
-    let totalHoras = parseInt(partesAnteriores[0]) + parseInt(partesAtuais[0]);
-    if (totalSegundos >= 60) {
-        totalSegundos -= 60;
-        totalMinutos++;
+    let elementoDia = document.getElementById(dias[diaDaSemana]);
+    if (elementoDia) {
+        elementoDia.textContent = '✅';
+        elementoDia.style.color = 'green';
     }
-    if (totalMinutos >= 60) {
-        totalMinutos -= 60;
-        totalHoras++;
-    }
-    let tempoTotal = `${formatarTempo(totalHoras)}:${formatarTempo(totalMinutos)}:${formatarTempo(totalSegundos)}`;
-    localStorage.setItem(`${dias[diaDaSemana]}Tempo`, tempoTotal);
-    document.getElementById('resultadoDia').textContent = `Treino Hoje: ${tempoTotal}`;
-    calcularTempoSemana();
-    segundos = 0;
-    minutos = 0;
-    horas = 0;
 
-    // Marcar no localStorage que o treino foi concluído
+    let elementoTempo = document.getElementById('tempo-cronometro');
+    if (elementoTempo) {
+        let tempoAnterior = localStorage.getItem(`${dias[diaDaSemana]}Tempo`) || '00:00:00';
+        let partesAnteriores = tempoAnterior.split(':');
+        let totalSegundos = parseInt(partesAnteriores[2]) + segundos;
+        let totalMinutos = parseInt(partesAnteriores[1]) + minutos;
+        let totalHoras = parseInt(partesAnteriores[0]) + horas;
+
+        if (totalSegundos >= 60) {
+            totalSegundos -= 60;
+            totalMinutos++;
+        }
+        if (totalMinutos >= 60) {
+            totalMinutos -= 60;
+            totalHoras++;
+        }
+
+        let tempoTotal = `${formatarTempo(totalHoras)}:${formatarTempo(totalMinutos)}:${formatarTempo(totalSegundos)}`;
+        localStorage.setItem(`${dias[diaDaSemana]}Tempo`, tempoTotal);
+
+        let elementoResultadoDia = document.getElementById('resultadoDia');
+        if (elementoResultadoDia) {
+            elementoResultadoDia.textContent = `Treino Hoje: ${tempoTotal}`;
+        }
+
+        calcularTempoSemana();
+    }
+
     localStorage.setItem(dias[diaDaSemana], '✅');
 
-    // Chamar a função para marcar os dias não treinados com X
-    marcarDiasNaoTreinados();
-
-    // Zerar o cronômetro
-    clearInterval(cronometro);
-    document.getElementById('tempo-cronometro').textContent = '00:00:00';
+    horas = 0;
+    minutos = 0;
+    segundos = 0;
+    atualizarTempoDisplay();
     cronometroIniciado = false;
     localStorage.setItem('cronometroIniciado', 'false');
     localStorage.removeItem('horaInicio');
+
+    // Reiniciar o progresso no final da semana (sábado)
+    reiniciarProgresso();
 }
 
-    // Função para calcular o tempo total de treino na semana
-    function calcularTempoSemana() {
-        let totalSegundos = 0;
-        let dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
-        dias.forEach(dia => {
-            let tempo = localStorage.getItem(`${dia}Tempo`);
-            if (tempo) {
-                let partes = tempo.split(':');
-                totalSegundos += parseInt(partes[0]) * 3600 + parseInt(partes[1]) * 60 + parseInt(partes[2]);
-            }
-        });
-        let horas = Math.floor(totalSegundos / 3600);
-        totalSegundos %= 3600;
-        let minutos = Math.floor(totalSegundos / 60);
-        let segundos = totalSegundos % 60;
-        document.getElementById('resultadoSemana').textContent = `Tempo da Semana: ${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
-    }
+// Função para calcular o tempo total de treino na semana
+function calcularTempoSemana() {
+    let totalSegundos = 0;
+    let dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+    dias.forEach(dia => {
+        let tempo = localStorage.getItem(`${dia}Tempo`);
+        if (tempo) {
+            let partes = tempo.split(':');
+            totalSegundos += parseInt(partes[0]) * 3600 + parseInt(partes[1]) * 60 + parseInt(partes[2]);
+        }
+    });
+    let horas = Math.floor(totalSegundos / 3600);
+    totalSegundos %= 3600;
+    let minutos = Math.floor(totalSegundos / 60);
+    let segundos = totalSegundos % 60;
+    document.getElementById('resultadoSemana').textContent = `Tempo da Semana: ${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
+}
 
-
-    // Função para marcar dias não treinados com um X
-    function marcarDiasNaoTreinados() {
-        let diaDaSemana = new Date().getDay();
-        let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+function marcarDiasNaoTreinados() {
+    let diaDaSemana = new Date().getDay();
+    let dias = [ 'segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+    
+    // Verifica se o dia da semana é válido
+    if (diaDaSemana >= 1 && diaDaSemana <= 5) {
         for (let i = 1; i < diaDaSemana; i++) {
             let progresso = localStorage.getItem(dias[i]);
-            if (!progresso || progresso !== '✅') {
-                document.getElementById(dias[i]).textContent = 'X';
-                document.getElementById(dias[i]).style.color = 'red';
+            let elementoDia = document.getElementById(dias[i]);
+            if (elementoDia && (!progresso || progresso !== '✅')) {
+                elementoDia.textContent = 'X';
+                elementoDia.style.color = 'red';
                 localStorage.setItem(dias[i], 'X');
             }
         }
     }
+}
 
-    // Reiniciar o progresso no final da semana
-    function reiniciarProgresso() {
-        let diaDaSemana = new Date().getDay();
-        if (diaDaSemana === 0) {
-            let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-            dias.forEach(dia => {
-                localStorage.removeItem(dia);
-                localStorage.removeItem(`${dia}Tempo`);
-                document.getElementById(dia).textContent = '';
-            });
-            document.getElementById('resultadoDia').textContent = '';
-            document.getElementById('resultadoSemana').textContent = '';
-        }
-    }
 
-    // Carregar progresso do LocalStorage ao recarregar a página
-    window.onload = function() {
+function reiniciarProgresso() {
+    let diaDaSemana = new Date().getDay();
+
+    // Verifica se o dia da semana é sábado (6) ou domingo (0)
+    if (diaDaSemana === 0 ) {
         let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
 
         dias.forEach(dia => {
-            let progresso = localStorage.getItem(dia);
-            if (progresso) {
-                document.getElementById(dia).textContent = progresso;
-                if (progresso === '✅') {
-                    document.getElementById(dia).style.color = 'green';
-                } else if (progresso === 'X') {
-                    document.getElementById(dia).style.color = 'red';
-                }
+            let elementoDia = document.getElementById(dia);
+
+            // Verifica se o elemento está presente antes de tentar acessá-lo
+            if (elementoDia) {
+                localStorage.removeItem(dia);
+                localStorage.removeItem(`${dia}Tempo`);
+                elementoDia.textContent = '';
             }
         });
 
-        // Chamar a função para iniciar o cronômetro se estiver ativo
-        iniciarCronometroSeAtivo();
+        let elementoResultadoDia = document.getElementById('resultadoDia');
+        if (elementoResultadoDia) {
+            elementoResultadoDia.textContent = '';
+        }
 
-        // Marcar os dias não treinados com X
-        marcarDiasNaoTreinados();
-    };
-
-    function iniciarCronometroSeAtivo() {
-        let estadoArmazenado = localStorage.getItem('tempoEstado');
-        if (estadoArmazenado && estadoArmazenado !== 'null' && !cronometroIniciado) {
-            let estado = JSON.parse(estadoArmazenado);
-            segundos = estado.segundos;
-            minutos = estado.minutos;
-            horas = estado.horas;
-            atualizarTempoDisplay();
-            iniciarTreino(); // Iniciar o cronômetro se o estado estiver ativo
-            cronometroIniciado = true; // Atualizar a variável de controle
-            localStorage.setItem('cronometroIniciado', 'true'); // Armazenar o estado do cronômetro
+        let elementoResultadoSemana = document.getElementById('resultadoSemana');
+        if (elementoResultadoSemana) {
+            elementoResultadoSemana.textContent = '';
         }
     }
+}
+
+// Carregar progresso do LocalStorage ao recarregar a página
+window.onload = function () {
+    let dias = [ 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+
+    dias.forEach(dia => {
+        let progresso = localStorage.getItem(dia);
+        if (progresso) {
+            document.getElementById(dia).textContent = progresso;
+            if (progresso === '✅') {
+                document.getElementById(dia).style.color = 'green';
+            } else if (progresso === 'X') {
+                document.getElementById(dia).style.color = 'red';
+            }
+        }
+    });
+
+    iniciarCronometroSeAtivo();
+
+    marcarDiasNaoTreinados();
+};
+
+// Função para iniciar o cronômetro se estiver ativo
+function iniciarCronometroSeAtivo() {
+    let estadoArmazenado = localStorage.getItem('tempoEstado');
+    if (estadoArmazenado && estadoArmazenado !== 'null' && !cronometroIniciado) {
+        let estado = JSON.parse(estadoArmazenado);
+        segundos = estado.segundos;
+        minutos = estado.minutos;
+        horas = estado.horas;
+        atualizarTempoDisplay();
+        iniciarTreino();
+        cronometroIniciado = true;
+        localStorage.setItem('cronometroIniciado', 'true');
+    }
+}
+
 </script>
 
 <script>
