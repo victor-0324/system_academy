@@ -203,48 +203,55 @@ function iniciarTreino() {
 }
     
 
-    // Função para concluir o treino
-    function concluirTreino() {
-        clearInterval(cronometro);
-        document.getElementById('btnIniciarTreino').disabled = false;
-        let diaDaSemana = new Date().getDay();
-        let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+   // Função para concluir o treino
+function concluirTreino() {
+    clearInterval(cronometro);
+    document.getElementById('btnIniciarTreino').disabled = false;
+    let diaDaSemana = new Date().getDay();
+    let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
 
-        // Marcar como concluído
-        document.getElementById(dias[diaDaSemana]).textContent = '✅';
-        document.getElementById(dias[diaDaSemana]).style.color = 'green';
+    // Marcar como concluído
+    document.getElementById(dias[diaDaSemana]).textContent = '✅';
+    document.getElementById(dias[diaDaSemana]).style.color = 'green';
 
-        // Restante do código...
+    // Restante do código...
 
-        // Atualizar o LocalStorage
-        let tempoAnterior = localStorage.getItem(`${dias[diaDaSemana]}Tempo`) || '00:00:00';
-        let partesAnteriores = tempoAnterior.split(':');
-        let partesAtuais = document.getElementById('tempo-cronometro').textContent.split(':');
-        let totalSegundos = parseInt(partesAnteriores[2]) + parseInt(partesAtuais[2]);
-        let totalMinutos = parseInt(partesAnteriores[1]) + parseInt(partesAtuais[1]);
-        let totalHoras = parseInt(partesAnteriores[0]) + parseInt(partesAtuais[0]);
-        if (totalSegundos >= 60) {
-            totalSegundos -= 60;
-            totalMinutos++;
-        }
-        if (totalMinutos >= 60) {
-            totalMinutos -= 60;
-            totalHoras++;
-        }
-        let tempoTotal = `${formatarTempo(totalHoras)}:${formatarTempo(totalMinutos)}:${formatarTempo(totalSegundos)}`;
-        localStorage.setItem(`${dias[diaDaSemana]}Tempo`, tempoTotal);
-        document.getElementById('resultadoDia').textContent = `Treino Hoje: ${tempoTotal}`;
-        calcularTempoSemana();
-        segundos = 0;
-        minutos = 0;
-        horas = 0;
-
-        // Marcar no localStorage que o treino foi concluído
-        localStorage.setItem(dias[diaDaSemana], '✅');
-
-        // Chamar a função para marcar os dias não treinados com X
-        marcarDiasNaoTreinados();
+    // Atualizar o LocalStorage
+    let tempoAnterior = localStorage.getItem(`${dias[diaDaSemana]}Tempo`) || '00:00:00';
+    let partesAnteriores = tempoAnterior.split(':');
+    let partesAtuais = document.getElementById('tempo-cronometro').textContent.split(':');
+    let totalSegundos = parseInt(partesAnteriores[2]) + parseInt(partesAtuais[2]);
+    let totalMinutos = parseInt(partesAnteriores[1]) + parseInt(partesAtuais[1]);
+    let totalHoras = parseInt(partesAnteriores[0]) + parseInt(partesAtuais[0]);
+    if (totalSegundos >= 60) {
+        totalSegundos -= 60;
+        totalMinutos++;
     }
+    if (totalMinutos >= 60) {
+        totalMinutos -= 60;
+        totalHoras++;
+    }
+    let tempoTotal = `${formatarTempo(totalHoras)}:${formatarTempo(totalMinutos)}:${formatarTempo(totalSegundos)}`;
+    localStorage.setItem(`${dias[diaDaSemana]}Tempo`, tempoTotal);
+    document.getElementById('resultadoDia').textContent = `Treino Hoje: ${tempoTotal}`;
+    calcularTempoSemana();
+    segundos = 0;
+    minutos = 0;
+    horas = 0;
+
+    // Marcar no localStorage que o treino foi concluído
+    localStorage.setItem(dias[diaDaSemana], '✅');
+
+    // Chamar a função para marcar os dias não treinados com X
+    marcarDiasNaoTreinados();
+
+    // Zerar o cronômetro
+    clearInterval(cronometro);
+    document.getElementById('tempo-cronometro').textContent = '00:00:00';
+    cronometroIniciado = false;
+    localStorage.setItem('cronometroIniciado', 'false');
+    localStorage.removeItem('horaInicio');
+}
 
     // Função para calcular o tempo total de treino na semana
     function calcularTempoSemana() {
