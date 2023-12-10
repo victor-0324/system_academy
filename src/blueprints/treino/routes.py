@@ -4,8 +4,11 @@ from src.database.querys import Querys
 from functools import wraps
 from src.database.config import DBConnectionHandler, db
 from src.database.models import Aluno
+from datetime import datetime
 
 treino_app = Blueprint("treino_app", __name__, url_prefix="/treino", template_folder='templates', static_folder='static')
+def formatar_data(data):
+    return datetime.strptime(data, "%Y-%m-%d").strftime("%d/%m/%Y")
 
 
 def treino_required(func):
@@ -46,7 +49,7 @@ def evolucao(aluno_id):
         historico_medidas_peso = aluno.historico_medidas_peso
         historico_depois = [historico[-1]]  
        
-        return render_template('evolucao.html', historico_medidas_peso=historico_medidas_peso, historico_depois=historico_depois)
+        return render_template('evolucao.html', historico_medidas_peso=historico_medidas_peso, historico_depois=historico_depois,formatar_data=formatar_data)
     else:
         # Retorna uma página de erro 404
         abort(404) 
