@@ -189,7 +189,7 @@
         clearInterval(cronometro);
         document.getElementById('btnIniciarTreino').disabled = false;
         let diaDaSemana = new Date().getDay();
-        let dias = [ 'segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+        let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
 
         let elementoDia = document.getElementById(dias[diaDaSemana]);
         if (elementoDia) {
@@ -308,7 +308,7 @@
 
     // Carregar progresso do LocalStorage ao recarregar a página
     window.onload = function () {
-        let dias = [ 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+        let dias = [ 'domingo','segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
 
         dias.forEach(dia => {
             let progresso = localStorage.getItem(dia);
