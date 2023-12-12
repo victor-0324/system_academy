@@ -7,8 +7,13 @@ from src.database.models import Aluno
 from datetime import datetime
 
 treino_app = Blueprint("treino_app", __name__, url_prefix="/treino", template_folder='templates', static_folder='static')
+
+
 def formatar_data(data):
+    if data is None:
+        return "Inicio Da Evolução"
     return datetime.strptime(data, "%Y-%m-%d").strftime("%d/%m/%Y")
+
 
 
 def treino_required(func):

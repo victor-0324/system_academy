@@ -18,29 +18,38 @@
 <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll">
     <nav class="navbar navbar-expand-md navbar-dark">
         <div class="container"> 
-        <!-- Brand --> 
-        <a class="navbar-brand mr-auto" href="/">
-            <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
-        </a>
-        <!-- Toggler/collapsibe Button -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
-        
-        <!-- Navbar links -->
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav ml-auto">
-            <li class="nav-item"> <a class="nav-link" href="/treino/evolucao/{{ current_user.id }}">Evolução</a> </li>
-            </ul>
-            <ul class="navbar-nav ml-5">
-            <li class="nav-item">
-                <a class="nav-link " href="/login/logout">
-                    Sair
-                </a>
-            </li>
-        </ul>            
-            <!-- <ul class="navbar-nav ml-5">
-            <li class="nav-item"> <a class="nav-link btn btn-danger" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> </li>
-            </ul> -->
-        </div>
+            <!-- Brand --> 
+            <a class="navbar-brand mr-auto" href="/">
+                <img src="/static/images/Enovare.jpg" alt="Enovare" style="width: 150px; height: 40px;">
+            </a>
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <span class="navbar-toggler-icon"></span> </button>
+            
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"> 
+                        <a class="nav-link" href="/treino/evolucao/{{ current_user.id }}">
+                            Evolução
+                        </a> 
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-5">
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="confirmarReinicio()">
+                            Reiniciar
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="/login/logout">
+                            Sair
+                        </a>
+                    </li>
+                </ul>            
+                <!-- <ul class="navbar-nav ml-5">
+                <li class="nav-item"> <a class="nav-link btn btn-danger" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> </li>
+                </ul> -->
+            </div>
         </div>
     </nav>
     <br>
@@ -51,6 +60,7 @@
                     <h3> TREINOS </h3>
                     <h4 class="card-title">{{ current_user.nome }} </h4>
                 </div>
+                
                 <div class="desafio-container">
                 <h2>Progresso Semanal</h2>
                     <div class="container">
@@ -272,6 +282,40 @@
                     localStorage.setItem(dias[i], 'X');
                 }
             }
+        }
+    }
+
+    function reiniciar() {
+        let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+
+        dias.forEach(dia => {
+            let elementoDia = document.getElementById(dia);
+
+            if (elementoDia) {
+                localStorage.removeItem(dia);
+                localStorage.removeItem(`${dia}Tempo`);
+                elementoDia.textContent = '';
+            }
+        });
+
+        let elementoResultadoDia = document.getElementById('resultadoDia');
+        if (elementoResultadoDia) {
+            elementoResultadoDia.textContent = '';
+        }
+
+        let elementoResultadoSemana = document.getElementById('resultadoSemana');
+        if (elementoResultadoSemana) {
+            elementoResultadoSemana.textContent = '';
+        }
+    }
+
+    function confirmarReinicio() {
+        // Adiciona uma janela de confirmação
+        let confirmacao = confirm("Tem certeza de que deseja reiniciar o progresso? Isso não pode ser desfeito.");
+
+        // Se o usuário confirmar, então reinicia o progresso
+        if (confirmacao) {
+            reiniciar();
         }
     }
 

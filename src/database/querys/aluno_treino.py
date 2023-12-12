@@ -116,7 +116,7 @@ class Querys():
             aluno_antes = Aluno()
             aluno_antes.__dict__.update(aluno.__dict__)
             aluno_antes.medidas_antes = historico_antes[:-1]
-            print(exercicios)
+          
             # Restringir a atualização apenas para medidas válidas
             if peso is not None and ombro is not None:
                 aluno.peso = peso
@@ -140,7 +140,7 @@ class Querys():
                 aluno.senha = senha
                 aluno.data_atualizacao = datetime.utcnow()
 
-                print(exercicios)
+               
                 if exercicios:
                     aluno.exercicios.clear()
                     for exercicio_info in exercicios:
