@@ -130,16 +130,22 @@
                                     <td>{{ value_antes }}</td>
                                     <td>
                                         {% if historico_depois[0][key] is defined and value_antes is defined %}
-                                            {{ historico_depois[0][key] }}
-                                            {% set ganho = historico_depois[0][key]|float - value_antes|float %}
-                                            {% set perda = value_antes|float - historico_depois[0][key]|float %}
-                                            {% if ganho > 0 %}
-                                                <span class="badge bg-success">Ganho: {{ ganho|round(2) }}</span>
-                                            {% elif perda > 0 %}
-                                                <span class="badge bg-danger">Perda: {{ perda|round(2) }}</span>
-                                            {% else %}
-                                                <span class="badge bg-warning">Sem alteração</span>
-                                            {% endif %}
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    {{ historico_depois[0][key] }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {% set ganho = historico_depois[0][key]|float - value_antes|float %}
+                                                    {% set perda = value_antes|float - historico_depois[0][key]|float %}
+                                                    {% if ganho > 0 %}
+                                                        <span class="badge bg-success">Ganho: {{ ganho|round(2) }}</span>
+                                                    {% elif perda > 0 %}
+                                                        <span class="badge bg-danger">Perda: {{ perda|round(2) }}</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning">Sem alteração</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
                                         {% else %}
                                             <span class="badge bg-warning">Sem dados disponíveis</span>
                                         {% endif %}
@@ -156,7 +162,7 @@
                 <canvas id="graficoPeso" width="400" height="200"></canvas>
             </div>
         </main>
-<!-- Adicione o seguinte bloco de código para o gráfico -->
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -164,12 +170,12 @@
         var ctxPeso = document.getElementById('graficoPeso').getContext('2d');
 
         var data = {
-            labels: ['Peso', 'Ombro D', 'Ombro E', 'Torax', 'Braço D', 'Braço E', 'Ant D', 'Ant E', 'Cintura', 'Abdome', 'Quadril', 'Coxa D', 'Coxa E', 'Pant D', 'Pant E'],
+            labels: ['Peso', 'ombro', 'Torax', 'Braço D', 'Braço E', 'Ant D', 'Ant E', 'Cintura', 'Abdome', 'Quadril', 'Coxa D', 'Coxa E', 'Pant D', 'Pant E'],
             datasets: [
                 {
                     label: 'Antes',
-                    backgroundColor: 'rgba(75, 192, 192, 1)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: '#F0941F', // torna a barra transparente
+                    borderColor: '#196774',
                     borderWidth: 1,
                     data: [
                         {% if historico_medidas_peso[0] %}
@@ -195,13 +201,12 @@
                 },
                 {
                     label: 'Depois',
-                    backgroundColor: 'rgb(32, 134, 55)',
-                    borderColor: 'rgb(32, 134, 55)',
+                    backgroundColor: '#EF6024',
+                    borderColor: '#363432',
                     borderWidth: 1,
                     data: [
                         {{ historico_depois[0]['peso'] }},
                         {{ historico_depois[0]['ombro'] }},
-                        
                         {{ historico_depois[0]['torax'] }},
                         {{ historico_depois[0]['braco_d'] }},
                         {{ historico_depois[0]['braco_e'] }},
