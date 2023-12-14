@@ -43,10 +43,19 @@
             background-color: #f2f2f2;
         }
 
-        .badge {
-            margin-left: 5px;
+        .badge_ {
+            margin-left: 6px;
+            Color: #F24405;
         }
 
+        .badge__ {
+            margin-left: 6px;
+            Color: #F0941F;
+        }
+        .badge___ {
+            margin-left: 6px;
+            Color: #22BABB;
+        }
         /* Adaptação para dispositivos móveis */
         @media (max-width: 767px) {
             .table th, .table td {
@@ -138,11 +147,11 @@
                                                     {% set ganho = historico_depois[0][key]|float - value_antes|float %}
                                                     {% set perda = value_antes|float - historico_depois[0][key]|float %}
                                                     {% if ganho > 0 %}
-                                                        <span class="badge bg-success">Ganho: {{ ganho|round(2) }}</span>
+                                                        <span class="badge_ "> + {{ ganho|round(2) }}</span>
                                                     {% elif perda > 0 %}
-                                                        <span class="badge bg-danger">Perda: {{ perda|round(2) }}</span>
+                                                        <span class="badge__ "> - {{ perda|round(2) }}</span>
                                                     {% else %}
-                                                        <span class="badge bg-warning">Sem alteração</span>
+                                                        <span class="badge___ "> 0.0 </span>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -174,7 +183,7 @@
             datasets: [
                 {
                     label: 'Antes',
-                    backgroundColor: '#F0941F', // torna a barra transparente
+                    backgroundColor: '#F0941F', 
                     borderColor: '#196774',
                     borderWidth: 1,
                     data: [

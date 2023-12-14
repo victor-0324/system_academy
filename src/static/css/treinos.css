@@ -24,24 +24,24 @@
     justify-content: space-between;
 }
 
-.botoes button {
-    padding: 10px;
-    background-color: #F28907; /* Nova cor do botão */
-    color: #000;
-    border: none;
-    border-radius: 5px; /* Bordas mais arredondadas */
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-right: 15px; /* Adiciona um pequeno espaço entre os botões */
-}
+  .botoes button {
+      padding: 10px;
+      background-color: #F28907; /* Nova cor do botão */
+      color: #000;
+      border: none;
+      border-radius: 15px; /* Bordas mais arredondadas */
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-right: 10px; /* Adiciona um pequeno espaço entre os botões */
+  }
 
-.botoes button:last-child {
-    margin-right: 0; /* Remove a margem direita do último botão para evitar excesso de espaço */
-}
+  .botoes button:last-child {
+      margin-right: 0; /* Remove a margem direita do último botão para evitar excesso de espaço */
+  }
 
-.botoes button:hover {
-    background-color: #D57706; /* Cor de fundo mais escura ao passar o mouse */
-}
+  .botoes button:hover {
+      background-color: #D57706; /* Cor de fundo mais escura ao passar o mouse */
+  }
   
   .table {
     width: 100%;
@@ -58,7 +58,16 @@
   .cronometro-estiloso {
     text-align: center;
 }
-
+  .treino {
+    padding: 10px;
+      background-color: #F28907; /* Nova cor do botão */
+      color: #000;
+      border: none;
+      border-radius: 15px; /* Bordas mais arredondadas */
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-right: 10px; 
+  }
 #tempo-cronometro {
     font-size: 2em;
     color: #4CAF50; /* Cor verde para destacar */
