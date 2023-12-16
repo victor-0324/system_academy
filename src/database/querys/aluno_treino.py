@@ -3,7 +3,7 @@ from src.database.models import Aluno, ExerciciosAluno
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.database.config import db_connector, DBConnectionHandler
 from sqlalchemy.orm import joinedload, load_only
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Querys():
    
@@ -77,6 +77,10 @@ class Querys():
         data_entrada = datetime.strptime(data_entrada, '%Y-%m-%d') if data_entrada else None
         data_pagamento = datetime.strptime(data_pagamento, '%Y-%m-%d') if data_pagamento else None
 
+        # Configurando a data de pagamento para a data de entrada
+        if data_pagamento is None:
+            data_pagamento = data_entrada
+
         aluno = Aluno(
             nome=nome, idade=idade, sexo=sexo, peso=peso,
             ombro=ombro,torax=torax, braco_d=braco_d, braco_e=braco_e, ant_d=ant_d, ant_e=ant_e,cintura=cintura,
@@ -86,7 +90,7 @@ class Querys():
             data_pagamento=data_pagamento,
             jatreino=jatreino, permissao=permissao
         )
-    # Adiciona o aluno ao histórico antes de fazer o commit
+     # Adiciona o aluno ao histórico antes de fazer o commit
         historico_antes = aluno.medidas_historico()
         aluno.historico_medidas_peso = self._converter_datas_para_string(historico_antes)
         
@@ -102,12 +106,8 @@ class Querys():
                 carga=exercicio.get('carga', '')
             )
             aluno.exercicios.append(exercicio_aluno)
-        
-
         self.session.commit()
-
         return aluno
-   
     def atualizar_dados(self, aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios):
         aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
         historico_antes = aluno.medidas_historico()
@@ -176,4 +176,3 @@ class Querys():
             medida_str = {key: value.strftime('%Y-%m-%d') if isinstance(value, datetime) else value for key, value in medida.items()}
             historico_str.append(medida_str)
         return historico_str
-

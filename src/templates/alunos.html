@@ -14,12 +14,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
 </head>
-    <title>Lista de Alunos</title>
+    <title>Alunos</title>
 </head>
-
 <body class="dark-theme">
     <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
-
     <nav class="navbar navbar-expand-md navbar-dark">
         <div class="container"> 
         <!-- Brand --> 
@@ -41,19 +39,15 @@
                     </a>
                 </li>
             </ul>
-
-      
         </div>
         </div>
     </nav>
-    
     <main>
-        <h1 class="titulo-pagina">Lista de Alunos</h1>
+        <h1 class="titulo-pagina">Lista dos Alunos</h1>
         <div class="pesquisa-alunos">
             <label for="pesquisa">Pesquisar:</label>
             <input type="text" id="pesquisa" placeholder="Digite o nome do aluno">
         </div>
-    
         <div class="resultados-pesquisa">
             
             <ul id="listaPesquisa"></ul>
@@ -62,24 +56,33 @@
         <div class="informacoes-gerais">
             <p>Total de Alunos Cadastrados: {{ quantidade_alunos }}</p>
         </div>
-        
         <div class="tabela-alunos">
             <table>
                 <thead>
                     <tr>
                         <th>Nome</th>
+                        <th>Status</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaAlunosBody">
-                    {% for aluno in alunos %}
+                    {% for i in range(quantidade_alunos) %}
                     <tr>
-                        <td>{{ aluno.nome }}</td>
+                        <td>{{ alunos[i].nome }}</td>
                         <td>
-                            <a href="detalhes/{{ aluno.id }}">
+                            {% if inadimplente_list[i] %}
+                                <span class="text-danger">Inadimplente</span>
+                                <br>
+                                Referente: {{ proxima_data_pagamento_list[i] }}
+                            {% else %}
+                                <span class="text-success">Pago</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="detalhes/{{ alunos[i].id }}">
                                 <button type="button">Detalhes</button>
                             </a>
-                                <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
+                            <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ alunos[i].id }}')">Deletar</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -88,96 +91,93 @@
         </div>
         <br>
     </main>
-
-
-    <script>
-        function confirmarExclusao(alunoId) {
-            var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
-            if (confirmacao) {
-                window.location.href = "/alunos/deletar/" + alunoId;
-            }
-        }
-    </script>
-
-    <script>
-        var alunos = [
-            {% for aluno in alunos %}
+<script>
+    var alunos = [
+        {% for aluno in alunos %}
             {
                 "id": "{{ aluno.id }}",
-                "nome": "{{ aluno.nome }}"
+                "nome": "{{ aluno.nome }}",
+                "inadimplente": {{ aluno.inadimplente|lower }},
             },
-            {% endfor %}
-        ];
-    
+        {% endfor %}
+    ];
 
-        var pesquisaInput = document.getElementById('pesquisa');
-        var listaPesquisa = document.getElementById('listaPesquisa');
-        var tabelaAlunosBody = document.getElementById('tabelaAlunosBody');
+    var pesquisaInput = document.getElementById('pesquisa');
+    var listaPesquisa = document.getElementById('listaPesquisa');
+    var tabelaAlunosBody = document.getElementById('tabelaAlunosBody');
+
+    pesquisaInput.addEventListener('input', function () {
+        var termoPesquisa = pesquisaInput.value.trim().toLowerCase();
     
-        pesquisaInput.addEventListener('input', function () {
-            var termoPesquisa = pesquisaInput.value.trim().toLowerCase();
-    
-            if (termoPesquisa === '') {
-                // Se o campo de pesquisa estiver vazio, limpa a lista de pesquisa e restaura a tabela original
-                listaPesquisa.innerHTML = '';
-                atualizarTabela(alunos);
-                return;
-            }
-    
-            var resultados = alunos.filter(function (aluno) {
-                return aluno.nome.toLowerCase().includes(termoPesquisa);
-            });
-    
-            // Atualiza a lista de pesquisa
+        if (termoPesquisa === '') {
             listaPesquisa.innerHTML = '';
-            resultados.forEach(function (resultado) {
-                var listItem = document.createElement('li');
-                listItem.textContent = resultado.nome;
-                listItem.onclick = function () {
-                    window.open('detalhes/' + resultado.id);
-                };
-                listaPesquisa.appendChild(listItem);
-            });
+            atualizarTabela(alunos);
+            return;
+        }
     
-            // Atualiza a tabela de alunos
-            atualizarTabela(resultados);
+        var resultados = alunos.filter(function (aluno) {
+            return aluno.nome.toLowerCase().includes(termoPesquisa);
         });
     
-        function atualizarTabela(resultados) {
-            tabelaAlunosBody.innerHTML = '';
-            resultados.forEach(function (resultado) {
-                var newRow = tabelaAlunosBody.insertRow(tabelaAlunosBody.rows.length);
-                var cellNome = newRow.insertCell(0);
-                var cellAcoes = newRow.insertCell(1);
+        listaPesquisa.innerHTML = '';
+        resultados.forEach(function (resultado) {
+            var listItem = document.createElement('li');
+            listItem.textContent = resultado.nome;
+            listItem.onclick = function () {
+                window.open('detalhes/' + resultado.id);
+            };
+            listaPesquisa.appendChild(listItem);
+        });
     
-                cellNome.innerHTML = resultado.nome;
+        // Atualiza a tabela de alunos
+        atualizarTabela(resultados);
+    });
+
+    function atualizarTabela(resultados) {
+        tabelaAlunosBody.innerHTML = '';
     
-                var detalhesButton = document.createElement('button');
-                detalhesButton.textContent = 'Detalhes';
-                detalhesButton.onclick = function () {
-                    window.open('detalhes/' + resultado.id);
-                };
+        resultados.forEach(function (resultado) {
+            var newRow = tabelaAlunosBody.insertRow(tabelaAlunosBody.rows.length);
+            var cellNome = newRow.insertCell(0);
+            var cellStatus = newRow.insertCell(1);
+            var cellAcoes = newRow.insertCell(2);
+    
+            cellNome.innerHTML = resultado.nome;
+    
+            cellStatus.innerHTML = resultado.inadimplente
+                ? '<span class="text-danger">Inadimplente</span><br>'
+                : '<span class="text-success">Pago</span>';
+    
+            var detalhesButton = document.createElement('button');
+            detalhesButton.textContent = 'Detalhes';
+            detalhesButton.onclick = function () {
+                window.open('detalhes/' + resultado.id);
+            };
+    
+            cellAcoes.appendChild(detalhesButton);
+    
+            var deletarButton = document.createElement('button');
+            deletarButton.textContent = 'Deletar';
+            deletarButton.className = 'registro-formulario';
+            deletarButton.onclick = function () {
+                var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+                if (confirmacao) {
+                    window.location.href = "/alunos/deletar/" + resultado.id;
+                }
+            };
+    
+            cellAcoes.appendChild(deletarButton);
+        });
+    }
 
-                cellAcoes.appendChild(detalhesButton);
-
-                var deletarButton = document.createElement('button');
-                deletarButton.textContent = 'Deletar';
-                deletarButton.className = 'registro-formulario'; 
-                deletarButton.onclick = function () {
-                    window.open('/alunos/deletar/' + resultado.id);
-                };
-
-                cellAcoes.appendChild(deletarButton);
-
-            });
+    function confirmarExclusao(alunoId) {
+        var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+        if (confirmacao) {
+            window.location.href = "/alunos/deletar/" + alunoId;
         }
-    </script>
-  
+    }
+</script>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-   
-  
-    
 </body>
-
 </html>

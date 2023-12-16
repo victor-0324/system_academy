@@ -17,12 +17,13 @@ def formatar_data(data):
 
 
 def treino_required(func):
-    """Decorator para restringir o acesso apenas a usuários com permissão 'treino'."""
+    """Decorator para restringir o acesso apenas a usuários com permissão 'treino' e que não estão inadimplentes."""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if current_user.is_authenticated and current_user.permissao == 'treino':
+        if current_user.is_authenticated and current_user.permissao == 'treino' and not current_user.inadimplente:
             return func(*args, **kwargs)
         else:
+            flash("Você não tem permissão para acessar esta página. Verifique seu status de pagamento.")
             return redirect(url_for('login_app.login'))
     return wrapper
 

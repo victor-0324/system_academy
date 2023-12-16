@@ -4,6 +4,7 @@ from flask_login import UserMixin, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey
 from src.database import Base
+from datetime import datetime, timedelta
 
 class Aluno(Base):
     __tablename__ = "alunos"
@@ -93,7 +94,17 @@ class Aluno(Base):
         
         # medidas_dict.update(kwargs)  # Atualiza o dicionário com argumentos adicionais
         return medidas_dict
-        
+    
+    @property
+    def inadimplente(self):
+        if self.data_pagamento:
+            prazo_pagamento = timedelta(days=30)  # Ajuste o prazo conforme necessário
+            data_limite = self.data_pagamento + prazo_pagamento
+
+            return datetime.utcnow() > data_limite
+        else:
+            return True
+
     def __repr__(self):
         return (
         f"{self.id} {self.nome} {self.idade} {self.sexo} {self.peso} "

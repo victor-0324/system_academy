@@ -54,8 +54,26 @@
                         <label for="nome">Nome:</label>
                         <p>{{ aluno.nome }}</p>
                     </div>
+
+                     <div class="input-wrapper">
+                        <label for="data_pagamento">Ultimo Pagamento:</label>
+                        <p>{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}</p>
+                        <label for="data_pagamento">Proxima Date de Pagamento:</label>
+                        <p>{{ proxima_data_pagamento }}</p>
+                    </div>
                     <div class="input-wrapper">
-                        <label for="idade">Idade:</label>
+                        {% if inadimplente %}
+                            <p class="text-danger">Inadimplente</p>
+                        {% else %}
+                            <p class="text-success">Pago</p>
+                        {% endif %}
+                    </div>
+                     <div class="input-wrapper">
+                        <label for="data_entrada">Data Entrada:</label>
+                        <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="idade">Data Nascimento:</label>
                         <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
                     </div>
                     <div class="input-wrapper">
@@ -142,16 +160,9 @@
                         <label for="senha">Senha:</label>
                         <p>{{ aluno.senha }}</p>
                     </div>
+                    
                     <div class="input-wrapper">
-                        <label for="data_entrada">Data de Entrada:</label>
-                        <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="data_pagamento">Data de Pagamento:</label>
-                        <p>{{ proxima_data_pagamento }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="jatreino">Ja Treino:</label>
+                        <label for="jatreino">Ja Treinou:</label>
                         <p>{{ aluno.jatreino }}</p>
                     </div>
                     <div class="input-wrapper">
@@ -204,22 +215,21 @@
             {% endfor %}
         
     </main>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        function confirmarExclusao(alunoId) {
-            var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
-            if (confirmacao) {
-                window.location.href = "/alunos/deletar/" + alunoId;
-            }
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    function confirmarExclusao(alunoId) {
+        var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+        if (confirmacao) {
+            window.location.href = "/alunos/deletar/" + alunoId;
         }
-        $(document).ready(function() {
-            $(".ver-exercicios").on("click", function() {
-                $(".exercicios-container").toggleClass("hidden");
-            });
+    }
+    $(document).ready(function() {
+        $(".ver-exercicios").on("click", function() {
+            $(".exercicios-container").toggleClass("hidden");
         });
-    </script>
-    
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    });
+</script>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 </html>

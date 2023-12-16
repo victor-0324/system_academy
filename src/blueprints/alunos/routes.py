@@ -43,10 +43,34 @@ def mostrar():
     with current_app.app_context():
         session = current_app.db.session
         querys_instance = Querys(session)
-        alunos = querys_instance.mostrar(session)  # Passe a sessão como argumento
-        quantidade_alunos = len(alunos)
-    return render_template("alunos.html", alunos=alunos, quantidade_alunos=quantidade_alunos)
+        
+        # Obter a lista de alunos
+        alunos = querys_instance.mostrar(session)
+        
+        # Inicializar listas para armazenar informações sobre cada aluno
+        data_pagamento_atual_list = []
+        proxima_data_pagamento_list = []
+        inadimplente_list = []
 
+        # Iterar sobre cada aluno na lista
+        for aluno in alunos:
+            # Obter apenas a data de pagamento do aluno
+            data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
+            data_pagamento_atual_list.append(data_pagamento_atual)
+
+            # Calcular a próxima data de pagamento
+            proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
+            proxima_data_pagamento_list.append(proxima_data_pagamento)
+
+            # Verificar se o aluno é inadimplente
+            inadimplente = aluno.inadimplente
+            inadimplente_list.append(inadimplente)
+
+        # Passar as listas para o template
+        return render_template("alunos.html", alunos=alunos, quantidade_alunos=len(alunos),
+                               data_pagamento_atual_list=data_pagamento_atual_list,
+                               proxima_data_pagamento_list=proxima_data_pagamento_list,
+                               inadimplente_list=inadimplente_list,proxima_data_pagamento=proxima_data_pagamento)
 
 @clientes_app.route("/detalhes/<int:aluno_id>", methods=["GET"])
 @admin_required
@@ -54,16 +78,17 @@ def mostrar_detalhes(aluno_id):
     with current_app.app_context():
         session = current_app.db.session
         querys_instance = Querys(session)
-        
         aluno = querys_instance.mostrar_detalhes(aluno_id) 
-
         # Obter apenas a data de pagamento do aluno
         data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
-
         # Calcular a próxima data de pagamento
         proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
+        
+        # Verificar se o aluno é inadimplente
+        inadimplente = aluno.inadimplente
+    return render_template('detalhes.html', aluno=[aluno], inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual)
 
-    return render_template('detalhes.html', aluno=[aluno],  proxima_data_pagamento=proxima_data_pagamento)
+
 
 @clientes_app.route("/atualizar/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
