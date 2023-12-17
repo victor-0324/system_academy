@@ -47,12 +47,12 @@
         <div class="registro-formulario">
             <h3>Detalhes do Aluno</h3>
         </div>  
-{% for aluno in aluno %}
-                {% if inadimplente %}
-                <p class="text-danger">INADIMPLENTE</p>
-                {% else %}
-                <p class="text-success">PAGO</p>
-                {% endif %}
+            {% for aluno in aluno %}
+            {% if inadimplente %}
+            <p class="text-danger">INADIMPLENTE</p>
+            {% else %}
+            <p class="text-success">PAGO</p>
+            {% endif %}
             <div class="dados-pessoais">
                 
                 <div  class="enviar">
@@ -62,8 +62,6 @@
                     <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">DELETAR</button>
                 </div>
                
-                
-           
                 <div class="input-wrapper">
                     <label for="nome">Nome:</label>
                     <p>{{ aluno.nome }}</p>
