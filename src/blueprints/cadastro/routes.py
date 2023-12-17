@@ -27,14 +27,11 @@ def cadastrar():
         try:
             data = request.form.get('exercicios')
             exercicios = json.loads(data) if data else []
-            
             nome = request.form.get('nome')
             idade = request.form.get('idade')
             sexo = request.form.get('sexo')
-           
             peso = request.form.get('peso')
             ombro = request.form.get('ombro')
-            
             torax = request.form.get('torax')
             braco_d = request.form.get('braco_d')
             braco_e = request.form.get('braco_e')

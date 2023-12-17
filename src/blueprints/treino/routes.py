@@ -57,7 +57,6 @@ def evolucao(aluno_id):
         historico = aluno.medidas_historico()
         historico_medidas_peso = aluno.historico_medidas_peso
         historico_depois = [historico[-1]]  
-       
         return render_template('evolucao.html', historico_medidas_peso=historico_medidas_peso, historico_depois=historico_depois,formatar_data=formatar_data)
     else:
         # Retorna uma página de erro 404

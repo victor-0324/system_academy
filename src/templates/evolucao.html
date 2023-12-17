@@ -115,27 +115,28 @@
                             <td>{{ formatar_data(historico_depois[0]['data_atualizacao']) }}</td>
                         </tr>
                         {% if historico_medidas_peso %}
-                            {% for key, value_antes in historico_medidas_peso[-1].items() if key not in ['descricao', 'data_entrada', 'data_atualizacao'] %}
+                            {% set ordem_medidas = ['peso', 'ombro', 'torax', 'braco_d', 'braco_e', 'ant_d', 'ant_e', 'cintura', 'abdome', 'quadril', 'coxa_d', 'coxa_e', 'pant_d', 'pant_e'] %}
+                            {% for medida_key in ordem_medidas %}
+                                {% set medida_nomes = {
+                                    'peso': 'Peso',
+                                    'ombro': 'Ombro',
+                                    'torax': 'Tórax',
+                                    'braco_d': 'Braço Direito',
+                                    'braco_e': 'Braço Esquerdo',
+                                    'ant_d': 'Antebraço Direito',
+                                    'ant_e': 'Antebraço Esquerdo',
+                                    'cintura': 'Cintura',
+                                    'abdome': 'Abdome',
+                                    'quadril': 'Quadril',
+                                    'coxa_d': 'Coxa Direita',
+                                    'coxa_e': 'Coxa Esquerda',
+                                    'pant_d': 'Panturrilha Direita',
+                                    'pant_e': 'Panturrilha Esquerda',
+                                } %}
+                                {% set key = medida_key %}
+                                {% set value_antes = historico_medidas_peso[-1][key] %}
                                 <tr>
-                                    <th scope="row">
-                                        {% set medida_nomes = {
-                                            'peso': 'Peso',
-                                            'ant_d': 'Antebraço Direito',
-                                            'ant_e': 'Antebraço Esquerdo',
-                                            'ombro': 'Ombro',
-                                            'torax': 'Tórax',
-                                            'abdome': 'Abdome',
-                                            'coxa_d': 'Coxa Direita',
-                                            'coxa_e': 'Coxa Esquerda',
-                                            'pant_d': 'Panturrilha Direita',
-                                            'pant_e': 'Panturrilha Esquerda',
-                                            'braco_d': 'Braço Direito',
-                                            'braco_e': 'Braço Esquerdo',
-                                            'cintura': 'Cintura',
-                                            'quadril': 'Quadril'
-                                        } %}
-                                        {{ medida_nomes[key]|default(key.capitalize()) }}
-                                    </th>
+                                    <th scope="row">{{ medida_nomes[key]|default(key.capitalize()) }}</th>
                                     <td>{{ value_antes }}</td>
                                     <td>
                                         {% if historico_depois[0][key] is defined and value_antes is defined %}

@@ -73,7 +73,6 @@ class Aluno(Base):
 
     def _medidas_dict(self, **kwargs):
         medidas_dict = {
-            
             'peso': (self.peso),
             'ombro': (self.ombro),
             'torax': (self.torax),
