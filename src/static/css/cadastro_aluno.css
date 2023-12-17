@@ -17,6 +17,7 @@ main {
     color: #121212; /* Preto */
     text-align: center;
     padding: 10px;
+    border-radius: 5px;
 }
 
 h1 {
@@ -60,7 +61,7 @@ button {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 1px;
     box-sizing: border-box;
     background-color: #121212; /* Preto escuro */
     color: #fff; /* Texto branco */
@@ -69,7 +70,7 @@ button {
 input[type="submit"] {
     background-color: #ff8c00; /* Laranja escuro */
     color: #121212; /* Preto */
-    cursor: pointer;
+    cursor: pointer; 
 }
 
 input[type="submit"]:hover {

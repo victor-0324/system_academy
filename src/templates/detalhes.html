@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
     <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_aluno.css') }}">
     
 </head>
 <body class="detalhes-page">
@@ -45,175 +45,174 @@
    
     <main>
         <div class="registro-formulario">
-            <h1>Detalhes do Aluno</h1>
+            <h3>Detalhes do Aluno</h3>
         </div>  
-        
-            {% for aluno in aluno %}
-                <div class="dados-pessoais">
-                    <div class="input-wrapper">
-                        <label for="nome">Nome:</label>
-                        <p>{{ aluno.nome }}</p>
-                    </div>
-
-                     <div class="input-wrapper">
-                        <label for="data_pagamento">Ultimo Pagamento:</label>
-                        <p>{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}</p>
-                        <label for="data_pagamento">Proxima Date de Pagamento:</label>
-                        <p>{{ proxima_data_pagamento }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        {% if inadimplente %}
-                            <p class="text-danger">Inadimplente</p>
-                        {% else %}
-                            <p class="text-success">Pago</p>
-                        {% endif %}
-                    </div>
-                     <div class="input-wrapper">
-                        <label for="data_entrada">Data Entrada:</label>
-                        <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="idade">Data Nascimento:</label>
-                        <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="sexo">Sexo:</label>
-                        <p>{{ aluno.sexo }}</p>
-                    </div>
-                    
-                    <div class="input-wrapper">
-                        <label for="peso">Peso (kg):</label>
-                        <p>{{ aluno.peso }}</p>
-                    </div>
-                    
-                    <div class="input-wrapper">
-                        <label for="telefone">Telefone:</label>
-                        <p>{{ aluno.telefone }}</p>
-                    </div>
-                    
-                    <div class="input-wrapper">
-                        <label for="ombro">Ombro:</label>
-                        <p>{{ aluno.ombro }}</p>
-                    </div>
-                    
-                    <div class="input-wrapper">
-                        <label for="torax">Tórax:</label>
-                        <p>{{ aluno.torax }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="braco_d">Braço Direito:</label>
-                        <p>{{ aluno.braco_d }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="braco_e">Braço Esquerdo:</label>
-                        <p>{{ aluno.braco_e }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="ant_d">Antebraço Direito:</label>
-                        <p>{{ aluno.ant_d }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="ant_e">Antebraço Esquerdo:</label>
-                        <p>{{ aluno.ant_e }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="cintura">Cintura:</label>
-                        <p>{{ aluno.cintura }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="abdome">Abdome:</label>
-                        <p>{{ aluno.abdome }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="quadril">Quadril:</label>
-                        <p>{{ aluno.quadril }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="coxa_d">Coxa Direita:</label>
-                        <p>{{ aluno.coxa_d }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="coxa_e">Coxa Esquerda:</label>
-                        <p>{{ aluno.coxa_e }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="pant_d">Panturrilha Direita:</label>
-                        <p>{{ aluno.pant_d }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="pant_e">Panturrilha Esquerda:</label>
-                        <p>{{ aluno.pant_e }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="observacao">Observação:</label>
-                        <p>{{ aluno.observacao }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="telefone">Telefone:</label>
-                        <p>{{ aluno.telefone }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="login">Login:</label>
-                        <p>{{ aluno.login }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="senha">Senha:</label>
-                        <p>{{ aluno.senha }}</p>
-                    </div>
-                    
-                    <div class="input-wrapper">
-                        <label for="jatreino">Ja Treinou:</label>
-                        <p>{{ aluno.jatreino }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="permissao">Permissão:</label>
-                        <p>{{ aluno.permissao }}</p>
-                    </div>
-                    <div class="input-wrapper">
-                        <label>Exercícios:</label>
-                        <button type="button" class="ver-exercicios">Ver Exercícios</button>
-                        <div class="exercicios-container hidden">
-                            {% set dias_exercicios = {} %}
-                            {% for exercicio in aluno.exercicios %}
-                                {% set dia = exercicio.tipoTreino %}
-                                {% if dias_exercicios[dia] is not defined %}
-                                    {% set _ = dias_exercicios.update({dia: []}) %}
-                                {% endif %}
-                                {% set _ = dias_exercicios[dia].append(exercicio) %}
-                            {% endfor %}
-                    
-                            {% for dia, exercicios_do_dia in dias_exercicios.items() %}
-                                <div class="col-md-12 mb-6">
-                                    <div class="card-body">
-                                        <ul class="list-group text-left">
-                                            <li class="list-group-item">
-                                                <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
-                                                {% for exercicio in exercicios_do_dia %}
-                                                    <hr class="mb-3">
-                                                    <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
-                                                    <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
-                                                    <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
-                                                    <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }} Seg</p>
-                                                    <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>
-                                                {% endfor %}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div  class="enviar">
-                      <a href="/alunos/atualizar/{{aluno.id}}">  <button class="registro-formulario" type="button" >MODIFICAR</button></a>
-                    </div>
-                    <div  class="enviar">
-                        <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">DELETAR</button>
-                    </div>
-                   
+{% for aluno in aluno %}
+                {% if inadimplente %}
+                <p class="text-danger">INADIMPLENTE</p>
+                {% else %}
+                <p class="text-success">PAGO</p>
+                {% endif %}
+            <div class="dados-pessoais">
+                
+                <div  class="enviar">
+                    <a href="/alunos/atualizar/{{aluno.id}}">  <button class="registro-formulario" type="button" >MODIFICAR</button></a>
                 </div>
-            {% endfor %}
-        
+                <div  class="enviar">
+                    <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">DELETAR</button>
+                </div>
+               
+                
+           
+                <div class="input-wrapper">
+                    <label for="nome">Nome:</label>
+                    <p>{{ aluno.nome }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="data_entrada">Inicio:</label>
+                    <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
+                </div>
+                    <div class="input-wrapper">
+                    <label for="data_pagamento">Ultimo Pagamento:</label>
+                    <p>{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="data_pagamento">Proximo Pagamento:</label>
+                    <p>{{ proxima_data_pagamento }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="idade">Data Nascimento:</label>
+                    <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="sexo">Sexo:</label>
+                    <p>{{ aluno.sexo }}</p>
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="peso">Peso (kg):</label>
+                    <p>{{ aluno.peso }}</p>
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="telefone">Telefone:</label>
+                    <p>{{ aluno.telefone }}</p>
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="ombro">Ombro:</label>
+                    <p>{{ aluno.ombro }}</p>
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="torax">Tórax:</label>
+                    <p>{{ aluno.torax }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="braco_d">Braço Direito:</label>
+                    <p>{{ aluno.braco_d }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="braco_e">Braço Esquerdo:</label>
+                    <p>{{ aluno.braco_e }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="ant_d">Antebraço Direito:</label>
+                    <p>{{ aluno.ant_d }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="ant_e">Antebraço Esquerdo:</label>
+                    <p>{{ aluno.ant_e }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="cintura">Cintura:</label>
+                    <p>{{ aluno.cintura }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="abdome">Abdome:</label>
+                    <p>{{ aluno.abdome }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="quadril">Quadril:</label>
+                    <p>{{ aluno.quadril }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="coxa_d">Coxa Direita:</label>
+                    <p>{{ aluno.coxa_d }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="coxa_e">Coxa Esquerda:</label>
+                    <p>{{ aluno.coxa_e }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="pant_d">Panturrilha Direita:</label>
+                    <p>{{ aluno.pant_d }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="pant_e">Panturrilha Esquerda:</label>
+                    <p>{{ aluno.pant_e }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="observacao">Observação:</label>
+                    <p>{{ aluno.observacao }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="telefone">Telefone:</label>
+                    <p>{{ aluno.telefone }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="login">Login:</label>
+                    <p>{{ aluno.login }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="senha">Senha:</label>
+                    <p>{{ aluno.senha }}</p>
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="jatreino">Ja Treinou:</label>
+                    <p>{{ aluno.jatreino }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label for="permissao">Permissão:</label>
+                    <p>{{ aluno.permissao }}</p>
+                </div>
+                <div class="input-wrapper">
+                    <label>Exercícios:</label>
+                    <button type="button" class="ver-exercicios">Ver Exercícios</button>
+                    <div class="exercicios-container hidden">
+                        {% set dias_exercicios = {} %}
+                        {% for exercicio in aluno.exercicios %}
+                            {% set dia = exercicio.tipoTreino %}
+                            {% if dias_exercicios[dia] is not defined %}
+                                {% set _ = dias_exercicios.update({dia: []}) %}
+                            {% endif %}
+                            {% set _ = dias_exercicios[dia].append(exercicio) %}
+                        {% endfor %}
+                
+                        {% for dia, exercicios_do_dia in dias_exercicios.items() %}
+                            <div class="col-md-12 mb-6">
+                                <div class="card-body">
+                                    <ul class="list-group text-left">
+                                        <li class="list-group-item">
+                                            <h5 class="mb-3 text-center dia-treino"><strong>{{ dia }}</strong></h5>
+                                            {% for exercicio in exercicios_do_dia %}
+                                                <hr class="mb-3">
+                                                <p class="mb-1"><strong>Exercício:</strong> {{ exercicio.exercicio|capitalize }}</p>
+                                                <p class="mb-1"><strong>Série:</strong> {{ exercicio.serie }}</p>
+                                                <p class="mb-1"><strong>Repetição:</strong> {{ exercicio.repeticao }}</p>
+                                                <p class="mb-1"><strong>Descanso:</strong> {{ exercicio.descanso }} Seg</p>
+                                                <p class="mb-1"><strong>Carga:</strong> {{ exercicio.carga }}</p>
+                                            {% endfor %}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </main>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>

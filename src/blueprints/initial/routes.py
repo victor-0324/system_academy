@@ -15,6 +15,7 @@ def admin_required(func):
         else:
             return redirect(url_for('login_app.login'))
     return wrapper
+
 def calcular_proxima_data_pagamento(data_pagamento_atual):
     if data_pagamento_atual:
         # Converter a string da data atual para um objeto datetime
@@ -29,6 +30,7 @@ def calcular_proxima_data_pagamento(data_pagamento_atual):
         return proxima_data_pagamento_str
 
     return None
+    
 # Tela Iniciarl do app
 @initial_app.route("/", methods=["GET", "POST"])
 @admin_required
