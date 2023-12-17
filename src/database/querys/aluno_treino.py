@@ -176,3 +176,25 @@ class Querys():
             medida_str = {key: value.strftime('%Y-%m-%d') if isinstance(value, datetime) else value for key, value in medida.items()}
             historico_str.append(medida_str)
         return historico_str
+
+    def verificar_falta_tres_dias(self, aluno_id):
+        aluno = (
+            self.session.query(Aluno)
+            .filter_by(id=aluno_id)
+            .first()
+        )
+
+        if aluno and aluno.data_pagamento:
+            # Calcular a data atual
+            data_atual = datetime.utcnow().date()
+
+            # Calcular a data de vencimento do pagamento
+            data_pagamento = aluno.data_pagamento.date()
+
+            # Calcular a diferença de dias entre a data de vencimento e a data atual
+            diferenca_dias = (data_pagamento - data_atual).days
+
+            # Verificar se faltam 3 dias ou menos para o pagamento
+            return diferenca_dias < 3
+
+        return False

@@ -53,6 +53,11 @@
             </div>
         </nav>
         <br>
+        {% if faltam_tres_dias %}
+        <div class="alert alert-warning" role="alert">
+            Seu pagamento está próximo de vencer! Por favor, efetue o pagamento nos próximos 3 dias para continuar acessando os treinos.
+        </div>
+        {% endif %}
         <div class="container-fluid fh5co-content-box">
             <div class="row trainers pl-0 pr-0">
                 <div class="col-12 bg-50">
