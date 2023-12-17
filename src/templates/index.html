@@ -48,11 +48,6 @@
       </div>
     </div>
   </nav>
-  <ul>
-    {% for aluno in inadimplentes %}
-        <li>{{ aluno.nome }} - Última Data de Pagamento: {{ aluno.dataPagamento }}</li>
-    {% endfor %}
-</ul>
   <div class="container">
     <div class="fh5co-banner-text-box">
       <div class="quote-box pl-5 pr-5 wow bounceInRight">
@@ -67,11 +62,15 @@
       <div class="col-md-12">
         <h4 class="wow bounceInUp">Página do Administrador</h4>
         <h2 class="wow bounceInRight">{{ current_user.nome }}</h2>
-        
         <div class="alunos-pagam-semana">
           {% if inadimplentes or alunosPagamSemana %}
               <div class="inadimplentes">
                   <h3>Alunos Inadimplentes</h3>
+                  <ul>
+                      {% for aluno in inadimplentes %}
+                          <li>{{ aluno.nome }} - Última Data de Pagamento: {{ aluno.dataPagamento }}</li>
+                      {% endfor %}
+                  </ul>
               </div>
       
               <div class="proximo-pagamento">
