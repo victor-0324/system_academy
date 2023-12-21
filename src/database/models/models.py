@@ -97,7 +97,7 @@ class Aluno(Base):
     @property
     def inadimplente(self):
         if self.data_pagamento:
-            prazo_pagamento = timedelta(days=30)  # Ajuste o prazo conforme necessário
+            prazo_pagamento = timedelta(days=30)  
             data_limite = self.data_pagamento + prazo_pagamento
 
             return datetime.utcnow() > data_limite
