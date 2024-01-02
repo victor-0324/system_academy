@@ -111,11 +111,12 @@
                     <tbody>
                         <tr>
                             <th scope="row">Data Atualização</th>
-                            <td>{{ formatar_data(historico_medidas_peso[-1]['data_atualizacao']) }}</td>
-                            <td>{{ formatar_data(historico_depois[0]['data_atualizacao']) }}</td>
+                            <td>{{ historico[-1]["Data"] }}</td>
+                            <td>{{ historico[0]["Data"] }}</td>
+                        
                         </tr>
-                        {% if historico_medidas_peso %}
-                            {% set ordem_medidas = ['peso', 'ombro', 'torax', 'braco_d', 'braco_e', 'ant_d', 'ant_e', 'cintura', 'abdome', 'quadril', 'coxa_d', 'coxa_e', 'pant_d', 'pant_e'] %}
+                        {% if historico %}
+                            {% set ordem_medidas = ['Peso', 'Ombro', 'Torax', 'Braco_d', 'Braco_e', 'Ant_d', 'Ant_e', 'Cintura', 'Abdome', 'Quadril', 'Coxa_d', 'Coxa_e', 'Pant_d', 'Pant_e'] %}
                             {% for medida_key in ordem_medidas %}
                                 {% set medida_nomes = {
                                     'peso': 'Peso',
@@ -134,19 +135,19 @@
                                     'pant_e': 'Panturrilha Esquerda',
                                 } %}
                                 {% set key = medida_key %}
-                                {% set value_antes = historico_medidas_peso[-1][key] %}
+                                {% set value_antes = historico[-1][key] %}
                                 <tr>
                                     <th scope="row">{{ medida_nomes[key]|default(key.capitalize()) }}</th>
                                     <td>{{ value_antes }}</td>
                                     <td>
-                                        {% if historico_depois[0][key] is defined and value_antes is defined %}
+                                        {% if historico[0][key] is defined and value_antes is defined %}
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    {{ historico_depois[0][key] }}
+                                                    {{ historico[0][key] }}
                                                 </div>
                                                 <div class="col-md-6">
-                                                    {% set ganho = historico_depois[0][key]|float - value_antes|float %}
-                                                    {% set perda = value_antes|float - historico_depois[0][key]|float %}
+                                                    {% set ganho = historico[0][key]|float - value_antes|float %}
+                                                    {% set perda = value_antes|float - historico[0][key]|float %}
                                                     {% if ganho > 0 %}
                                                         <span class="badge_ "> + {{ ganho|round(2) }}</span>
                                                     {% elif perda > 0 %}
@@ -186,21 +187,21 @@
                     borderColor: '#196774',
                     borderWidth: 1,
                     data: [
-                        {% if historico_medidas_peso[0] %}
-                            {{ historico_medidas_peso[0]['peso'] }},
-                            {{ historico_medidas_peso[0]['ombro'] }},
-                            {{ historico_medidas_peso[0]['torax'] }},
-                            {{ historico_medidas_peso[0]['braco_d'] }},
-                            {{ historico_medidas_peso[0]['braco_e'] }},
-                            {{ historico_medidas_peso[0]['ant_d'] }},
-                            {{ historico_medidas_peso[0]['ant_e'] }},
-                            {{ historico_medidas_peso[0]['cintura'] }},
-                            {{ historico_medidas_peso[0]['abdome'] }},
-                            {{ historico_medidas_peso[0]['quadril'] }},
-                            {{ historico_medidas_peso[0]['coxa_d'] }},
-                            {{ historico_medidas_peso[0]['coxa_e'] }},
-                            {{ historico_medidas_peso[0]['pant_d'] }},
-                            {{ historico_medidas_peso[0]['pant_e'] }}
+                        {% if historico[0] %}
+                            {{ historico[0]['Peso'] }},
+                            {{ historico[0]['Ombro'] }},
+                            {{ historico[0]['Torax'] }},
+                            {{ historico[0]['Braco_d'] }},
+                            {{ historico[0]['Braco_e'] }},
+                            {{ historico[0]['Ant_d'] }},
+                            {{ historico[0]['Ant_e'] }},
+                            {{ historico[0]['Cintura'] }},
+                            {{ historico[0]['Abdome'] }},
+                            {{ historico[0]['Quadril'] }},
+                            {{ historico[0]['Coxa_d'] }},
+                            {{ historico[0]['Coxa_e'] }},
+                            {{ historico[0]['Pant_d'] }},
+                            {{ historico[0]['Pant_e'] }}
                         {% else %}
                             // Valor padrão se historico_medidas_peso[-1] não existir
                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -213,20 +214,20 @@
                     borderColor: '#363432',
                     borderWidth: 1,
                     data: [
-                        {{ historico_depois[0]['peso'] }},
-                        {{ historico_depois[0]['ombro'] }},
-                        {{ historico_depois[0]['torax'] }},
-                        {{ historico_depois[0]['braco_d'] }},
-                        {{ historico_depois[0]['braco_e'] }},
-                        {{ historico_depois[0]['ant_d'] }},
-                        {{ historico_depois[0]['ant_e'] }},
-                        {{ historico_depois[0]['cintura'] }},
-                        {{ historico_depois[0]['abdome'] }},
-                        {{ historico_depois[0]['quadril'] }},
-                        {{ historico_depois[0]['coxa_d'] }},
-                        {{ historico_depois[0]['coxa_e'] }},
-                        {{ historico_depois[0]['pant_d'] }},
-                        {{ historico_depois[0]['pant_e'] }}
+                        {{ historico[0]['Peso'] }},
+                        {{ historico[0]['Ombro'] }},
+                        {{ historico[0]['Torax'] }},
+                        {{ historico[0]['Braco_d'] }},
+                        {{ historico[0]['Braco_e'] }},
+                        {{ historico[0]['Ant_d'] }},
+                        {{ historico[0]['Ant_e'] }},
+                        {{ historico[0]['Cintura'] }},
+                        {{ historico[0]['Abdome'] }},
+                        {{ historico[0]['Quadril'] }},
+                        {{ historico[0]['Coxa_d'] }},
+                        {{ historico[0]['Coxa_e'] }},
+                        {{ historico[0]['Pant_d'] }},
+                        {{ historico[0]['Pant_e'] }}
                     ]
                 }
             ]

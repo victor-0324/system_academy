@@ -4,7 +4,8 @@ import json
 from src.database.config import db_connector, DBConnectionHandler
 from functools import wraps
 from flask_login import current_user
-
+from src.database.sheets.sheets import SheetsConnector
+from uuid import UUID
 
 cadastro_app = Blueprint("cadastro_app", __name__, url_prefix="/cadastro", template_folder='templates',static_folder='static')
 
@@ -23,6 +24,7 @@ def admin_required(func):
 @cadastro_app.route("/", methods=["GET", "POST"])
 @admin_required
 def cadastrar():
+
     if request.method == 'POST':
         try:
             data = request.form.get('exercicios')
@@ -53,17 +55,33 @@ def cadastrar():
             jatreino = request.form.get('jatreino')
             permissao = request.form.get('permissao')
 
-            session = current_app.db.session
-            # Crie uma instância da classe Querys
-            querys_instance = Querys(session)
+            # session = current_app.db.session
+            # # Crie uma instância da classe Querys
+            # querys_instance = Querys(session)
 
             # Chame o método cadastrar_aluno na instância
-            querys_instance.cadastrar_aluno(
-                nome, idade, sexo, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
-                abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, senha,
+            # querys_instance.cadastrar_aluno(
+            #     nome, idade, sexo, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
+            #     abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, senha,
+            #     data_entrada, data_pagamento, jatreino, permissao,
+            #     exercicios
+            # )
+            
+            sheets_connector = SheetsConnector()
+
+            # sheets_connector.cadastrar_medidas(
+            #     peso, ombro, torax, braco_d, braco_e, ant_d, ant_e,
+            #     cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e
+            # )
+
+            sheets_connector.cadastrar_aluno(
+                nome, idade, sexo, observacao, telefone, login, senha,
                 data_entrada, data_pagamento, jatreino, permissao,
-                exercicios
+                peso, ombro, torax, braco_d, braco_e, ant_d, ant_e,
+                cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, exercicios
             )
+
+            
 
             return jsonify({'success': True}), 200
 
@@ -73,4 +91,22 @@ def cadastrar():
 
     return render_template("cadastro.html")
 
-  
+
+@cadastro_app.route('/buscar_exercicios_por_nome', methods=["GET", "POST"])
+def buscar_exercicios_por_nome():
+    sheets_connector = SheetsConnector()
+
+    # Certifique-se de que os dados estão sendo enviados como JSON no corpo do POST
+    data = request.get_json()
+   
+    if 'nome_aluno' in data:
+        nome_aluno = data['nome_aluno']
+        aluno = sheets_connector.get_aluno_por_nome(nome_aluno)
+       
+        if aluno:
+            return jsonify({'status': 'success', 'aluno': aluno})
+        else:
+            return jsonify({'status': 'error', 'message': 'Aluno não encontrado'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Nome do aluno não fornecido no corpo do POST'})
+

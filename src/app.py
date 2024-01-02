@@ -4,23 +4,39 @@ from src.database.querys import Querys
 from src.database.config import db, DBConnectionHandler, DevelopmentConfig
 from src.database import Base
 from src.database.models import Aluno
+from flask_login import LoginManager, UserMixin
+from src.database.sheets.sheets import SheetsConnector
+from src.database.sheets.models import User 
 
 login_manager = LoginManager()
 
+
+@login_manager.user_loader
 def load_user(user_id):
-    with DBConnectionHandler(current_app.db) as connection:
-        connection = DBConnectionHandler(db)
-        user = connection.query(Aluno).get(int(user_id))
-        return user
+    sheets_connector = SheetsConnector()
+    aluno_data = sheets_connector.obter_aluno_por_id(user_id)
+
+    if aluno_data:
+        return User(user_id, aluno_data)
+    else:
+        return None
+
+login_manager = LoginManager()
+
+# def load_user(user_id):
+#     with DBConnectionHandler(current_app.db) as connection:
+#         connection = DBConnectionHandler(db)
+#         user = connection.query(Aluno).get(int(user_id))
+#         return user
 
 def init_app():
     """Construindo o app"""
     app = Flask(__name__)
-    app.config.from_object("src.database.config.DevelopmentConfig")
+    # app.config.from_object("src.database.config.DevelopmentConfig")
     login_manager.init_app(app)
     login_manager.login_view = 'login_app.login'
     login_manager.user_loader(load_user)
-
+    app.secret_key = "vitorvitoriaeyaramariaauvesdacosta"
     # Importar blueprints após a criação do aplicativo
     from .blueprints import login_app, initial_app, cadastro_app, clientes_app, treino_app
 
@@ -30,10 +46,10 @@ def init_app():
     app.register_blueprint(cadastro_app)
     app.register_blueprint(clientes_app)
     app.register_blueprint(treino_app)
-    db_handler = DBConnectionHandler(db)
-    db_handler.init_app(app)
+    # db_handler = DBConnectionHandler(db)
+    # db_handler.init_app(app)
     
-    with app.app_context():
-        Base.metadata.create_all(db_handler.get_connection().engine)
+    # with app.app_context():
+    #     Base.metadata.create_all(db_handler.get_connection().engine)
 
     return app, login_manager

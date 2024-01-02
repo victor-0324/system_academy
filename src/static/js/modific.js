@@ -43,9 +43,7 @@
     
     exercicios.push(exercicioInfo);
     
-    // Adicione logs para verificar o que está sendo adicionado
-    console.log('Exercício adicionado:', exercicioInfo);
-    console.log('Lista de exercícios atualizada:', exercicios);
+
     // Atualiza a lista de exercícios na página
     atualizarListaExercicios();
     
@@ -123,6 +121,7 @@
         }
         
     }
+    
     function enviarMedidasParaServidor() {
         // Obtenha os dados das medidas, excluindo os exercícios
         var formData = new FormData(document.querySelector('form'));

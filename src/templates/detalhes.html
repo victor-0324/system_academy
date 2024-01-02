@@ -47,7 +47,7 @@
         <div class="registro-formulario">
             <h3>Detalhes do Aluno</h3>
         </div>  
-            {% for aluno in aluno %}
+            
             {% if inadimplente %}
             <p class="text-danger">INADIMPLENTE</p>
             {% else %}
@@ -56,130 +56,126 @@
             <div class="dados-pessoais">
                 
                 <div  class="enviar">
-                    <a href="/alunos/atualizar/{{aluno.id}}">  <button class="registro-formulario" type="button" >MODIFICAR</button></a>
+                    <a href="/alunos/atualizar/{{aluno.Aluno_id}}">  <button class="registro-formulario" type="button" >MODIFICAR</button></a>
                 </div>
                 <div  class="enviar">
-                    <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">DELETAR</button>
+                    <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.Aluno_id }}')">DELETAR</button>
                 </div>
                
                 <div class="input-wrapper">
                     <label for="nome">Nome:</label>
-                    <p>{{ aluno.nome }}</p>
+                    <p>{{ aluno.Nome }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="data_entrada">Inicio:</label>
-                    <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
+                    <p>{{ aluno.Data_entrada.strftime('%d/%m/%Y') if aluno.Data_entrada else '' }}</p>
                 </div>
-                    <div class="input-wrapper">
+                <div class="input-wrapper">
                     <label for="data_pagamento">Ultimo Pagamento:</label>
-                    <p>{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}</p>
+                    <p>{{ aluno.Data_pagamento.strftime('%d/%m/%Y') if aluno.Data_pagamento else '' }}</p>
                 </div>
+                
                 <div class="input-wrapper">
                     <label for="data_pagamento">Proximo Pagamento:</label>
                     <p>{{ proxima_data_pagamento }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="idade">Data Nascimento:</label>
-                    <p>{{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</p>
+                    <p>{{ aluno.Data_entrada.strftime('%d/%m/%Y') if aluno.Data_entrada else '' }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="sexo">Sexo:</label>
-                    <p>{{ aluno.sexo }}</p>
-                </div>
-                
-                <div class="input-wrapper">
-                    <label for="telefone">Telefone:</label>
-                    <p>{{ aluno.telefone }}</p>
+                    <p>{{ aluno.Sexo }}</p>
                 </div>
                 
                 <div class="input-wrapper">
                     <label for="peso">Peso (kg):</label>
-                    <p>{{ aluno.peso }}</p>
+                    <p>{{ aluno.Peso }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="ombro">Ombro:</label>
-                    <p>{{ aluno.ombro }}</p>
+                    <p>{{ aluno.Ombro }}</p>
                 </div>
                 
                 <div class="input-wrapper">
                     <label for="torax">Tórax:</label>
-                    <p>{{ aluno.torax }}</p>
+                    <p>{{ aluno.Torax }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="braco_d">Braço Direito:</label>
-                    <p>{{ aluno.braco_d }}</p>
+                    <p>{{ aluno.Braco_d }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="braco_e">Braço Esquerdo:</label>
-                    <p>{{ aluno.braco_e }}</p>
+                    <p>{{ aluno.Braco_e }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="ant_d">Antebraço Direito:</label>
-                    <p>{{ aluno.ant_d }}</p>
+                    <p>{{ aluno.Ant_d }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="ant_e">Antebraço Esquerdo:</label>
-                    <p>{{ aluno.ant_e }}</p>
+                    <p>{{ aluno.Ant_e }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="cintura">Cintura:</label>
-                    <p>{{ aluno.cintura }}</p>
+                    <p>{{ aluno.Cintura }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="abdome">Abdome:</label>
-                    <p>{{ aluno.abdome }}</p>
+                    <p>{{ aluno.Abdome }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="quadril">Quadril:</label>
-                    <p>{{ aluno.quadril }}</p>
+                    <p>{{ aluno.Quadril }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="coxa_d">Coxa Direita:</label>
-                    <p>{{ aluno.coxa_d }}</p>
+                    <p>{{ aluno.Coxa_d }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="coxa_e">Coxa Esquerda:</label>
-                    <p>{{ aluno.coxa_e }}</p>
+                    <p>{{ aluno.Coxa_e }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="pant_d">Panturrilha Direita:</label>
-                    <p>{{ aluno.pant_d }}</p>
+                    <p>{{ aluno.Pant_d }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="pant_e">Panturrilha Esquerda:</label>
-                    <p>{{ aluno.pant_e }}</p>
+                    <p>{{ aluno.Pant_e }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="observacao">Observação:</label>
-                    <p>{{ aluno.observacao }}</p>
+                    <p>{{ aluno.Observacao }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="telefone">Telefone:</label>
-                    <p>{{ aluno.telefone }}</p>
+                    <p>{{ aluno.Telefone }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="login">Login:</label>
-                    <p>{{ aluno.login }}</p>
+                    <p>{{ aluno.Login }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="senha">Senha:</label>
-                    <p>{{ aluno.senha }}</p>
+                    <p>{{ aluno.Senha }}</p>
                 </div>
                 
                 <div class="input-wrapper">
                     <label for="jatreino">Ja Treinou:</label>
-                    <p>{{ aluno.jatreino }}</p>
+                    <p>{{ aluno.Jatreino }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label for="permissao">Permissão:</label>
-                    <p>{{ aluno.permissao }}</p>
+                    <p>{{ aluno.Permissao }}</p>
                 </div>
                 <div class="input-wrapper">
                     <label>Exercícios:</label>
                     <button type="button" class="ver-exercicios">Ver Exercícios</button>
                     <div class="exercicios-container hidden">
                         {% set dias_exercicios = {} %}
-                        {% for exercicio in aluno.exercicios %}
+                        {% for exercicio in aluno.Exercicios %}
                             {% set dia = exercicio.tipoTreino %}
                             {% if dias_exercicios[dia] is not defined %}
                                 {% set _ = dias_exercicios.update({dia: []}) %}
@@ -209,7 +205,7 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
+        
     </main>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>

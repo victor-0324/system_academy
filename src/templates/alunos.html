@@ -68,7 +68,7 @@
                 <tbody id="tabelaAlunosBody">
                     {% for i in range(quantidade_alunos) %}
                     <tr>
-                        <td>{{ alunos[i].nome }}</td>
+                        <td>{{ alunos[i].Nome }}</td>
                         <td>
                             {% if inadimplente_list[i] %}
                                 <span class="text-danger">Inadimplente</span>
@@ -79,11 +79,12 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="detalhes/{{ alunos[i].id }}">
+                        <a href="detalhes/{{ alunos[i].Aluno_id }}">
                                 <button type="button">Detalhes</button>
-                            </a>
-                            <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ alunos[i].id }}')">Deletar</button>
+                        </a>                 
+                        <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ alunos[i].Aluno_id }}')">Deletar</button>       
                         </td>
+                   
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -91,20 +92,24 @@
         </div>
         <br>
     </main>
-<script>
-    var alunos = [
-        {% for aluno in alunos %}
-            {
-                "id": "{{ aluno.id }}",
-                "nome": "{{ aluno.nome }}",
-                "inadimplente": {{ aluno.inadimplente|lower }},
-            },
-        {% endfor %}
-    ];
+    <script>
+        
+        var alunos = [
+            {% for aluno in alunos %}
+            
+                {
+                    "id": "{{ aluno.Aluno_id }}",
+                    "nome": "{{ aluno.Nome }}",
+                    "inadimplente": {{ "true" if aluno.Inadimplente else "false" }},
+                    
+                },
+            {% endfor %}
+        ];
 
-    var pesquisaInput = document.getElementById('pesquisa');
-    var listaPesquisa = document.getElementById('listaPesquisa');
-    var tabelaAlunosBody = document.getElementById('tabelaAlunosBody');
+        var pesquisaInput = document.getElementById('pesquisa');
+        var listaPesquisa = document.getElementById('listaPesquisa');
+        var tabelaAlunosBody = document.getElementById('tabelaAlunosBody');
+
 
     pesquisaInput.addEventListener('input', function () {
         var termoPesquisa = pesquisaInput.value.trim().toLowerCase();
@@ -160,10 +165,7 @@
             deletarButton.textContent = 'Deletar';
             deletarButton.className = 'registro-formulario';
             deletarButton.onclick = function () {
-                var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
-                if (confirmacao) {
-                    window.location.href = "/alunos/deletar/" + resultado.id;
-                }
+                confirmarExclusao(resultado.id);
             };
     
             cellAcoes.appendChild(deletarButton);
@@ -176,6 +178,9 @@
             window.location.href = "/alunos/deletar/" + alunoId;
         }
     }
+    
+    console.log(confirmarExclusao); 
+    
 </script>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>

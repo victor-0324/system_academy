@@ -112,4 +112,58 @@ $(document).ready(function () {
             $('#aviso-admin').hide();
         }
     });
+});
+
+
+
+function utilizarExerciciosExistentes() {
+    // Obtenha o nome do aluno a ser pesquisado (você pode modificar isso conforme necessário)
+    var nomeAluno = prompt("Digite o nome do aluno:");
+
+    // Faça uma solicitação ao servidor Flask para buscar os exercícios do aluno pelo nome
+    fetch('/cadastro/buscar_exercicios_por_nome', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nome_aluno: nomeAluno }), // note que é nome_aluno
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Resposta do servidor:', data);
+        // Verifique se a busca foi bem-sucedida
+        if (data && data.aluno) {
+            console.log('Dados do aluno:', data.aluno);
+            // Preencha automaticamente os campos do formulário com os exercícios do aluno
+            preencherCamposComExercicios(data.aluno);
+        } else {
+            alert('Aluno não encontrado ou sem exercícios');
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        alert('Erro ao buscar aluno');
     });
+}
+
+
+function preencherCamposComExercicios(resposta) {
+    // Verifica se a resposta é válida e se há pelo menos um aluno
+    if (!Array.isArray(resposta) || resposta.length === 0) {
+        console.error('Erro: Resposta inválida ou sem exercícios');
+        return;
+    }
+
+    const exerciciosAluno = document.getElementById('exerciciosAdicionados');
+
+    // Limpa a lista de exercícios antes de preenchê-la
+    exerciciosAluno.innerHTML = '';
+
+    // Itera sobre os exercícios e adiciona à lista
+    resposta.forEach(exercicio => {
+        const itemLista = document.createElement('li');
+        itemLista.textContent = `Dia: ${exercicio.tipoTreino}, Exercício: ${exercicio.exercicio}, Série: ${exercicio.serie}, Repetição: ${exercicio.repeticao}, Descanso: ${exercicio.descanso}, Carga: ${exercicio.carga}`;
+        exerciciosAluno.appendChild(itemLista);
+    });
+}
+
