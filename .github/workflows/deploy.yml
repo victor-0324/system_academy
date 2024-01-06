@@ -14,7 +14,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          cd apps/cdc-sys
+          cd apps/system_academy
           git pull origin deploy
           docker compose build
           docker compose down
