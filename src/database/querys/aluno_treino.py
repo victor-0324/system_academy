@@ -53,6 +53,19 @@ class Querys():
         else:
             return False
 
+    def buscar_exercicios_por_nome(self, nome_aluno):
+        aluno = (
+            self.session.query(Aluno)
+            .filter(Aluno.nome == nome_aluno)
+            .first()
+        )
+
+        if aluno:
+           
+            return aluno
+        else:
+            return None
+
     def get_exercicios_by_aluno(self, aluno_id):
         exercicios = (
         self.session.query(ExerciciosAluno)

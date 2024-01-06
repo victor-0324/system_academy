@@ -73,4 +73,32 @@ def cadastrar():
 
     return render_template("cadastro.html")
 
-  
+
+@cadastro_app.route("/busca_pornome", methods=["POST"])
+@admin_required
+def busca_pornome():
+    # Certifique-se de que os dados estão sendo enviados como JSON no corpo do POST
+    data = request.get_json()
+
+    if 'nome_aluno' in data:
+        nome_aluno = data['nome_aluno']
+
+        with current_app.app_context():
+            session = current_app.db.session
+            querys_instance = Querys(session)
+            aluno = querys_instance.buscar_exercicios_por_nome(nome_aluno)
+
+            if aluno:
+                print(aluno)
+                # Obter exercícios do aluno
+                exercicios = querys_instance.get_exercicios_by_aluno(aluno.id)
+
+                # Retornar os detalhes do aluno em formato JSON
+                return jsonify({'status': 'success', 'aluno': {
+                    'exercicios': exercicios,
+                }})
+            else:
+                return jsonify({'status': 'error', 'message': 'Aluno não encontrado'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Nome do aluno não fornecido no corpo do POST'})
+

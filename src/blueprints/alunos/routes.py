@@ -152,4 +152,3 @@ def deletar(aluno_id):
         querys_instance.deletar( aluno_id)
     return redirect(url_for("clientes_app.mostrar"))
    
-
