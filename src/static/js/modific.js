@@ -1,3 +1,7 @@
+     // Escopo local para evitar variáveis globais desnecessárias
+    var exercicios = [];
+
+
     function atualizarData() {
         // Obter a data atual no formato desejado (dia/mês/ano)
         var dataAtual = new Date().toLocaleDateString('pt-BR');
@@ -9,14 +13,15 @@
     function atualizarCamposExercicio() {
         var opcaoExercicio = document.getElementById('opcaoExercicio').value;
         var cadastroTreinoForm = document.getElementById('cadastroTreinoForm');
-    
+     
         // Mostra ou oculta os elementos com base na escolha do administrador
         cadastroTreinoForm.style.display = opcaoExercicio === 'adicionarNovo' ? 'block' : 'none';
+        if (opcaoExercicio === 'busca') {
+            // Chama a função para buscar exercícios pelo nome do aluno
+            buscarExerciciosPorNome(nomeAluno);
+        }
     }
 
-    // Escopo local para evitar variáveis globais desnecessárias
-    var exercicios = [];
-    
     function adicionarExercicio()  {
     
     var tipoTreino = document.getElementById('tipoTreino').value;
@@ -123,13 +128,12 @@
         }
         
     }
+
     function enviarMedidasParaServidor() {
         // Obtenha os dados das medidas, excluindo os exercícios
         var formData = new FormData(document.querySelector('form'));
         formData.delete('exercicios');
     
-        // Adicione qualquer lógica adicional necessária para enviar apenas as medidas
-        // ...
     
         // Obtenha o ID do aluno da URL
         var alunoId = window.location.pathname.split('/').pop();

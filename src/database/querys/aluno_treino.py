@@ -199,7 +199,7 @@ class Querys():
 
         if aluno and aluno.data_pagamento:
             # Calcular a data de vencimento do próximo pagamento (30 dias após o último pagamento)
-            data_pagamento_proximo = aluno.data_pagamento + timedelta(days=31)
+            data_pagamento_proximo = aluno.data_pagamento + timedelta(days=30)
 
             # Calcular a diferença de dias entre a data de vencimento e a data atual
             diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days

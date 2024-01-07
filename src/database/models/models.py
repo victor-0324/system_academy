@@ -58,7 +58,7 @@ class Aluno(Base):
 
     # Relacionamento com a tabela ExerciciosAluno
     exercicios = relationship('ExerciciosAluno', back_populates='aluno')
-
+    
     def medidas_historico(self):
         historico_antes = []
         historico_depois = []
