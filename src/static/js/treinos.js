@@ -25,21 +25,29 @@
         minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
         segundos = Math.floor((tempoDecorrido % 60000) / 1000);
         atualizarTempoDisplay();
-
+    
         cronometro = setInterval(() => {
             horas = Math.floor(tempoDecorrido / 3600000);
             minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
             segundos = Math.floor((tempoDecorrido % 60000) / 1000);
             atualizarTempoDisplay();
             tempoDecorrido += 1000;
+    
+            // Atualiza o localStorage a cada segundo
+            localStorage.setItem('tempoEstado', JSON.stringify({
+                horas: horas,
+                minutos: minutos,
+                segundos: segundos,
+                treinoAtivo: true,
+                horaInicio: horaInicio
+            }));
         }, 1000);
-
+    
         document.getElementById('btnIniciarTreino').disabled = true;
-
+    
         cronometroIniciado = true;
         localStorage.setItem('cronometroIniciado', 'true');
         localStorage.setItem('horaInicio', horaInicio);
-       
     }
 
 
@@ -228,28 +236,34 @@
     // Atualize a função para iniciar o cronômetro
     function iniciarCronometroSeAtivo() {
         let estadoArmazenado = localStorage.getItem('tempoEstado');
+        console.log(estadoArmazenado)
+        // Verifica se há um estado armazenado e se o cronômetro estava ativo
         if (estadoArmazenado && estadoArmazenado !== 'null') {
             let estado = JSON.parse(estadoArmazenado);
+    
+            // Atualiza os valores de horas, minutos e segundos com base no estado
             segundos = estado.segundos;
             minutos = estado.minutos;
             horas = estado.horas;
-
-            // Verifique se o cronômetro não está iniciado e se o treino estava ativo
-            if (!cronometroIniciado && estado.treinoAtivo) {
-                // Ajuste o tempo decorrido com base no tempo quando o treino foi iniciado
+    
+            // Verifica se o cronômetro estava ativo
+            if (estado.treinoAtivo) {
+                // Calcula o tempo decorrido desde o início do treino até agora
                 let tempoDecorrido = new Date().getTime() - estado.horaInicio;
-
+    
+                // Converte o tempo decorrido em horas, minutos e segundos
                 horas = Math.floor(tempoDecorrido / 3600000);
                 minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
                 segundos = Math.floor((tempoDecorrido % 60000) / 1000);
-
-                // Atualize o tempo da semana ao iniciar o cronômetro
+    
+                // Atualiza o tempo da semana ao iniciar o cronômetro
                 calcularTempoSemana();
-
+    
+                // Atualiza o display do tempo
                 atualizarTempoDisplay();
-                iniciarTreino(); 
+    
+                // Marca o cronômetro como iniciado
                 cronometroIniciado = true;
-                localStorage.setItem('cronometroIniciado', 'true');
             }
         }
     }
@@ -262,22 +276,22 @@
             let progresso = localStorage.getItem(dia);
             let elementoDia = document.getElementById(dia);
     
-            if (elementoDia) {
-                if (progresso) {
-                    elementoDia.textContent = progresso;
-                    if (progresso === '✅') {
-                        elementoDia.style.color = 'green';
-                    } else if (progresso === 'X') {
-                        elementoDia.style.color = 'red';
+                if (elementoDia) {
+                    if (progresso) {
+                        elementoDia.textContent = progresso;
+                        if (progresso === '✅') {
+                            elementoDia.style.color = 'green';
+                        } else if (progresso === 'X') {
+                            elementoDia.style.color = 'red';
+                        }
+                    } else {
+                        elementoDia.textContent = '';
                     }
-                } else {
-                    elementoDia.textContent = '';
                 }
-            }
-        });
-    
+            });
+        marcarDiasNaoTreinados(dias);
         iniciarCronometroSeAtivo();
-        marcarDiasNaoTreinados(dias); 
+         
         
     };
 
