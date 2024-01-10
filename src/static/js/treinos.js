@@ -1,11 +1,9 @@
-
-   // Variáveis do cronômetro
     let cronometro;
     let segundos = 0;
     let minutos = 0;
     let horas = 0;
-    let cronometroIniciado = localStorage.getItem('cronometroIniciado') === 'true';
     let horaInicio;
+    let cronometroIniciado;
 
     // Função para formatar o tempo
     function formatarTempo(tempo) {
@@ -17,38 +15,66 @@
         document.getElementById('tempo-cronometro').textContent = `${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
     }
 
-    // Função para iniciar o treino
+    // Inicia o treino
     function iniciarTreino() {
-        horaInicio = parseInt(localStorage.getItem('horaInicio')) || new Date().getTime();
+        console.log("Iniciando treino...");
+        // Obtém a hora de início do localStorage ou usa o tempo atual se não houver
+        let horaInicio = parseInt(localStorage.getItem('horaInicio')) || new Date().getTime();
+
+        // Calcula o tempo decorrido desde o início do treino
         let tempoDecorrido = new Date().getTime() - horaInicio;
+        
+        // Calcula horas, minutos e segundos a partir do tempo decorrido
         horas = Math.floor(tempoDecorrido / 3600000);
         minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
         segundos = Math.floor((tempoDecorrido % 60000) / 1000);
+        
+        // Atualiza o display do tempo
         atualizarTempoDisplay();
-    
+
+        // Inicia o cronômetro que atualiza o tempo a cada segundo
         cronometro = setInterval(() => {
             horas = Math.floor(tempoDecorrido / 3600000);
             minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
             segundos = Math.floor((tempoDecorrido % 60000) / 1000);
+            
+            // Atualiza o display do tempo a cada segundo
             atualizarTempoDisplay();
+            
+            // Incrementa o tempo decorrido em 1 segundo
             tempoDecorrido += 1000;
-    
-            // Atualiza o localStorage a cada segundo
-            localStorage.setItem('tempoEstado', JSON.stringify({
-                horas: horas,
-                minutos: minutos,
-                segundos: segundos,
-                treinoAtivo: true,
-                horaInicio: horaInicio
-            }));
+
+            // Atualiza o localStorage a cada segundo com o estado do cronômetro
+            if (cronometroIniciado) {
+                localStorage.setItem('tempoEstado', JSON.stringify({
+                    horas: horas,
+                    minutos: minutos,
+                    segundos: segundos,
+                    treinoAtivo: true,
+                    horaInicio: horaInicio
+                }));
+            }
         }, 1000);
-    
+
+        // Desabilita o botão de iniciar treino
         document.getElementById('btnIniciarTreino').disabled = true;
-    
+
+        // Marca o cronômetro como iniciado no localStorage
         cronometroIniciado = true;
         localStorage.setItem('cronometroIniciado', 'true');
         localStorage.setItem('horaInicio', horaInicio);
     }
+
+    // Event listener para o evento de visibilidade da página
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            // Pausar o cronômetro quando a página não está visível
+            clearInterval(cronometro);
+        } else {
+            // Retomar o cronômetro quando a página volta a ser visível
+            iniciarCronometroSeAtivo();
+        }
+    });
 
 
     // Função para concluir o treino
@@ -101,10 +127,14 @@
         cronometroIniciado = false;
         localStorage.setItem('cronometroIniciado', 'false');
         localStorage.removeItem('horaInicio');
+        
+        // Limpa o estado do cronômetro no localStorage
+        localStorage.removeItem('tempoEstado');
 
         // Reiniciar o progresso no final da semana (sábado)
         reiniciarProgresso();
     }
+
 
     // Adicione essa linha antes do código do cronômetro para definir a função que atualiza o tempo da semana
     setInterval(calcularTempoSemana, 1000);
@@ -233,40 +263,58 @@
         }
     }
 
-    // Atualize a função para iniciar o cronômetro
+    // Função para iniciar o cronômetro se estiver ativo
     function iniciarCronometroSeAtivo() {
         let estadoArmazenado = localStorage.getItem('tempoEstado');
-        console.log(estadoArmazenado)
-        // Verifica se há um estado armazenado e se o cronômetro estava ativo
+    
         if (estadoArmazenado && estadoArmazenado !== 'null') {
             let estado = JSON.parse(estadoArmazenado);
-    
-            // Atualiza os valores de horas, minutos e segundos com base no estado
             segundos = estado.segundos;
             minutos = estado.minutos;
             horas = estado.horas;
     
-            // Verifica se o cronômetro estava ativo
-            if (estado.treinoAtivo) {
-                // Calcula o tempo decorrido desde o início do treino até agora
+            // Verifique se o cronômetro não está iniciado e se o treino estava ativo
+            if (!cronometroIniciado && estado.treinoAtivo) {
+                // Ajuste o tempo decorrido com base no tempo quando o treino foi iniciado
                 let tempoDecorrido = new Date().getTime() - estado.horaInicio;
     
-                // Converte o tempo decorrido em horas, minutos e segundos
                 horas = Math.floor(tempoDecorrido / 3600000);
                 minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
                 segundos = Math.floor((tempoDecorrido % 60000) / 1000);
     
-                // Atualiza o tempo da semana ao iniciar o cronômetro
+                // Atualize o tempo da semana ao iniciar o cronômetro
                 calcularTempoSemana();
     
-                // Atualiza o display do tempo
                 atualizarTempoDisplay();
     
-                // Marca o cronômetro como iniciado
+                // Inicie o cronômetro novamente
+                cronometro = setInterval(() => {
+                    horas = Math.floor(tempoDecorrido / 3600000);
+                    minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
+                    segundos = Math.floor((tempoDecorrido % 60000) / 1000);
+                    atualizarTempoDisplay();
+    
+                    // Atualiza o localStorage a cada segundo
+                    localStorage.setItem('tempoEstado', JSON.stringify({
+                        horas: horas,
+                        minutos: minutos,
+                        segundos: segundos,
+                        treinoAtivo: true,
+                        horaInicio: estado.horaInicio
+                    }));
+    
+                    tempoDecorrido += 1000;
+                }, 1000);
+    
                 cronometroIniciado = true;
+                localStorage.setItem('cronometroIniciado', 'true');
             }
+        } else {
+            // Se não houver estado salvo, reinicie o progresso
+            reiniciarProgresso();
         }
     }
+  
    
     // Carregar progresso do LocalStorage ao recarregar a página
     window.onload = function () {
@@ -292,7 +340,6 @@
         marcarDiasNaoTreinados(dias);
         iniciarCronometroSeAtivo();
          
-        
     };
 
     function marcarConcluido(botao) {
