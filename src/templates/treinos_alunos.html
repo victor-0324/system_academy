@@ -66,7 +66,7 @@
                         <h4 class="card-title">{{ current_user.nome }} </h4>
                     </div>
                     <div class="desafio-container">
-                    <h2>Progresso Semanal</h2>
+                        <h2>Progresso Semanal</h2>
                         <div class="container">
                             <table class="table" aria-labelledby="tabelaProgressoLabel">
                                 <thead>
@@ -99,6 +99,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     {% set dias_exercicios = {} %}
                     {% for exercicio in exercicios %}
                         {% set dia = exercicio.tipoTreino %}
@@ -142,11 +143,16 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2">
-                                                <button type="button" class="treino"  onclick="marcarConcluido(this)">Concluir Treino</button>
+                                                <br>
                                             </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="button" class="treino"  onclick="marcarConcluido(this)">Concluir Treino</button>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div>
@@ -155,6 +161,7 @@
                 </div>      
             </div>   
         </div> 
+
     <script src="{{ url_for('static', filename='js/treinos.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
