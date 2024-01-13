@@ -16,49 +16,121 @@
      
         // Mostra ou oculta os elementos com base na escolha do administrador
         cadastroTreinoForm.style.display = opcaoExercicio === 'adicionarNovo' ? 'block' : 'none';
-        if (opcaoExercicio === 'busca') {
+        cadastroTreinoForm.style.display = opcaoExercicio === 'Busca' ? 'block' : 'none';
+        if (opcaoExercicio === 'Busca') {
             // Chama a função para buscar exercícios pelo nome do aluno
-            buscarExerciciosPorNome(nomeAluno);
+            utilizarExerciciosExistentes();
         }
     }
 
-    function adicionarExercicio()  {
-    
-    var tipoTreino = document.getElementById('tipoTreino').value;
-    var exercicio = document.getElementById('exercicio').value;
-    var serie = document.getElementById('serie').value;
-    var repeticao = document.getElementById('repeticao').value;
-    var descanso = document.getElementById('descanso').value;
-    var carga = document.getElementById('carga').value;
-    
-    // Verifica se todos os campos estão preenchidos
-    if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
-        alert('Por favor, preencha todos os campos do exercício.');
-        return;
+    function utilizarExerciciosExistentes() {
+        // Obtenha o nome do aluno a ser pesquisado (você pode modificar isso conforme necessário)
+        var nomeAluno = prompt("Digite o nome do aluno:");
+
+        // Faça uma solicitação ao servidor Flask para buscar os exercícios do aluno pelo nome
+        fetch('/cadastro/busca_pornome', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify({ nome_aluno: nomeAluno }), 
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Resposta do servidor:', data);
+            // Verifique se a busca foi bem-sucedida
+            if (data && data.aluno.exercicios) {
+                console.log('Dados do aluno:', data.aluno.exercicios);
+                // Adicione os exercícios à lista
+                adicionarExercicios(Object.values(data.aluno.exercicios));
+            } else {
+                alert('Aluno não encontrado ou sem exercícios');
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Erro ao buscar aluno');
+        });
     }
+
+    // Função para adicionar exercícios à lista
+    function adicionarExercicios(novosExercicios) {
+        // Adiciona cada novo exercício à lista global
+        novosExercicios.forEach(novoExercicio => {
+            // Verifica se o exercício já está na lista
+            const exercicioExistente = exercicios.find(exercicio => (
+                exercicio.tipoTreino === novoExercicio.tipoTreino &&
+                exercicio.exercicio === novoExercicio.exercicio &&
+                exercicio.serie === novoExercicio.serie &&
+                exercicio.repeticao === novoExercicio.repeticao &&
+                exercicio.descanso === novoExercicio.descanso &&
+                exercicio.carga === novoExercicio.carga
+            ));
     
-    var exercicioInfo = {
-        'tipoTreino': tipoTreino,
-        'exercicio': exercicio,
-        'serie': serie,
-        'repeticao': repeticao,
-        'descanso': descanso,
-        'carga': carga,
-    };
+            // Adiciona o novo exercício apenas se não estiver na lista
+            if (!exercicioExistente) {
+                exercicios.push(novoExercicio);
+            }
+        });
     
-    exercicios.push(exercicioInfo);
+        // Limpa a lista de exercícios antes de preenchê-la
+        const exerciciosAdicionados = document.getElementById('exerciciosAdicionados');
+        exerciciosAdicionados.innerHTML = '';
     
-    // Adicione logs para verificar o que está sendo adicionado
-    console.log('Exercício adicionado:', exercicioInfo);
-    console.log('Lista de exercícios atualizada:', exercicios);
-    // Atualiza a lista de exercícios na página
-    atualizarListaExercicios();
+        // Itera sobre os exercícios e adiciona campos de edição à lista
+        exercicios.forEach(exercicio => {
+            const divExercicio = document.createElement('div');
+            divExercicio.className = 'exercicio-editavel';
+            
+            // Adiciona uma margem inferior para criar espaço entre as divs
+            divExercicio.style.marginBottom = '10px'; // Ajuste conforme necessário
+            
+            const camposEdicao = ['tipoTreino', 'exercicio', 'serie', 'repeticao', 'descanso', 'carga'];
     
-    // Limpa os campos de treino
-    limparCamposTreino();
+            camposEdicao.forEach(campo => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = exercicio[campo];
+                input.setAttribute('data-campo', campo);
+                divExercicio.appendChild(input);
+            });
     
+            exerciciosAdicionados.appendChild(divExercicio);
+        });
     }
-    
+
+    function adicionarExercicioManualmente() {
+        var tipoTreino = document.getElementById('tipoTreino').value;
+        var exercicio = document.getElementById('exercicio').value;
+        var serie = document.getElementById('serie').value;
+        var repeticao = document.getElementById('repeticao').value;
+        var descanso = document.getElementById('descanso').value;
+        var carga = document.getElementById('carga').value;
+
+        // Verifica se todos os campos estão preenchidos
+        if (!tipoTreino || !exercicio || !serie || !repeticao || !descanso || !carga) {
+            alert('Por favor, preencha todos os campos do exercício.');
+            return;
+        }
+
+        // Adiciona ou edita um exercício à lista
+        var exercicioInfo = {
+            'tipoTreino': tipoTreino,
+            'exercicio': exercicio,
+            'serie': serie,
+            'repeticao': repeticao,
+            'descanso': descanso,
+            'carga': carga,
+        };
+
+        exercicios.push(exercicioInfo);
+        
+        adicionarExercicios(exercicios);
+        
+        // Limpa os campos de treino
+        limparCamposTreino();
+    }
+
     function atualizarListaExercicios() {
     
     var listaExercicios = document.getElementById('exerciciosAdicionados');

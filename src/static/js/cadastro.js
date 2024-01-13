@@ -91,6 +91,9 @@
         exercicios.forEach(exercicio => {
             const divExercicio = document.createElement('div');
             divExercicio.className = 'exercicio-editavel';
+            
+            // Adiciona uma margem inferior para criar espaço entre as divs
+            divExercicio.style.marginBottom = '10px'; // Ajuste conforme necessário
     
             const camposEdicao = ['tipoTreino', 'exercicio', 'serie', 'repeticao', 'descanso', 'carga'];
     
