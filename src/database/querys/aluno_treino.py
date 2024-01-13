@@ -87,6 +87,7 @@ class Querys():
         return None, None
 
     def cadastrar_aluno(self, nome, idade, sexo, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, senha, data_entrada, data_pagamento, jatreino, permissao, exercicios):
+
         data_entrada = datetime.strptime(data_entrada, '%Y-%m-%d') if data_entrada else None
         data_pagamento = datetime.strptime(data_pagamento, '%Y-%m-%d') if data_pagamento else None
 
@@ -121,6 +122,7 @@ class Querys():
             aluno.exercicios.append(exercicio_aluno)
         self.session.commit()
         return aluno
+        
     def atualizar_dados(self, aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios):
         aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
         historico_antes = aluno.medidas_historico()
@@ -199,7 +201,7 @@ class Querys():
 
         if aluno and aluno.data_pagamento:
             # Calcular a data de vencimento do próximo pagamento (30 dias após o último pagamento)
-            data_pagamento_proximo = aluno.data_pagamento + timedelta(days=30)
+            data_pagamento_proximo = aluno.data_pagamento + timedelta(days=32)
 
             # Calcular a diferença de dias entre a data de vencimento e a data atual
             diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
@@ -208,7 +210,9 @@ class Querys():
                 return "Seu pagamento está próximo de vencer! Por favor, efetue o pagamento nos próximos 3 dias para continuar acessando os treinos."
             elif diferenca_dias == 2:
                 return "Seu pagamento está próximo de vencer! Por favor, efetue o pagamento nos próximos 2 dias para continuar acessando os treinos."
-            elif diferenca_dias == 1:
+            elif diferenca_dias == 2:
+                return "Seu pagamento está próximo de vencer! Por favor, efetue o pagamento nos próximos 1 dias para continuar acessando os treinos."
+            elif diferenca_dias == 0:
                 return "Seu pagamento  vence hoje! Efetue o pagamento e continue acessando os treinos."
             else:
                 return None 

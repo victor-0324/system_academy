@@ -5,6 +5,16 @@ body {
     overflow: hidden;
 }
 
+.mensagem-erro {
+    color: #FFA500;
+    background-color: #FFF0E6; /* Fundo em tom pastel */
+    padding: 10px;
+    border: 1px solid #FFA500; /* Borda laranja */
+    border-radius: 5px; /* Cantos arredondados */
+    margin-bottom: 10px; /* Espaço abaixo da mensagem */
+    font-size: 14px;
+}
+
 .login-container {
     background-image: url(enovare.jpeg);
     background-size: contain;

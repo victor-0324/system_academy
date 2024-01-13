@@ -15,7 +15,11 @@ def login():
         querys_instance = Querys(session)   
 
         aluno, permissao = querys_instance.verificar_credenciais(login, senha) 
-       
+
+        if aluno == None:
+                mensagem_erro = 'Credenciais inválidas ou acesso não autorizado. Tente novamente.'
+                return render_template('pages/auth/login.html', mensagem_erro=mensagem_erro)
+
         if aluno:
             if permissao == 'admin':
                 login_user(aluno)
@@ -29,6 +33,7 @@ def login():
             flash('Credenciais inválidas. Tente novamente.', 'danger')
 
     return render_template('pages/auth/login.html')
+   
 
 @login_app.route('/logout')
 @login_required

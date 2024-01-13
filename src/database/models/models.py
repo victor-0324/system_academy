@@ -4,7 +4,7 @@ from flask_login import UserMixin, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey
 from src.database import Base
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 class Aluno(Base):
     __tablename__ = "alunos"
@@ -97,12 +97,23 @@ class Aluno(Base):
     @property
     def inadimplente(self):
         if self.data_pagamento:
-            prazo_pagamento = timedelta(days=30)  
+            prazo_pagamento = timedelta(days=32)
             data_limite = self.data_pagamento + prazo_pagamento
 
-            return datetime.utcnow() > data_limite
+            # Obtém o fuso horário UTC
+            tz_utc = timezone.utc
+
+            # Obtém a data e hora atual com o fuso horário UTC
+            data_atual_utc = datetime.now(tz=tz_utc)
+
+            # Converte a data de limite para o fuso horário UTC
+            data_limite_utc = data_limite.replace(tzinfo=tz_utc)
+
+            # Verifica se a data atual é maior que a data limite
+            return data_atual_utc > data_limite_utc
         else:
             return True
+
 
     def __repr__(self):
         return (

@@ -37,10 +37,8 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Resposta do servidor:', data);
             // Verifique se a busca foi bem-sucedida
             if (data && data.aluno.exercicios) {
-                console.log('Dados do aluno:', data.aluno.exercicios);
                 // Adicione os exercícios à lista
                 adicionarExercicios(Object.values(data.aluno.exercicios));
             } else {
@@ -184,7 +182,6 @@
             .then(response => response.json())
             .then(data => {
                 // Lida com a resposta do servidor
-                console.log(data);
                 // Limpa os exercícios após o envio
                 exercicios = [];
                 atualizarListaExercicios();
@@ -218,8 +215,7 @@
         })
             .then(response => response.json())
             .then(data => {
-                // Lida com a resposta do servidor
-                console.log(data);
+       
                 // Redireciona para a outra página após o cadastro
                 window.location.href = '/alunos';
             })

@@ -17,7 +17,7 @@
 
     // Inicia o treino
     function iniciarTreino() {
-        console.log("Iniciando treino...");
+       
         // Obtém a hora de início do localStorage ou usa o tempo atual se não houver
         let horaInicio = parseInt(localStorage.getItem('horaInicio')) || new Date().getTime();
 

@@ -10,6 +10,9 @@
 <body>
     <div class="login-container">
         <form method="POST">
+            {% if mensagem_erro %}
+                <p class="mensagem-erro">{{ mensagem_erro }}</p>
+            {% endif %}
             <h2>Login</h2>
             <div class="input-group">
                 <label for="username">Usuário:</label>
