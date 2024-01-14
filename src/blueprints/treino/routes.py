@@ -42,7 +42,7 @@ def mostrar():
 
     # Verificação de pagamento
     faltam_tres_dias = querys_instance.verificar_falta_tres_dias(aluno_id)
-
+    print(faltam_tres_dias)
     return render_template('treinos_alunos.html', exercicios=exercicios, faltam_tres_dias=faltam_tres_dias)
 
 @treino_app.route("/evolucao/<int:aluno_id>", methods=["GET"])
