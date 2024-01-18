@@ -69,32 +69,23 @@
         if (document.hidden) {
             
             // Verificar se há dados de cronômetro no localStorage
+            
+        } else {
             var dadosCronometro = localStorage.getItem('tempoEstado');
-           
+            
             if (dadosCronometro) {
                 // Analisar os dados do cronômetro
                 var dadosObj = JSON.parse(dadosCronometro);
                 
                 // Verificar se o cronômetro está ativo
                 if (dadosObj.treinoAtivo) {
-                    // Mostrar alerta e recarregar a página
-                    var resposta = confirm("Por favor, recarregue a página para continuar.");
-    
-                    if (resposta) {
-                        // Recarregar a página
-                        location.reload();
-                    } else {
-                        // O usuário escolheu não recarregar a página, você pode adicionar lógica adicional aqui se necessário
-                    }
+                    location.reload();
                 } else {
                     // O cronômetro não está ativo, você pode adicionar lógica adicional aqui se necessário
                 }
             } else {
                 // Não há dados de cronômetro no localStorage, você pode adicionar lógica adicional aqui se necessário
             }
-        } else {
-            // Retomar o cronômetro quando a página volta a ser visível
-            iniciarCronometroSeAtivo();
         }
     });
 
