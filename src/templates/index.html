@@ -18,7 +18,7 @@
 <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tabelas.css') }}">
 </head>
 <body>
   <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/inicio.jpg') }}">
@@ -60,30 +60,53 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h4 class="wow bounceInUp">Página do Administrador</h4>
-        <h2 class="wow bounceInRight">{{ current_user.nome }}</h2>
+        <h3 class="wow bounceInUp">Página Do Administrador</h3>
+        <div class="total-alunos">
+          <h4>Total de Alunos: {{ quantidade_alunos }}</h4>
+        </div>
+        <br>
         <div class="alunos-pagam-semana">
           {% if inadimplentes or alunosPagamSemana %}
-              <div class="inadimplentes">
-                  <h3>Alunos Inadimplentes</h3>
-                  <ul>
-                      {% for aluno in inadimplentes %}
-                          <li>{{ aluno.nome }} - Última Data de Pagamento: {{ aluno.dataPagamento }}</li>
-                      {% endfor %}
-                  </ul>
-              </div>
-      
-              <div class="proximo-pagamento">
-                  <h3>Pagantes da Semana</h3>
-                  <ul>
-                      {% for aluno in alunosPagamSemana %}
-                          <li>{{ aluno.nome }} - Próxima Data de Pagamento: {{ aluno.proximaDataPagamento }}</li>
-                      {% endfor %}
-                  </ul>
-              </div>
-      
-              <div class="total-alunos">
-                  <h4>Total de Alunos: {{ quantidade_alunos }}</h4>
+              <div class="table-container">
+                  <div class="inadimplentes">
+                      <h5>Alunos Inadimplentes</h5>
+                      <table>
+                          <thead>
+                              <tr>
+                                  <th>Nome</th>
+                                  <th>Último Pagamento</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for aluno in inadimplentes %}
+                                  <tr>
+                                      <td>{{ aluno.nome }}</td>
+                                      <td>{{ aluno.dataPagamento }}</td>
+                                  </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              
+                  <div class="proximo-pagamento">
+                      <h5>Pagantes Da Semana</h5>
+                      <table>
+                          <thead>
+                              <tr>
+                                  <th>Nome</th>
+                                  <th>Próx. Pagamento</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for aluno in alunosPagamSemana %}
+                                  <tr>
+                                      <td>{{ aluno.nome }}</td>
+                                      <td>{{ aluno.proximaDataPagamento }}</td>
+                                  </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
               </div>
           {% else %}
               <p>Não há alunos para exibir.</p>
@@ -93,6 +116,7 @@
     </div>
   </div>
 </div>
+
 
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
