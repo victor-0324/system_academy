@@ -63,10 +63,21 @@ button {
     border: 1px solid #ccc;
     border-radius: 1px;
     box-sizing: border-box;
-    background-color: #121212; /* Preto escuro */
+    background-color: #333; /* Preto escuro */
     color: #fff; /* Texto branco */
 }
+button {
+    background-color: #ff8c00;
+    color: #121212;
+}
+.botoes-acoes {
+    display: flex;
+    flex-direction: column;
+}
 
+.botoes-acoes button {
+    margin-bottom: 10px; /* Adiciona um espaçamento de 5 pixels abaixo de cada botão */
+}
 input[type="submit"] {
     background-color: #ff8c00; /* Laranja escuro */
     color: #121212; /* Preto */

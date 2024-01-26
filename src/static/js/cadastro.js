@@ -135,41 +135,84 @@
         return exercicios;
     }
 
-    function enviarExerciciosParaServidor() {
-        // Obtenha os dados dos exercícios
-        var exercicios = obterExerciciosAdicionados();
-
-        // Verifique se há exercícios antes de enviar
-        if (exercicios.length === 0) {
-            alert('Adicione pelo menos um exercício antes de cadastrar.');
-            return false; // Impede o envio do formulário
-        }
-
-        // Adicione os exercícios ao formData
-        var formData = new FormData(document.querySelector('form'));
-        formData.append('exercicios', JSON.stringify(exercicios));
-
-        var alunoId = window.location.pathname.split('/').pop();
-        var url = '' + alunoId;
-
-        // Faça a solicitação POST para o servidor
-        fetch(url, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                // Limpa os exercícios após o envio
-                exercicios = [];
-                // Redireciona para a outra página após o cadastro
-                window.location.href = '/alunos';
-            })
-            .catch(error => {
-                // Lida com erros
-                console.error(error);
+    function validarFormulario() {
+        // Obtém referências para os campos de entrada
+        var login = document.getElementById('login');
+        var senha = document.getElementById('senha');
+        var idade = document.getElementById('idade');
+        var sexo = document.getElementById('sexo');
+        var data_entrada = document.getElementById('data_entrada');
+        var data_pagamento = document.getElementById('data_pagamento');
+        var jatreino = document.getElementById('jatreino');
+        var permissao = document.getElementById('permissao');
+    
+        // Lista de campos
+        var campos = [login, senha, idade, sexo, data_pagamento, data_entrada, jatreino, permissao];
+    
+        // Encontrar o primeiro campo vazio
+        var primeiroCampoVazio = campos.find(function(campo) {
+            return campo.value === "";
+        });
+    
+        // Verifica se há algum campo vazio
+        if (primeiroCampoVazio) {
+            // Exibe o alerta
+            alert("Por favor, preencha todos os campos antes de enviar o formulário.");
+    
+            // Rola para o primeiro campo vazio
+            window.scrollTo({
+                top: primeiroCampoVazio.offsetTop - 20,
+                behavior: 'smooth'
             });
+    
+            // Impede o envio do formulário
+            return false;
+        }
+    
+        // Se todos os campos estiverem preenchidos, o formulário pode ser enviado
+        return true;
+    }
+    
+    
+    function enviarExerciciosParaServidor() {
+        if (validarFormulario()) {
+            // Obtenha os dados dos exercícios
+            var exercicios = obterExerciciosAdicionados();
 
-        return false; // Impede o envio do formulário
+            // Verifique se há exercícios antes de enviar
+            if (exercicios.length === 0) {
+                alert('Adicione pelo menos um exercício antes de cadastrar.');
+                return false; // Impede o envio do formulário
+            }
+
+            // Adicione os exercícios ao formData
+            var formData = new FormData(document.querySelector('form'));
+            formData.append('exercicios', JSON.stringify(exercicios));
+
+            var alunoId = window.location.pathname.split('/').pop();
+            var url = '' + alunoId;
+
+            // Faça a solicitação POST para o servidor
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Limpa os exercícios após o envio
+                    exercicios = [];
+                    // Redireciona para a outra página após o cadastro
+                    window.location.href = '/alunos';
+                })
+                .catch(error => {
+                    // Lida com erros
+                    console.error(error);
+                });
+            return true;
+        } else {
+            // Se a validação falhar, retorne false para impedir o envio do formulário
+            return false;
+        }
     }
 
     $(document).ready(function () {

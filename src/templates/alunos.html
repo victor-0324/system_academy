@@ -42,55 +42,64 @@
         </div>
         </div>
     </nav>
+    
     <main>
-        <h1 class="titulo-pagina">Lista dos Alunos</h1>
-        <div class="pesquisa-alunos">
-            <label for="pesquisa">Pesquisar:</label>
-            <input type="text" id="pesquisa" placeholder="Digite o nome do aluno">
+        <div class="main-container">
+            <h1 class="titulo-pagina">Lista dos Alunos</h1>
+            <div class="pesquisa-alunos">
+                <label for="pesquisa">Pesquisar:</label>
+                <input type="text" id="pesquisa" placeholder="Digite o nome do aluno">
+            </div>
+            <div class="resultados-pesquisa">
+                
+                <ul id="listaPesquisa"></ul>
+            </div>
+            <br> <br>
+            <div class="informacoes-gerais">
+                <p>Total de Alunos Cadastrados: {{ quantidade_alunos }}</p>
+            </div>
+            <div class="tabela-alunos">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAlunosBody">
+                        {% for i in range(quantidade_alunos) %}
+                        <tr>
+                            <td>{{ alunos[i].nome }}</td>
+                            <td>
+                                {% if inadimplente_list[i] %}
+                                    <span class="text-danger">Inadimplente</span>
+                                    <br>
+                                    Referente: {{ proxima_data_pagamento_list[i] }}
+                                {% else %}
+                                    <span class="text-success">Pago</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="botoes-acoes">  
+                                    <a href="detalhes/{{ alunos[i].id }}">
+                                        <button type="button">Detalhes</button>
+                                    </a>
+                                
+                                    <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ alunos[i].id }}')">
+                                        Deletar
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
         </div>
-        <div class="resultados-pesquisa">
-            
-            <ul id="listaPesquisa"></ul>
-        </div>
-        <br> <br>
-        <div class="informacoes-gerais">
-            <p>Total de Alunos Cadastrados: {{ quantidade_alunos }}</p>
-        </div>
-        <div class="tabela-alunos">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaAlunosBody">
-                    {% for i in range(quantidade_alunos) %}
-                    <tr>
-                        <td>{{ alunos[i].nome }}</td>
-                        <td>
-                            {% if inadimplente_list[i] %}
-                                <span class="text-danger">Inadimplente</span>
-                                <br>
-                                Referente: {{ proxima_data_pagamento_list[i] }}
-                            {% else %}
-                                <span class="text-success">Pago</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="detalhes/{{ alunos[i].id }}">
-                                <button type="button">Detalhes</button>
-                            </a>
-                            <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ alunos[i].id }}')">Deletar</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <br>
     </main>
+    
 <script>
     var alunos = [
         {% for aluno in alunos %}
