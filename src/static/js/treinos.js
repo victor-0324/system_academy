@@ -214,15 +214,6 @@
 
     function reiniciarProgresso() {
         let diaDaSemana = new Date().getDay();
-    
-        // Verifica se o dia da semana é domingo (0)
-        if (diaDaSemana === 0) {
-            reiniciar();
-        }
-    }
-
-    function reiniciarProgresso() {
-        let diaDaSemana = new Date().getDay();
 
         // Verifica se o dia da semana é sábado (6) ou domingo (0)
         if (diaDaSemana === 0 ) {
@@ -332,5 +323,3 @@
         carregarProgresso();
         reiniciarProgresso();
     };
-
-   
