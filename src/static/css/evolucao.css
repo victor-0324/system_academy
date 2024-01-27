@@ -1,0 +1,50 @@
+body {
+    color: #000000;
+}
+
+main {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+.badge_ {
+    margin-left: 6px;
+    Color: #04D939;
+}
+
+.badge__ {
+    margin-left: 6px;
+    Color: #F24405;
+}
+.badge___ {
+    margin-left: 6px;
+    Color: #F0941F;
+}
+/* Adaptação para dispositivos móveis */
+@media (max-width: 767px) {
+    .table th, .table td {
+        padding: 8px;
+    }
+}

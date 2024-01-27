@@ -212,12 +212,11 @@
         }
     }
 
-    function confirmarReinicio() {
-        // Adiciona uma janela de confirmação
-        let confirmacao = confirm("Tem certeza de que deseja reiniciar o progresso? Isso não pode ser desfeito.");
-
-        // Se o usuário confirmar, então reinicia o progresso
-        if (confirmacao) {
+    function reiniciarProgresso() {
+        let diaDaSemana = new Date().getDay();
+    
+        // Verifica se o dia da semana é domingo (0)
+        if (diaDaSemana === 0) {
             reiniciar();
         }
     }
@@ -331,11 +330,7 @@
     // Carregar progresso do LocalStorage ao recarregar a página
     window.onload = function () {
         carregarProgresso();
+        reiniciarProgresso();
     };
 
-    function marcarConcluido(botao) {
-        botao.innerHTML = 'Concluído';
-        botao.style.backgroundColor = '#008000';  // Cor verde após clicar
-        botao.style.color = '#ffffff';  // Texto branco após clicar
-        botao.disabled = true;  // Desativa o botão após ser concluído
-    };
+   

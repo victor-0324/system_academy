@@ -11,59 +11,7 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        body {
-            color: #000000;
-        }
-
-        main {
-            background-color: #ffffff;
-            color: #000000;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .table th, .table td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        .table th {
-            background-color: #f2f2f2;
-        }
-
-        .badge_ {
-            margin-left: 6px;
-            Color: #F24405;
-        }
-
-        .badge__ {
-            margin-left: 6px;
-            Color: #F0941F;
-        }
-        .badge___ {
-            margin-left: 6px;
-            Color: #22BABB;
-        }
-        /* Adaptação para dispositivos móveis */
-        @media (max-width: 767px) {
-            .table th, .table td {
-                padding: 8px;
-            }
-        }
-    </style>
-        
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/evolucao.css') }}">
 </head>
 
 <body>
@@ -132,7 +80,7 @@
                                     'ant_d': 'Antebraço Direito',
                                     'ant_e': 'Antebraço Esquerdo',
                                     'cintura': 'Cintura',
-                                    'abdome': 'Abdome',
+                                    'abdome': 'abdômen',
                                     'quadril': 'Quadril',
                                     'coxa_d': 'Coxa Direita',
                                     'coxa_e': 'Coxa Esquerda',
@@ -175,84 +123,109 @@
                         {% endif %}
                     </tbody>
                 </table>
-                <canvas id="graficoPeso" width="400" height="200"></canvas>
+                <canvas id="graficoPeso" width="400" height="300"></canvas>
+                <div id="legendaCores"></div>
             </div>
         </main>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctxPeso = document.getElementById('graficoPeso').getContext('2d');
-
-        var data = {
-            labels: ['Peso', 'ombro', 'Torax', 'Braço D', 'Braço E', 'Ant D', 'Ant E', 'Cintura', 'Abdome', 'Quadril', 'Coxa D', 'Coxa E', 'Pant D', 'Pant E'],
-            datasets: [
-                {
-                    label: 'Antes',
-                    backgroundColor: '#F0941F', 
-                    borderColor: '#196774',
-                    borderWidth: 1,
-                    data: [
-                        {% if historico_medidas_peso[0] %}
-                            {{ historico_medidas_peso[0]['peso'] }},
-                            {{ historico_medidas_peso[0]['ombro'] }},
-                            {{ historico_medidas_peso[0]['torax'] }},
-                            {{ historico_medidas_peso[0]['braco_d'] }},
-                            {{ historico_medidas_peso[0]['braco_e'] }},
-                            {{ historico_medidas_peso[0]['ant_d'] }},
-                            {{ historico_medidas_peso[0]['ant_e'] }},
-                            {{ historico_medidas_peso[0]['cintura'] }},
-                            {{ historico_medidas_peso[0]['abdome'] }},
-                            {{ historico_medidas_peso[0]['quadril'] }},
-                            {{ historico_medidas_peso[0]['coxa_d'] }},
-                            {{ historico_medidas_peso[0]['coxa_e'] }},
-                            {{ historico_medidas_peso[0]['pant_d'] }},
-                            {{ historico_medidas_peso[0]['pant_e'] }}
-                        {% else %}
-                            // Valor padrão se historico_medidas_peso[-1] não existir
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                        {% endif %}
-                    ]
-                },
-                {
-                    label: 'Depois',
-                    backgroundColor: '#EF6024',
-                    borderColor: '#363432',
-                    borderWidth: 1,
-                    data: [
-                        {{ historico_depois[0]['peso'] }},
-                        {{ historico_depois[0]['ombro'] }},
-                        {{ historico_depois[0]['torax'] }},
-                        {{ historico_depois[0]['braco_d'] }},
-                        {{ historico_depois[0]['braco_e'] }},
-                        {{ historico_depois[0]['ant_d'] }},
-                        {{ historico_depois[0]['ant_e'] }},
-                        {{ historico_depois[0]['cintura'] }},
-                        {{ historico_depois[0]['abdome'] }},
-                        {{ historico_depois[0]['quadril'] }},
-                        {{ historico_depois[0]['coxa_d'] }},
-                        {{ historico_depois[0]['coxa_e'] }},
-                        {{ historico_depois[0]['pant_d'] }},
-                        {{ historico_depois[0]['pant_e'] }}
-                    ]
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var historico_medidas_peso = {% if historico_medidas_peso %}{{ historico_medidas_peso | tojson | safe }}{% else %}[]{% endif %};
+                var historico_depois = {% if historico_depois %}{{ historico_depois | tojson | safe }}{% else %}[]{% endif %};
+            
+                // Verificar se há dados disponíveis
+                if (historico_medidas_peso.length > 0 && historico_depois.length > 0) {
+                    // Obter a última atualização
+                    var medidasAntes = historico_medidas_peso[historico_medidas_peso.length - 1];
+                    var medidasDepois = historico_depois[0];
+            
+                    var ctxPeso = document.getElementById('graficoPeso').getContext('2d');
+            
+                    var calcularDiferenca = function (antes, depois) {
+                        if (isNaN(antes) || isNaN(depois)) {
+                            return 0;
+                        }
+            
+                        return depois - antes;
+                    };
+            
+                    var labels = ['Peso', 'Ombro', 'Tórax', 'Braço Direito', 'Braço Esquerdo', 'Antebraço Direito', 'Antebraço Esquerdo', 'Cintura', 'abdômen', 'Quadril', 'Coxa Direita', 'Coxa Esquerda', 'Panturrilha Direita', 'Panturrilha Esquerda'];
+                    var dadosAntes = [ medidasAntes['peso'], medidasAntes['ombro'], medidasAntes['torax'], medidasAntes['braco_d'], medidasAntes['braco_e'], medidasAntes['ant_d'], medidasAntes['ant_e'], medidasAntes['cintura'], medidasAntes['abdome'], medidasAntes['quadril'], medidasAntes['coxa_d'], medidasAntes['coxa_e'], medidasAntes['pant_d'], medidasAntes['pant_e']];
+                    var dadosDepois = [ medidasDepois['peso'], medidasDepois['ombro'], medidasDepois['torax'], medidasDepois['braco_d'], medidasDepois['braco_e'], medidasDepois['ant_d'], medidasDepois['ant_e'], medidasDepois['cintura'], medidasDepois['abdome'], medidasDepois['quadril'], medidasDepois['coxa_d'], medidasDepois['coxa_e'], medidasDepois['pant_d'], medidasDepois['pant_e']];
+            
+                    // Remover as medidas de data
+                    var medidasExcluidas = ['data_atualizacao', 'data_entrada'];
+            
+                    // Filtrar as medidas indesejadas
+                    labels = labels.filter(function (label) {
+                        return !medidasExcluidas.includes(label.toLowerCase());
+                    });
+            
+                    dadosAntes = dadosAntes.filter(function (dado, index) {
+                        return !medidasExcluidas.includes(labels[index].toLowerCase());
+                    });
+            
+                    dadosDepois = dadosDepois.filter(function (dado, index) {
+                        return !medidasExcluidas.includes(labels[index].toLowerCase());
+                    });
+            
+                    var obterCoresFundo = function (antes, depois) {
+                        var cores = {};
+                        antes.forEach(function (valor, index) {
+                            var diferenca = calcularDiferenca(valor, depois[index]);
+                            if (diferenca > 0) {
+                                cores[labels[index]] = '#04D939'; // Ganho (verde)
+                            } else if (diferenca < 0) {
+                                cores[labels[index]] = '#F24405'; // Perda (vermelho)
+                            } else {
+                                cores[labels[index]] = '#F0941F'; // Nenhum ganho (laranja)
+                            }
+                        });
+                        return cores;
+                    };
+            
+                    var data = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Comparação',
+                                backgroundColor: function (context) {
+                                    var cores = obterCoresFundo(dadosAntes, dadosDepois);
+                                    return Object.values(cores);
+                                },
+                                borderColor: '#F2EDD5',
+                                borderWidth: 1,
+                                data: dadosDepois
+                            }
+                        ]
+                    };
+            
+                    var options = {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    };
+            
+                    var graficoPeso = new Chart(ctxPeso, {
+                        type: 'bar',
+                        data: data,
+                        options: options
+                    });
+                    // Legenda de Cores
+                var legendaCores = document.getElementById('legendaCores');
+                var coresExplicacao = '<strong>Legenda de Cores:</strong><br>' +
+                    '<span style="color: #04D939;">▮</span> Ganho (verde)<br>' +
+                    '<span style="color: #F24405;">▮</span> Perda (vermelho)<br>' +
+                    '<span style="color: #F0941F;">▮</span> Nenhum ganho (laranja)';
+                legendaCores.innerHTML = coresExplicacao;
+                } else {
+                    // Se não houver dados disponíveis, exiba uma mensagem ou faça o tratamento apropriado
+                    console.log('Sem dados disponíveis para exibir o gráfico.');
                 }
-            ]
-        };
-
-        var options = {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        };
-
-        var graficoPeso = new Chart(ctxPeso, {
-            type: 'bar',
-            data: data,
-            options: options
-        });
-    });
-</script>
+            });
+        </script>
         
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>

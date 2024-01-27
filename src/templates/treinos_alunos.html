@@ -11,7 +11,11 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/treinos.css') }}">
-
+    <style>
+        .exercicios {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -35,11 +39,7 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-5">
-                        <li class="nav-item">
-                            <a class="nav-link" onclick="confirmarReinicio()">
-                                Reiniciar
-                            </a>
-                        </li>
+                       
                         <li class="nav-item">
                             <a class="nav-link " href="/login/logout">
                                 Sair
@@ -102,65 +102,75 @@
                     
                     {% set dias_exercicios = {} %}
                     {% for exercicio in exercicios %}
-                        {% set dia = exercicio.tipoTreino %}
-                        {% if dias_exercicios[dia] is not defined %}
-                            {% set _ = dias_exercicios.update({dia: []}) %}
-                        {% endif %}
-                        {% set _ = dias_exercicios[dia].append(exercicio) %}
+                    {% set dia = exercicio.tipoTreino %}
+                    {% if dias_exercicios[dia] is not defined %}
+                    {% set _ = dias_exercicios.update({dia: []}) %}
+                    {% endif %}
+                    {% set _ = dias_exercicios[dia].append(exercicio) %}
                     {% endfor %}
                     {% for dia, exercicios_do_dia in dias_exercicios.items() %}
-            
                     <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
                         <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
                         <div class="card-body">
                             <table class="table text-left">
                                 <thead>
                                     <tr>
-                                        <th colspan="2" class="text-center dia-treino"><strong>{{ dia }}</strong></th>
+                                        <th colspan="2" class="text-center dia-treino" onclick="toggleExercicios('{{ dia|replace('&', 'and')|lower }}')">
+                                            <strong>{{ dia }}</strong>
+                                        </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="exercicios exercicios-{{ dia|replace('&', 'and')|lower }}">
                                     {% for exercicio in exercicios_do_dia %}
-                                        <tr>
-                                            <td><strong>Exercício:</strong></td>
-                                            <td>{{ exercicio.exercicio|capitalize }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Série:</strong></td>
-                                            <td>{{ exercicio.serie }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Repetição:</strong></td>
-                                            <td>{{ exercicio.repeticao }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Descanso:</strong></td>
-                                            <td>{{ exercicio.descanso }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Carga:</strong></td>
-                                            <td>{{ exercicio.carga }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <br>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td><strong>Exercício:</strong></td>
+                                        <td>{{ exercicio.exercicio|capitalize }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Série:</strong></td>
+                                        <td>{{ exercicio.serie }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Repetição:</strong></td>
+                                        <td>{{ exercicio.repeticao }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Descanso:</strong></td>
+                                        <td>{{ exercicio.descanso }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Carga:</strong></td>
+                                        <td>{{ exercicio.carga }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <br>
+                                        </td>
+                                    </tr>
                                     {% endfor %}
                                 </tbody>
-                                <tr>
-                                    <td colspan="2">
-                                        <button type="button" class="treino"  onclick="marcarConcluido(this)">Concluir Treino</button>
-                                    </td>
-                                </tr>
+                              
                             </table>
                         </div>
                     </div>
-                    
                     {% endfor %}
                 </div>      
             </div>   
         </div> 
+    
+    <script>
+        function toggleExercicios(dia) {
+            // Esconder todos os exercícios
+            var todasExercicios = document.querySelectorAll('.exercicios');
+            todasExercicios.forEach(function (exercicios) {
+                exercicios.style.display = 'none';
+            });
+
+            // Exibir exercícios específicos
+            var exerciciosDia = document.querySelector('.exercicios-' + dia);
+            exerciciosDia.style.display = 'table-row-group';
+        }
+    </script>
 
     <script src="{{ url_for('static', filename='js/treinos.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
