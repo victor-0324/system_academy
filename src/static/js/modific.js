@@ -16,8 +16,9 @@
      
         // Mostra ou oculta os elementos com base na escolha do administrador
         cadastroTreinoForm.style.display = opcaoExercicio === 'adicionarNovo' ? 'block' : 'none';
-        cadastroTreinoForm.style.display = opcaoExercicio === 'Busca' ? 'block' : 'none';
+        
         if (opcaoExercicio === 'Busca') {
+            cadastroTreinoForm.style.display = opcaoExercicio === 'Busca' ? 'block' : 'none';
             // Chama a função para buscar exercícios pelo nome do aluno
             utilizarExerciciosExistentes();
         }

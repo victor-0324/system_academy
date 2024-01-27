@@ -174,13 +174,13 @@
                         antes.forEach(function (valor, index) {
                             var diferenca = calcularDiferenca(valor, depois[index]);
                             if (diferenca > 0) {
-                                cores[labels[index] + '_antes'] = '#012E40'; // Cinza para ganho
+                                cores[labels[index] + '_antes'] = '#103778'; // Cinza para ganho
                                 cores[labels[index] + '_depois'] = '#04D939'; // Ganho (verde)
                             } else if (diferenca < 0) {
-                                cores[labels[index] + '_antes'] = '#012E40'; // Cinza para perda
+                                cores[labels[index] + '_antes'] = '#103778'; // Cinza para perda
                                 cores[labels[index] + '_depois'] = '#F24405'; // Perda (vermelho)
                             } else {
-                                cores[labels[index] + '_antes'] = '#012E40'; // Cinza para nenhum ganho
+                                cores[labels[index] + '_antes'] = '#103778'; // Cinza para nenhum ganho
                                 cores[labels[index] + '_depois'] = '#F0941F'; // Nenhum ganho (laranja)
                             }
                         });
@@ -198,7 +198,7 @@
                                         return index % 2 === 0; // Pegar apenas as cores "antes"
                                     });
                                 },
-                                borderColor: '#F2EDD5',
+                                borderColor: '#151F30',
                                 borderWidth: 1,
                                 data: dadosAntes
                             },
@@ -210,7 +210,7 @@
                                         return index % 2 !== 0; // Pegar apenas as cores "depois"
                                     });
                                 },
-                                borderColor: '#F2EDD5',
+                                borderColor: '#151F30',
                                 borderWidth: 1,
                                 data: dadosDepois
                             }
@@ -239,7 +239,7 @@
             });
                 var legendaCores = document.getElementById('legendaCores');
                 var coresExplicacao = '<strong>Legenda de Cores:</strong><br>' +
-                    '<span style="color: #012E40;">▮</span> Antes (Azul)<br>' +
+                    '<span style="color: #151F30;">▮</span> Antes (Azul)<br>' +
                     '<span style="color: #04D939;">▮</span> Ganho (verde)<br>' +
                     '<span style="color: #F24405;">▮</span> Perda (vermelho)<br>' +
                     '<span style="color: #F0941F;">▮</span> Nenhum ganho (laranja)';

@@ -104,28 +104,36 @@
                         </div>
                     </div>
                     
-                    {% set dias_exercicios = {} %}
+                    {% set dias_exercicios = {
+                        'segunda&sexta': 'Segunda_e_Sexta',
+                        'terca&quinta': 'Terca_e_Quinta',
+                        'quarta': 'Quarta',
+                    } %}
+
+                    {% set exercicios_por_dia = {} %}
                     {% for exercicio in exercicios %}
-                    {% set dia = exercicio.tipoTreino %}
-                    {% if dias_exercicios[dia] is not defined %}
-                    {% set _ = dias_exercicios.update({dia: []}) %}
-                    {% endif %}
-                    {% set _ = dias_exercicios[dia].append(exercicio) %}
+                        {% set dia = exercicio.tipoTreino %}
+                        {% if exercicios_por_dia[dia] is not defined %}
+                            {% set _ = exercicios_por_dia.update({dia: []}) %}
+                        {% endif %}
+                        {% set _ = exercicios_por_dia[dia].append(exercicio) %}
                     {% endfor %}
-                    {% for dia, exercicios_do_dia in dias_exercicios.items() %}
-                    <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
-                        <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
-                        <div class="card-body">
-                            <table class="table text-left">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2" class="text-center dia-treino" onclick="toggleExercicios('{{ dia|replace('&', 'and')|lower }}')">
-                                            <strong>{{ dia }}</strong>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="exercicios exercicios-{{ dia|replace('&', 'and')|lower }}">
-                                    {% for exercicio in exercicios_do_dia %}
+
+                    {% for dia, exercicios_do_dia in exercicios_por_dia.items() %}
+                        {% set nome_amigavel_dia = dias_exercicios[dia] %}
+                        <div class="card text-center wow bounceInLeft" data-wow-delay=".25s" style="visibility: visible; animation-delay: 0.25s; animation-name: bounceInLeft;">
+                            <img class="card-img-top rounded-circle img-fluid" src="/static/images/Enovare.jpg" alt="Card image">
+                            <div class="card-body">
+                                <table class="table text-left">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" class="text-center dia-treino" onclick="toggleExercicios('{{ nome_amigavel_dia|replace('&', 'and')|lower }}')">
+                                                <strong>{{ nome_amigavel_dia }}</strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="exercicios exercicios-{{ nome_amigavel_dia|replace('&', 'and')|lower }}">
+                                        {% for exercicio in exercicios_do_dia %}
                                     <tr>
                                         <td><strong>Exercício:</strong></td>
                                         <td>{{ exercicio.exercicio|capitalize }}</td>
@@ -165,14 +173,20 @@
     <script>
         function toggleExercicios(dia) {
             // Esconder todos os exercícios
+            console.log('Dia:', dia);
+            dia = dia.toLowerCase().replace(/[\s&]+/g, '_');
             var todasExercicios = document.querySelectorAll('.exercicios');
             todasExercicios.forEach(function (exercicios) {
-                exercicios.style.display = 'none';
+                if (exercicios) {
+                    exercicios.style.display = 'none';
+                }
             });
-
+        
             // Exibir exercícios específicos
             var exerciciosDia = document.querySelector('.exercicios-' + dia);
-            exerciciosDia.style.display = 'table-row-group';
+            if (exerciciosDia) {
+                exerciciosDia.style.display = 'table-row-group';
+            }
         }
     </script>
 
