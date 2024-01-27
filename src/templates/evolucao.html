@@ -150,8 +150,8 @@
                     };
             
                     var labels = ['Peso', 'Ombro', 'Tórax', 'Braço Direito', 'Braço Esquerdo', 'Antebraço Direito', 'Antebraço Esquerdo', 'Cintura', 'abdômen', 'Quadril', 'Coxa Direita', 'Coxa Esquerda', 'Panturrilha Direita', 'Panturrilha Esquerda'];
-                    var dadosAntes = [ medidasAntes['peso'], medidasAntes['ombro'], medidasAntes['torax'], medidasAntes['braco_d'], medidasAntes['braco_e'], medidasAntes['ant_d'], medidasAntes['ant_e'], medidasAntes['cintura'], medidasAntes['abdome'], medidasAntes['quadril'], medidasAntes['coxa_d'], medidasAntes['coxa_e'], medidasAntes['pant_d'], medidasAntes['pant_e']];
-                    var dadosDepois = [ medidasDepois['peso'], medidasDepois['ombro'], medidasDepois['torax'], medidasDepois['braco_d'], medidasDepois['braco_e'], medidasDepois['ant_d'], medidasDepois['ant_e'], medidasDepois['cintura'], medidasDepois['abdome'], medidasDepois['quadril'], medidasDepois['coxa_d'], medidasDepois['coxa_e'], medidasDepois['pant_d'], medidasDepois['pant_e']];
+                    var dadosAntes = [medidasAntes['peso'], medidasAntes['ombro'], medidasAntes['torax'], medidasAntes['braco_d'], medidasAntes['braco_e'], medidasAntes['ant_d'], medidasAntes['ant_e'], medidasAntes['cintura'], medidasAntes['abdome'], medidasAntes['quadril'], medidasAntes['coxa_d'], medidasAntes['coxa_e'], medidasAntes['pant_d'], medidasAntes['pant_e']];
+                    var dadosDepois = [medidasDepois['peso'], medidasDepois['ombro'], medidasDepois['torax'], medidasDepois['braco_d'], medidasDepois['braco_e'], medidasDepois['ant_d'], medidasDepois['ant_e'], medidasDepois['cintura'], medidasDepois['abdome'], medidasDepois['quadril'], medidasDepois['coxa_d'], medidasDepois['coxa_e'], medidasDepois['pant_d'], medidasDepois['pant_e']];
             
                     // Remover as medidas de data
                     var medidasExcluidas = ['data_atualizacao', 'data_entrada'];
@@ -174,11 +174,14 @@
                         antes.forEach(function (valor, index) {
                             var diferenca = calcularDiferenca(valor, depois[index]);
                             if (diferenca > 0) {
-                                cores[labels[index]] = '#04D939'; // Ganho (verde)
+                                cores[labels[index] + '_antes'] = '#012E40'; // Cinza para ganho
+                                cores[labels[index] + '_depois'] = '#04D939'; // Ganho (verde)
                             } else if (diferenca < 0) {
-                                cores[labels[index]] = '#F24405'; // Perda (vermelho)
+                                cores[labels[index] + '_antes'] = '#012E40'; // Cinza para perda
+                                cores[labels[index] + '_depois'] = '#F24405'; // Perda (vermelho)
                             } else {
-                                cores[labels[index]] = '#F0941F'; // Nenhum ganho (laranja)
+                                cores[labels[index] + '_antes'] = '#012E40'; // Cinza para nenhum ganho
+                                cores[labels[index] + '_depois'] = '#F0941F'; // Nenhum ganho (laranja)
                             }
                         });
                         return cores;
@@ -188,10 +191,24 @@
                         labels: labels,
                         datasets: [
                             {
-                                label: 'Comparação',
+                                label: 'Antes',
                                 backgroundColor: function (context) {
                                     var cores = obterCoresFundo(dadosAntes, dadosDepois);
-                                    return Object.values(cores);
+                                    return Object.values(cores).filter(function (_, index) {
+                                        return index % 2 === 0; // Pegar apenas as cores "antes"
+                                    });
+                                },
+                                borderColor: '#F2EDD5',
+                                borderWidth: 1,
+                                data: dadosAntes
+                            },
+                            {
+                                label: 'Depois',
+                                backgroundColor: function (context) {
+                                    var cores = obterCoresFundo(dadosAntes, dadosDepois);
+                                    return Object.values(cores).filter(function (_, index) {
+                                        return index % 2 !== 0; // Pegar apenas as cores "depois"
+                                    });
                                 },
                                 borderColor: '#F2EDD5',
                                 borderWidth: 1,
@@ -213,18 +230,20 @@
                         data: data,
                         options: options
                     });
-                    // Legenda de Cores
-                var legendaCores = document.getElementById('legendaCores');
-                var coresExplicacao = '<strong>Legenda de Cores:</strong><br>' +
-                    '<span style="color: #04D939;">▮</span> Ganho (verde)<br>' +
-                    '<span style="color: #F24405;">▮</span> Perda (vermelho)<br>' +
-                    '<span style="color: #F0941F;">▮</span> Nenhum ganho (laranja)';
-                legendaCores.innerHTML = coresExplicacao;
-                } else {
+                } 
+              
+                 else {
                     // Se não houver dados disponíveis, exiba uma mensagem ou faça o tratamento apropriado
                     console.log('Sem dados disponíveis para exibir o gráfico.');
                 }
             });
+                var legendaCores = document.getElementById('legendaCores');
+                var coresExplicacao = '<strong>Legenda de Cores:</strong><br>' +
+                    '<span style="color: #012E40;">▮</span> Antes (Azul)<br>' +
+                    '<span style="color: #04D939;">▮</span> Ganho (verde)<br>' +
+                    '<span style="color: #F24405;">▮</span> Perda (vermelho)<br>' +
+                    '<span style="color: #F0941F;">▮</span> Nenhum ganho (laranja)';
+                legendaCores.innerHTML = coresExplicacao;
         </script>
         
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
