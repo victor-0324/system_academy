@@ -143,7 +143,7 @@
         // Limpa o estado do cronômetro no localStorage
         localStorage.removeItem('tempoEstado');
 
-        // Reiniciar o progresso no final da semana (sábado)
+        // Reiniciar o progresso no final da semana (Domingo)
         reiniciarProgresso();
     }
 
@@ -214,33 +214,14 @@
 
     function reiniciarProgresso() {
         let diaDaSemana = new Date().getDay();
-
-        // Verifica se o dia da semana é sábado (6) ou domingo (0)
-        if (diaDaSemana === 0 ) {
-            let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-
-            dias.forEach(dia => {
-                let elementoDia = document.getElementById(dia);
-
-                // Verifica se o elemento está presente antes de tentar acessá-lo
-                if (elementoDia) {
-                    localStorage.removeItem(dia);
-                    localStorage.removeItem(`${dia}Tempo`);
-                    elementoDia.textContent = '';
-                }
-            });
-
-            let elementoResultadoDia = document.getElementById('resultadoDia');
-            if (elementoResultadoDia) {
-                elementoResultadoDia.textContent = '';
-            }
-
-            let elementoResultadoSemana = document.getElementById('resultadoSemana');
-            if (elementoResultadoSemana) {
-                elementoResultadoSemana.textContent = '';
-            }
+    
+        // Verifica se o dia da semana é domingo (0)
+        if (diaDaSemana === 0 || diaDaSemana === 6) {
+            reiniciar();
         }
     }
+
+    
 
     // Função para iniciar o cronômetro se estiver ativo
     function iniciarCronometroSeAtivo() {
@@ -317,7 +298,18 @@
         marcarDiasNaoTreinados(dias);
         iniciarCronometroSeAtivo();
     }
-   
+
+    function confirmarReinicio() {
+        // Adiciona uma janela de confirmação
+        let confirmacao = confirm("Tem certeza de que deseja reiniciar o progresso? Isso não pode ser desfeito.");
+
+        // Se o usuário confirmar, então reinicia o progresso
+        if (confirmacao) {
+            reiniciar();
+        }
+    }
+
+
     // Carregar progresso do LocalStorage ao recarregar a página
     window.onload = function () {
         carregarProgresso();
