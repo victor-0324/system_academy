@@ -1,63 +1,109 @@
-body.dark-theme {
-    background-color: #121212;
-    color: #fff;
+:root {
+    --cor-fundo: #121212;
+    --cor-texto: #fff;
+    --cor-destaque: #ff8c00;
+  }
+  
+  body.dark-theme {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
     font-family: Arial, sans-serif;
-}
-
-main {
+  }
+  
+  main {
     max-width: 800px;
     margin: 20px auto;
-   
-}
-
-.main-container {
-    padding: 20px;
+  }
+  
+  /* Estilo padrão para telas maiores que 600px */
+  .main-container {
+    width: 1000px;
+    margin: 0 auto;
     background-color: #555;
-}
-.titulo-pagina {
+  }
+  
+  /* Adapte essas dimensões conforme necessário */
+@media (max-width: 800px) {
+    main {
+      max-width: 100%;
+      padding: 10px;
+    }
+  
+    .main-container {
+      padding: 10px;
+    }
+  
+    .input-pesquisa {
+      width: 100%;
+    }
+  
+    .tabela-alunos table {
+      font-size: 14px; /* Ajuste o tamanho da fonte para telas menores */
+    }
+  }
+  
+  /* Adapte essas dimensões conforme necessário */
+  @media (max-width: 600px) {
+    .main-container {
+      padding: 5px;
+    }
+  
+    .tabela-alunos table {
+      font-size: 12px; /* Ajuste o tamanho da fonte para telas ainda menores */
+    }
+  }
+  /* Estilo alternativo para telas menores ou iguais a 600px */
+  @media (max-width: 600px) {
+    .main-container {
+      width: 100%;
+      margin: 0;
+    }
+  }
+  
+  .titulo-pagina {
     text-align: center;
-    color: #ff8c00; /* laranja escuro */
-}
-
-.pesquisa-alunos {
+    color: var(--cor-destaque);
+  }
+  
+  .pesquisa-alunos {
     margin-bottom: 20px;
-}
-
-label {
-    color: #ff8c00;
-}
-
-input {
+  }
+  
+  label {
+    color: var(--cor-destaque);
+  }
+  
+  input {
     padding: 8px;
     margin: 5px;
-}
-
-table {
+  }
+  
+  table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-}
-
-th, td {
+  }
+  
+  th, td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ff8c00;
-}
-
-th {
-    background-color: #ff8c00;
-    color: #121212; /* preto */
-}
-
-button {
-    background-color: #ff8c00;
-    color: #121212;
+    border-bottom: 1px solid var(--cor-destaque);
+  }
+  
+  th {
+    background-color: var(--cor-destaque);
+    color: var(--cor-fundo);
+  }
+  
+  button {
+    background-color: var(--cor-destaque);
+    color: var(--cor-fundo);
     border: none;
     padding: 8px;
     cursor: pointer;
     margin-right: 5px;
-}
-
-button:hover {
-    background-color: #ff4500; /* laranja mais escuro */
-}
+  }
+  
+  button:hover {
+    background-color: #ff4500;
+  }
