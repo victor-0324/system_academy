@@ -16,7 +16,7 @@ def login():
 
         aluno, permissao = querys_instance.verificar_credenciais(login, senha) 
 
-        if aluno == None:
+        if aluno == None or  aluno.inadimplente:
                 mensagem_erro = 'Credenciais inválidas ou acesso não autorizado. Tente novamente.'
                 return render_template('pages/auth/login.html', mensagem_erro=mensagem_erro)
 

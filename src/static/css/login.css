@@ -6,7 +6,7 @@ body {
 }
 
 .mensagem-erro {
-    color: #FFA500;
+    color: #000000;
     background-color: #FFF0E6; /* Fundo em tom pastel */
     padding: 10px;
     border: 1px solid #FFA500; /* Borda laranja */

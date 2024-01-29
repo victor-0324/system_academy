@@ -207,8 +207,6 @@ class Querys():
             diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
             
             if diferenca_dias == 3:
-                return "Seu pagamento está próximo de vencer! Por favor, efetue o pagamento nos próximos 3 dias para continuar acessando os treinos."
-            elif diferenca_dias == 2:
                 return "Seu pagamento está próximo de vencer! Por favor, efetue o pagamento nos próximos 2 dias para continuar acessando os treinos."
             elif diferenca_dias == 1:
                 return "Seu pagamento está prestes a vencer! Por favor, efetue o pagamento até amanhã para continuar acessando os treinos."
