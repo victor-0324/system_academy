@@ -135,47 +135,9 @@
         return exercicios;
     }
 
-    function validarFormulario() {
-        // Obtém referências para os campos de entrada
-        var login = document.getElementById('login');
-        var senha = document.getElementById('senha');
-        var idade = document.getElementById('idade');
-        var sexo = document.getElementById('sexo');
-        var data_entrada = document.getElementById('data_entrada');
-        var data_pagamento = document.getElementById('data_pagamento');
-        var jatreino = document.getElementById('jatreino');
-        var permissao = document.getElementById('permissao');
-    
-        // Lista de campos
-        var campos = [login, senha, idade, sexo, data_pagamento, data_entrada, jatreino, permissao];
-    
-        // Encontrar o primeiro campo vazio
-        var primeiroCampoVazio = campos.find(function(campo) {
-            return campo.value === "";
-        });
-    
-        // Verifica se há algum campo vazio
-        if (primeiroCampoVazio) {
-            // Exibe o alerta
-            alert("Por favor, preencha todos os campos antes de enviar o formulário.");
-    
-            // Rola para o primeiro campo vazio
-            window.scrollTo({
-                top: primeiroCampoVazio.offsetTop - 20,
-                behavior: 'smooth'
-            });
-    
-            // Impede o envio do formulário
-            return false;
-        }
-    
-        // Se todos os campos estiverem preenchidos, o formulário pode ser enviado
-        return true;
-    }
-    
-    
+   
     function enviarExerciciosParaServidor() {
-        if (validarFormulario()) {
+   
             // Obtenha os dados dos exercícios
             var exercicios = obterExerciciosAdicionados();
 
@@ -209,10 +171,7 @@
                     console.error(error);
                 });
             return true;
-        } else {
-            // Se a validação falhar, retorne false para impedir o envio do formulário
-            return false;
-        }
+        
     }
 
     $(document).ready(function () {
