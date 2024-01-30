@@ -166,6 +166,40 @@
             
             
         }
+        if (opcaoExercicio === 'Busca' || 'adicionarNovo') {
+            var exercicios = atualizarListaExercicios();
+
+            // Adicione os exercícios ao formData
+            var formData = new FormData(document.querySelector('form'));
+            formData.append('exercicios', JSON.stringify(exercicios));
+
+            // Obtenha o ID do aluno da URL
+            var alunoId = window.location.pathname.split('/').pop();
+            var url = '/alunos/atualizar_ex/' + alunoId; // Utilize uma rota específica para a atualização de exercícios
+
+            // Faça a solicitação POST para o servidor
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Lida com a resposta do servidor
+                // Limpa os exercícios após o envio
+                exercicios = [];
+                atualizarListaExercicios();
+                console.log('Exercícios atualizados no servidor');
+            })
+            .catch(error => {
+                // Lida com erros
+                console.error(error);
+            });
+            window.location.href = '/alunos';
+            return false; // Impede o envio do formulário
+            
+            
+        }
+
         else {
             // Adicione os exercícios ao formData
         var formData = new FormData(document.querySelector('form'));

@@ -216,4 +216,31 @@ class Querys():
                 return None 
         return None
 
-       
+    def atualizar_exercicios(self, aluno_id, exercicios):
+        try:
+            aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
+
+            # Limpa os exercícios existentes
+            aluno.exercicios.clear()
+
+            # Adiciona os novos exercícios
+            for exercicio_info in exercicios:
+                exercicio = ExerciciosAluno(
+                    tipoTreino=exercicio_info['tipoTreino'],
+                    exercicio=exercicio_info['exercicio'],
+                    serie=exercicio_info['serie'],
+                    repeticao=exercicio_info['repeticao'],
+                    descanso=exercicio_info['descanso'],
+                    carga=exercicio_info['carga']
+                )
+                aluno.exercicios.append(exercicio)
+
+            # Commit fora do loop para melhor desempenho e lógica de transação
+            self.session.commit()
+
+            return True  # Indica sucesso
+
+        except Exception as e:
+            print(f'Erro ao atualizar exercícios: {str(e)}')
+            self.session.rollback()  # Desfaz quaisquer alterações em caso de erro
+            return False  # Indica falha

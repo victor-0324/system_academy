@@ -172,7 +172,7 @@ def busca_pornome():
                 # Serializa a lista de exercícios
                 exercicios_serializados = [serialize_exercicios(exercicio) for exercicio in exercicios]
 
-                print(exercicios_serializados, type(exercicios_serializados))
+               
                 # Retornar os detalhes do aluno em formato JSON
                 return jsonify({'status': 'success', 'aluno': {
                     'exercicios': exercicios_serializados,
@@ -191,3 +191,29 @@ def deletar(aluno_id):
         querys_instance.deletar( aluno_id)
     return redirect(url_for("clientes_app.mostrar"))
    
+@clientes_app.route("/atualizar_ex/<int:aluno_id>", methods=["GET", "POST"])
+@admin_required
+def atualizar_ex(aluno_id):
+    session = current_app.db.session
+    querys_instance = Querys(session)
+    
+    try:
+        if request.method == "POST":
+            data = request.form.get('exercicios')
+            exercicios = json.loads(data) if data else []
+
+            # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
+            resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
+
+            if resultado_atualizacao:  # Adapte conforme necessário
+                return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
+            else:
+                return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
+
+        else:
+            aluno = querys_instance.mostrar_detalhes(aluno_id)
+            return render_template("modificar.html", aluno=[aluno])
+
+    except Exception as e:
+        print(f'Erro no servidor: {str(e)}')
+        return jsonify({'error': 'Erro no servidor'}), 500

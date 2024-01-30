@@ -15,7 +15,6 @@
 <body class="detalhes-page">
 
 <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/banner2.jpg') }}">
-
     <nav class="navbar navbar-expand-md navbar-dark">
         
         <div class="container"> 
@@ -43,163 +42,163 @@
         </div>
     </nav>
     <form method="post" onsubmit="return enviarExerciciosParaServidor()">
-    <main>
-        {% for aluno in aluno %}
-        <div class="registro-formulario">
-            <h3>Atualizar {{aluno.nome}}</h3>
-        </div> 
-        <div class="dados-pessoais">
-           
-            <div class="input-wrapper">
-                <label for="peso">Peso:</label>
-                <input type="number" id="peso" name="peso"  value="{{ aluno.peso }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="ombro">Ombro:</label>
-                <input type="number" name="ombro" id="ombro"   value="{{ aluno.ombro }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="torax">Tórax:</label>
-                <input type="number" name="torax" id="torax"  value="{{ aluno.torax }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="braco">braço D:</label>
-                <input type="number" name="braco_d" id="braco_d"  value="{{ aluno.braco_d }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="braco">braço E:</label>
-                <input type="number" name="braco_e" id="braco_e"  value="{{ aluno.braco_e }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="ant">Ante braço D:</label>
-                <input type="number" name="ant_d" id="ant_d"  value="{{ aluno.ant_d }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="ant">Ante braço E:</label>
-                <input type="number" name="ant_e" id="ant_e"  value="{{ aluno.ant_e }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="cintura">Cintura:</label>
-                <input type="number" name="cintura" id="cintura"  value="{{ aluno.cintura }}">
-            </div>
-             <div class="input-wrapper">
-                <label for="abdome">Abdome:</label>
-                <input type="number" name="abdome" id="abdome"  value="{{ aluno.abdome }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="quadril">Quadril:</label>
-                <input type="number" name="quadril" id="quadril"  value="{{ aluno.abdome }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="coxa">Coxa D:</label>
-                <input type="number" name="coxa_d" id="coxa_d"  value="{{ aluno.coxa_d }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="coxa">Coxa E:</label>
-                <input type="number" name="coxa_e" id="coxa_e"  value="{{ aluno.coxa_e }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="pant">Panturrilha D:</label>
-                <input type="number" name="pant_d" id="pant_d"  value="{{ aluno.pant_d }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="pant">Panturrilha E:</label>
-                <input type="number" name="pant_e" id="pant_e"  value="{{ aluno.pant_e }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="observacao">Observação:</label>
-                <input type="text" name="observacao" id="observacao" value="{{ aluno.observacao }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="telefone">Telefone:</label>
-                <input type="tel" name="telefone" id="telefone" value="{{ aluno.telefone }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="login">Login:</label>
-                <input type="text" name="login" id="login" value="{{ aluno.login }}">
-            </div>
-            <div class="input-wrapper">
-                <label for="senha">Senha:</label>
-                <input type="password" name="senha" id="senha" value="{{ aluno.senha }}">
-            </div>
-            
-            <div class="input-wrapper">
-                <label for="dia">Data de Pagamento:</label>
-                <input type="text" name="data_pagamento" id="dia" value="{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}">
-                <button type="button" onclick="atualizarData()">Receber Pagamento</button>
-            </div>
-
-            <div class="input-wrapper">
-                <label for="opcaoExercicio">Escolha uma opção:</label>
-                <select id="opcaoExercicio" onchange="atualizarCamposExercicio()">
-                    
-                    <option  value="manterCadastrado">Manter Exercícios</option>
-                 
-                    <option value="adicionarNovo">Novo Exercício</option>
+        <main>
+            {% for aluno in aluno %}
+            <div class="registro-formulario">
+                <h3>Atualizar {{aluno.nome}}</h3>
+            </div> 
+            <div class="dados-pessoais">
+                <div class="input-wrapper">
+                    <label for="dia">Data de Pagamento:</label>
+                    <input type="text" name="data_pagamento" id="dia" value="{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}">
+                    <button type="button" onclick="atualizarData()">Receber Pagamento</button>
+                </div>
                 
-                    <option value="Busca">Busca De Um Aluno</option>
-                     
-                </select>
-            </div>
+                <div class="input-wrapper">
+                    <label for="peso">Peso:</label>
+                    <input type="number" id="peso" name="peso"  value="{{ aluno.peso }}">
+                </div>
 
-            <div class="input-wrapper" >
-                <div class="dados-pessoais">
-                    <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm" style="display: none;">
-                        <h3 class="titulo-secao">Cadastra o Treino</h3>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Dias da semana:</label>
-                            <select id="tipoTreino" required>
-                                <option value="" disabled selected>Dia do treino</option>
-                                <option value="segunda&sexta">Segunda & Sexta</option>
-                                <option value="terca&quinta">Terça & Quinta</option>
-                                <option value="quarta">Quarta</option>
-                            </select>
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar Exercício:</label>
-                            <input type="text" id="exercicio">
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar serie:</label>
-                            <input type="number" id="serie">
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar Repetição:</label>
-                            <input type="text" id="repeticao">
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar Descanso:</label>
-                            <input type="text" id="descanso">
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="tipoTreino">Adicionar Carga:</label>
-                            <input type="text" id="carga">
-                        </div>
-                        <div class="input-wrapper">
-                            <div class="enviar">
-                                <button type="button" onclick="adicionarExercicioManualmente()">Adicionar Exercício</button>
-                            </div>
-                        </div>
+                <div class="input-wrapper">
+                    <label for="ombro">Ombro:</label>
+                    <input type="number" name="ombro" id="ombro"   value="{{ aluno.ombro }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="torax">Tórax:</label>
+                    <input type="number" name="torax" id="torax"  value="{{ aluno.torax }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="braco">braço D:</label>
+                    <input type="number" name="braco_d" id="braco_d"  value="{{ aluno.braco_d }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="braco">braço E:</label>
+                    <input type="number" name="braco_e" id="braco_e"  value="{{ aluno.braco_e }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="ant">Ante braço D:</label>
+                    <input type="number" name="ant_d" id="ant_d"  value="{{ aluno.ant_d }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="ant">Ante braço E:</label>
+                    <input type="number" name="ant_e" id="ant_e"  value="{{ aluno.ant_e }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="cintura">Cintura:</label>
+                    <input type="number" name="cintura" id="cintura"  value="{{ aluno.cintura }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="abdome">Abdome:</label>
+                    <input type="number" name="abdome" id="abdome"  value="{{ aluno.abdome }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="quadril">Quadril:</label>
+                    <input type="number" name="quadril" id="quadril"  value="{{ aluno.abdome }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="coxa">Coxa D:</label>
+                    <input type="number" name="coxa_d" id="coxa_d"  value="{{ aluno.coxa_d }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="coxa">Coxa E:</label>
+                    <input type="number" name="coxa_e" id="coxa_e"  value="{{ aluno.coxa_e }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="pant">Panturrilha D:</label>
+                    <input type="number" name="pant_d" id="pant_d"  value="{{ aluno.pant_d }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="pant">Panturrilha E:</label>
+                    <input type="number" name="pant_e" id="pant_e"  value="{{ aluno.pant_e }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="observacao">Observação:</label>
+                    <input type="text" name="observacao" id="observacao" value="{{ aluno.observacao }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" name="telefone" id="telefone" value="{{ aluno.telefone }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="login">Login:</label>
+                    <input type="text" name="login" id="login" value="{{ aluno.login }}">
+                </div>
+                <div class="input-wrapper">
+                    <label for="senha">Senha:</label>
+                    <input type="password" name="senha" id="senha" value="{{ aluno.senha }}">
+                </div>
+
+                <div class="input-wrapper">
+                    <label for="opcaoExercicio">Escolha uma opção:</label>
+                    <select id="opcaoExercicio" onchange="atualizarCamposExercicio()">
                         
-                        <h3 class="titulo-secao">Exercícios Adicionados:</h3>
-                        <div class="input-wrapper">
-                            <ul class="titulo-secao" id="exerciciosAdicionados">
+                        <option  value="manterCadastrado">Manter Exercícios</option>
 
-                            </ul>
-                        </div>
-                      
-                    </div>
-                </div>
-                
-                <div class="input-wrapper" >
+                        <option value="adicionarNovo">Novo Exercício</option>
                     
-                    <div  class="enviar">
-                        <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Atualizar</button>
+                        <option value="Busca">Busca De Um Aluno</option>
+                        
+                    </select>
+                </div>
+
+                <div class="input-wrapper" >
+                    <div class="dados-pessoais">
+                        <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm" style="display: none;">
+                            <h3 class="titulo-secao">Cadastra o Treino</h3>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Dias da semana:</label>
+                                <select id="tipoTreino" required>
+                                    <option value="" disabled selected>Dia do treino</option>
+                                    <option value="segunda&sexta">Segunda & Sexta</option>
+                                    <option value="terca&quinta">Terça & Quinta</option>
+                                    <option value="quarta">Quarta</option>
+                                </select>
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar Exercício:</label>
+                                <input type="text" id="exercicio">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar serie:</label>
+                                <input type="number" id="serie">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar Repetição:</label>
+                                <input type="text" id="repeticao">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar Descanso:</label>
+                                <input type="text" id="descanso">
+                            </div>
+                            <div class="input-wrapper">
+                                <label for="tipoTreino">Adicionar Carga:</label>
+                                <input type="text" id="carga">
+                            </div>
+                            <div class="input-wrapper">
+                                <div class="enviar">
+                                    <button type="button" onclick="adicionarExercicioManualmente()">Adicionar Exercício</button>
+                                </div>
+                            </div>
+                            
+                            <h3 class="titulo-secao">Exercícios Adicionados:</h3>
+                            <div class="input-wrapper">
+                                <ul class="titulo-secao" id="exerciciosAdicionados">
+
+                                </ul>
+                            </div>
+                        
+                        </div>
+                    </div>
+                    
+                    <div class="input-wrapper" >
+                        
+                        <div  class="enviar">
+                            <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Atualizar</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    </main>
+            {% endfor %}
+        </main>
     </form>
 </div>
 <script src="{{ url_for('static', filename='js/modific.js') }}"></script>
