@@ -7,7 +7,7 @@ from functools import wraps
 from dateutil.relativedelta import relativedelta 
 import json
 from copy import deepcopy 
-
+from .exercicios import ExerciciosView
 
 clientes_app = Blueprint("clientes_app", __name__, url_prefix="/alunos", template_folder='templates',static_folder='static')
 
@@ -88,7 +88,6 @@ def mostrar_detalhes(aluno_id):
         inadimplente = aluno.inadimplente
     return render_template('detalhes.html', aluno=[aluno], inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual)
 
-
 @clientes_app.route("/atualizar/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
 def atualizar(aluno_id):
@@ -98,7 +97,10 @@ def atualizar(aluno_id):
         if request.method == "POST":
             data = request.form.get('exercicios')
             exercicios = json.loads(data) if data else []
-            peso = request.form.get("peso")
+            nome = request.form.get('nome')
+            idade = request.form.get('idade')
+            sexo = request.form.get('sexo')
+            peso = request.form.get('peso')
             ombro = request.form.get("ombro")
             torax = request.form.get("torax")
             braco_d = request.form.get("braco_d")
@@ -117,7 +119,8 @@ def atualizar(aluno_id):
             login = request.form.get("login")
             senha = request.form.get("senha")
             data_pagamento = request.form.get("data_pagamento")
-            opcaoExercicio = request.form.get("opcaoExercicio")
+            jatreino = request.form.get('jatreino')
+            permissao = request.form.get('permissao')
             
             if not all([ peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
                         abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, telefone, login]):
@@ -128,7 +131,7 @@ def atualizar(aluno_id):
             # Use a função atualizar_dados para atualizar as informações do aluno
             aluno_antes = deepcopy(aluno)  # Crie uma cópia profunda do aluno antes da atualização
             historico_antes, historico_depois = querys_instance.atualizar_dados(
-                aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
+                aluno_id,nome, idade, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
                 abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios
             )
             
@@ -164,8 +167,6 @@ def busca_pornome():
             querys_instance = Querys(session)
             aluno = querys_instance.buscar_exercicios_por_nome(nome_aluno)
 
-            
-
             if aluno:
                 exercicios = aluno.exercicios
 
@@ -188,32 +189,68 @@ def deletar(aluno_id):
     with current_app.app_context():
         session = current_app.db.session
         querys_instance = Querys(session)
-        querys_instance.deletar( aluno_id)
+        querys_instance.deletar(aluno_id)
     return redirect(url_for("clientes_app.mostrar"))
-   
+
+@clientes_app.route("/deletar/exercicio/<int:exercicio_id>", methods=["GET", "POST"])
+@admin_required
+def deletar_ex(exercicio_id):
+    with current_app.app_context():
+        session = current_app.db.session
+        querys_instance = Querys(session)
+        querys_instance.deletar_exercicio(exercicio_id)
+    return redirect(url_for("clientes_app.mostrar"))
+
+
+@clientes_app.route("/cadastrar_ex", methods=["GET", "POST"])
+@admin_required
+def cadastrar_ex():
+
+    if request.method == 'POST':
+        
+        exercicio = request.get('exercicio')
+        serie = request.get('serie')
+        repeticao = request.get('repeticao')
+        descanso = request.get('descanso')
+        carga = request.get('carga')
+
+        session = current_app.db.session
+            # Crie uma instância da classe Querys
+        querys_instance = Querys(session)
+
+        querys_instance.cadastrar_ex(
+                    exercicio, serie, repeticao, descanso, carga
+                )
+        
+    return jsonify({'success': True}), 200
+
+
 @clientes_app.route("/atualizar_ex/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
 def atualizar_ex(aluno_id):
     session = current_app.db.session
     querys_instance = Querys(session)
     
-    try:
-        if request.method == "POST":
-            data = request.form.get('exercicios')
-            exercicios = json.loads(data) if data else []
+    if request.method == "POST":
+        data = request.form.get('exercicios')
+        exercicios = json.loads(data) if data else []
 
-            # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
-            resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
+        # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
+        resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
 
-            if resultado_atualizacao:  # Adapte conforme necessário
-                return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
-            else:
-                return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
-
+        if resultado_atualizacao:  # Adapte conforme necessário
+            return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
         else:
-            aluno = querys_instance.mostrar_detalhes(aluno_id)
-            return render_template("modificar.html", aluno=[aluno])
+            return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
 
-    except Exception as e:
-        print(f'Erro no servidor: {str(e)}')
-        return jsonify({'error': 'Erro no servidor'}), 500
+    else:
+        aluno = querys_instance.mostrar_detalhes(aluno_id)
+      
+        exercicios = querys_instance.criar_objeto_exercicio(aluno_id)
+     
+        return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios,aluno=aluno)
+
+
+exercicio_aluno_view = ExerciciosView.as_view('exercicios_aluno_view')
+clientes_app.add_url_rule('/exercicios/rest', view_func=exercicio_aluno_view)
+clientes_app.add_url_rule('/exercicios/rest/<int:_id>', view_func=exercicio_aluno_view, methods=['DELETE'])

@@ -1,0 +1,101 @@
+<div class="modal fade" id="excluirExercicioModal{{ exercicio.id }}">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Confirmar exclusão:</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Certeza que deseja exluir o {{ exercicio.exercicio }};</p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="excluirExercicio" data-exercicio-card-id="{{ exercicio.id }}">Excluir</button>
+
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-3 card-aluno" id="alunoCard-{{ exercicio.id }}">
+    <div class="card">
+        <div class="card-header bg-secondary">
+            <h3 class="card-title">{{ exercicio.exercicio }}</h3>
+            <div class="card-tools">
+                            
+                <div class="btn-group">
+                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                    <i class="fas fa-wrench"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#excluirExercicioModal{{ exercicio.id }}">Excluir exercicio</a>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <ul>
+            </li>
+                <div class="small-box-footer d-flex align-items-center justify-content-center">
+                    <a href="" data-toggle="modal" data-target="#exercicio{{ exercicio.id }}"> {{ exercicio.tipoTreino }}  <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                
+              </li>
+          </ul>
+            
+            <!-- Movendo a UL abaixo das caixas coloridas -->
+      
+            <!-- /.nav -->
+            <!-- /.card-body -->
+          <div class="card-footer p-0">
+          </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exercicio{{ exercicio.id }}">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ exercicio.exercicio }}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Adicione os campos do exercício aqui -->
+        <label>Dias Da Semana:</label>
+            <select class="form-control" id="tipoTreino" required>
+                <option value="" disabled selected>{{ exercicio.tipoTreino }}</option>
+                <option value="segunda&sexta">Segunda & Sexta</option>
+                <option value="terca&quinta">Terça & Quinta</option>
+                <option value="quarta">Quarta</option>
+            </select>
+        <label>Exercício:</label>
+        <input type="text" class="form-control" value="{{ exercicio.exercicio }}" >
+        <label>Série:</label>
+        <input type="text" class="form-control" value="{{ exercicio.serie }}" >
+        <label>Repetição:</label>
+        <input type="text" class="form-control" value="{{ exercicio.repeticao }}" >
+        <label>Descanso:</label>
+        <input type="text" class="form-control" value="{{ exercicio.descanso }}" >
+        <label>Carga:</label>
+        <input type="text" class="form-control" value="{{ exercicio.carga }}" >
+        <!-- Adicione campos de edição aqui se necessário -->
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+        <div class="button-group">
+          <button type="button" class="btn btn-primary" id="cadastrar">Adicionar Exercicio</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

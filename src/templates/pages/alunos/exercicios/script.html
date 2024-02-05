@@ -1,0 +1,174 @@
+
+
+<script>
+    $(function() {
+        
+        $('#cadastrarProjeto').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false
+        });
+        
+        $('#botaoAbrirModal').on('click', function() {
+            $('#cadastrarProjeto').modal('show');
+        });
+
+        $('#cadastrar_ex').on('click', function() {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            var alunoId = $(this).data('aluno-id');
+            $.ajax({
+                url: '/alunos/exercicios/rest',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    alunoId: alunoId,
+                    tipoTreino: $("select[name='tipoTreino']").val(),
+                    exercicio: $("input[name='exercicio']").val(),
+                    serie: $("input[name='serie'").val(),
+                    repeticao: $("input[name='repeticao']").val(),
+                    descanso: $("input[name='descanso']").val(),
+                    carga: $("input[name='carga']").val(),
+                }),
+                success: function(response) {
+                    // Tratar a resposta do servidor
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Exercicio Criado Com Sucesso!'
+                    });
+                    window.location.reload();
+
+                },
+                error: function(error) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Houve algum problema em excluir o projeto' + error.data
+                    });
+                }
+        });
+        });
+
+
+        $(document).on('click', '#excluirExercicio', function() {
+            var exercicioCardId = $(this).data('exercicio-card-id'); 
+            console.log('Exercício Card ID:', exercicioCardId);  // Adicione este log para verificar o ID no console
+       
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        
+            $.ajax({
+                url: '/alunos/exercicios/rest/'+ exercicioCardId,
+                type: 'DELETE',
+                success: function(response) {
+                    console.log('Resposta do servidor:', response);  // Adicione este log para verificar a resposta no console
+       
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Exercício Excluído com sucesso!'
+                    });
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error('Erro na requisição:', error);  // Adicione este log para verificar o erro no console
+       
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Houve algum problema em excluir o exercício'
+                    });
+                }
+            });
+        });
+       
+        
+
+        //Date range picker
+        $('#reservation').daterangepicker({
+            locale: {
+              format: 'DD/MM/YYYY'
+            },
+        });
+        
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.filtro-status').forEach(function(item) {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+    
+                var statusSelecionado = this.getAttribute('data-status');
+                var cartoes = document.querySelectorAll('.card-projeto');
+    
+                cartoes.forEach(function(cartao) {
+                    if (cartao.getAttribute('data-status') === statusSelecionado || statusSelecionado === 'todos') {
+                        cartao.style.display = ''; // Mostra o cartão
+                    } else {
+                        cartao.style.display = 'none'; // Esconde o cartão
+                    }
+                });
+            });
+        });
+    });    
+</script>
+  
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    $('.abrirModalEncerramento').on('click', function() {
+        var projetoId = $(this).data('projeto-id');
+        $('#confirmarEncerramento').data('projeto-id-encerrar', projetoId);
+    });
+
+    $('#confirmarEncerramento').on('click', function() {
+        var projetoId = $(this).data('projeto-id-encerrar');
+        console.log('Projeto a encerrar:', projetoId);
+        // Adicione aqui a lógica para encerrar o projeto
+    });
+
+    $('#encerrarProjeto').click(function() {
+        var projetoId = this.getAttribute('data-projeto-id-encerrar');
+        console.log(projetoId);
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
+        $.ajax({
+            url: '/projetos/rest',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: projetoId,
+                status: 'encerrado'
+            }),
+            success: function(response) {
+                // Tratar a resposta do servidor
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Projeto Excluido com sucesso!'
+                });
+            },
+            error: function(error) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Houve algum problema em encerrar o projeto'
+                });
+            }
+        });
+    });
+});    
+
+</script>
+    

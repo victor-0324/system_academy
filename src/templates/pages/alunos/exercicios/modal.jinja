@@ -1,0 +1,72 @@
+<div class="modal fade" id="cadastrarProjeto">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Cadastrar Exercicio</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="modal-body">
+        <!-- Adicione os campos do exercício aqui -->
+        <label>Dias da semana:</label>
+            <select class="form-control" name="tipoTreino" id="tipoTreino" required>
+                <option value="" disabled selected>Dia do reino</option>
+                <option value="segunda&sexta">Segunda & Sexta</option>
+                <option value="terca&quinta">Terça & Quinta</option>
+                <option value="quarta">Quarta</option>
+            </select>
+        <label>Exercício:</label>
+      <input type="text" class="form-control" name="exercicio">
+        <label>Série:</label>
+      <input type="text" class="form-control" name="serie">
+        <label>Repetição:</label>
+      <input type="text" class="form-control" name="repeticao">
+        <label>Descanso:</label>
+      <input type="text" class="form-control" name="descanso" >
+        <label>Carga:</label>
+      <input type="text" class="form-control"  name="carga">
+        <!-- Adicione campos de edição aqui se necessário -->
+      </div>
+      
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <div class="button-group">
+          <button type="button" class="btn btn-primary" id="cadastrar_ex" data-aluno-id="{{aluno.id}}">Cadastrar Exercicio</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="encerrarProjetoModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Encerrar Projeto:</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Tem Certeza que deseja encerrar o aluno?</p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="confirmarEncerramento">Encerrar</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+

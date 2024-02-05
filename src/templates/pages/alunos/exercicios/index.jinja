@@ -1,0 +1,74 @@
+{% extends 'base.jinja' %}
+
+{% block head %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<style>
+  .text-small-top {
+    font-size: 12px; /* Tamanho de fonte menor */
+    position: absolute; /* Posição absoluta para sobrepor o conteúdo */
+    top: 10px; /* Posição superior de 10px */
+    left: 10px; /* Posição esquerda de 10px */
+    margin: 0; /* Margem zero para evitar espaçamento extra */
+    padding: 0; /* Preenchimento zero para evitar espaçamento extra */
+    font-weight: bold; /* Deixa o texto em negrito */
+
+}
+</style>
+{% endblock %}
+{% block content %}
+
+
+<div class="card">
+  <div class="card-header d-flex p-0">
+    <h3 class="card-title p-3">{{aluno.nome}}</h3>
+    <ul class="nav nav-pills ml-auto p-2">
+      <li class="nav-item dropdown mr-2">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+          Filtrar<span class="caret"></span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item filtro-status" data-status="todos">Todos</a>
+            <a class="dropdown-item filtro-status" data-status="">Segunda e Sexta</a>
+            <a class="dropdown-item filtro-status" data-status="">Terça e Quinta</a>
+            <a class="dropdown-item filtro-status" data-status="">Querta</a>
+            <!-- Adicione mais itens aqui se necessário -->
+        </div>
+      
+     
+
+    </ul>
+    
+    <ul class="nav nav-pills ml-auto p-2">
+      <li class="nav-item">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastrarProjeto">
+          Adicionar
+        </button>
+      </li>
+    </ul>
+    </li>
+  </div>
+</div>
+
+
+<div class="row">
+{% for exercicio in exercicios %}
+{% include 'pages/alunos/exercicios/exercicio.jinja' with context %}
+{% endfor %}
+
+{% include 'pages/alunos/exercicios/modal.jinja' with context%}
+{% endblock %}
+
+{% block scripts %}
+
+
+<!-- Inclua o JS do Moment.js, que é uma dependência do Date Range Picker -->
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<!-- Inclua o JS do Date Range Picker -->
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js">
+</script>
+{% include 'pages/alunos/exercicios/script.html'%}
+
+{% endblock %}
