@@ -1,6 +1,10 @@
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand-md navbar-light navbar-dark">
   <div class="container">
+    <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
     <a href="/" class="navbar-brand">
       <link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
       <img src="{{ url_for('static', filename='images/IMG.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -19,25 +23,20 @@
             <li><a href="/cadastro" class="dropdown-item">Cadastrar</a></li>
             <li><a href="/alunos" class="dropdown-item">Meus Alunos</a></li>
             <li class="dropdown-divider"></li>
-
             <!-- End Level two -->
           </ul>
         </li>
-      
       </ul>
 
-      <!-- SEARCH FORM -->
+      <!-- Right navbar links -->
+      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+        <li class="nav-item">
+          <a href="/login/logout" class="nav-link">Sair</a>
+        </li>
+      </ul>
     </div>
 
-    <!-- Right navbar links -->
-    <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-      <li class="nav-item">
-        <a href="/login/logout" class="nav-link">Sair</a>
-      </li>
-      <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </ul>
+    <!-- SEARCH FORM -->
   </div>
 </nav>
 <!-- /.navbar -->
