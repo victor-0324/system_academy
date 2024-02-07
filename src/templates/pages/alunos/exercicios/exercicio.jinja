@@ -22,42 +22,38 @@
 </div>
 <!-- /.modal -->
 
-<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-3 card-aluno" id="alunoCard-{{ exercicio.id }}">
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-3 card-aluno" id="alunoCard-{{ exercicio.id }}" data-status="{{ exercicio.tipoTreino }}">
     <div class="card">
         <div class="card-header bg-secondary">
             <h3 class="card-title">{{ exercicio.exercicio }}</h3>
             <div class="card-tools">
-                            
                 <div class="btn-group">
                     <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
-                    <i class="fas fa-wrench"></i>
+                        <i class="fas fa-wrench"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" role="menu">
-                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#excluirExercicioModal{{ exercicio.id }}">Excluir exercicio</a>
-                </div>
+                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#excluirExercicioModal{{ exercicio.id }}">Excluir exercicio</a>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-          <ul>
-            </li>
-                <div class="small-box-footer d-flex align-items-center justify-content-center">
-                    <a href="" data-toggle="modal" data-target="#exercicio{{ exercicio.id }}"> {{ exercicio.tipoTreino }}  <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-                
+            <ul>
               </li>
-          </ul>
-            
-            <!-- Movendo a UL abaixo das caixas coloridas -->
-      
+                <div class="small-box-footer d-flex align-items-center justify-content-center">
+                    <a href="" data-toggle="modal" data-target="#exercicio{{ exercicio.id }}">{{ exercicio.tipoTreino }} <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+              </li>
+            </ul>
             <!-- /.nav -->
             <!-- /.card-body -->
-          <div class="card-footer p-0">
-          </div>
+            <div class="card-footer p-0">
+            </div>
         </div>
     </div>
 </div>
+
 
 
 <div class="modal fade" id="exercicio{{ exercicio.id }}">
@@ -93,7 +89,7 @@
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
         <div class="button-group">
-          <button type="button" class="btn btn-primary" id="cadastrar">Adicionar Exercicio</button>
+          <button type="button" class="btn btn-primary" id="cadastrar" >Adicionar Exercicio</button>
         </div>
       </div>
     </div>

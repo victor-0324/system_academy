@@ -87,8 +87,9 @@
                 }
             });
         });
-       
+
         
+
 
         //Date range picker
         $('#reservation').daterangepicker({
@@ -107,7 +108,7 @@
                 event.preventDefault();
     
                 var statusSelecionado = this.getAttribute('data-status');
-                var cartoes = document.querySelectorAll('.card-projeto');
+                var cartoes = document.querySelectorAll('.card-aluno');
     
                 cartoes.forEach(function(cartao) {
                     if (cartao.getAttribute('data-status') === statusSelecionado || statusSelecionado === 'todos') {
@@ -118,7 +119,7 @@
                 });
             });
         });
-    });    
+    }); 
 </script>
   
 <script>
