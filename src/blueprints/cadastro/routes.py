@@ -56,7 +56,7 @@ def cadastrar():
             session = current_app.db.session
             # Crie uma instância da classe Querys
             querys_instance = Querys(session)
-
+            
             # Chame o método cadastrar_aluno na instância
             querys_instance.cadastrar_aluno(
                 nome, idade, sexo, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,

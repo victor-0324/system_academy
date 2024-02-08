@@ -108,7 +108,6 @@
     }
     
     function limparCamposTreino() {
-            document.getElementById('tipoTreino').value = '0';
             document.getElementById('exercicio').value = '0';
             document.getElementById('serie').value = '0';
             document.getElementById('repeticao').value = '0';
@@ -134,45 +133,49 @@
 
         return exercicios;
     }
-
+    
    
-    function enviarExerciciosParaServidor() {
-   
+    document.addEventListener('DOMContentLoaded', function() {
+        // Adicione um ouvinte de evento ao formulário
+        var formulario = document.querySelector('form');
+        formulario.addEventListener('submit', function(event) {
+            // Previne o envio padrão do formulário
+            event.preventDefault();
+    
             // Obtenha os dados dos exercícios
             var exercicios = obterExerciciosAdicionados();
-
+    
             // Verifique se há exercícios antes de enviar
             if (exercicios.length === 0) {
                 alert('Adicione pelo menos um exercício antes de cadastrar.');
-                return false; // Impede o envio do formulário
+                return;
             }
-
+    
             // Adicione os exercícios ao formData
-            var formData = new FormData(document.querySelector('form'));
+            var formData = new FormData(formulario);
             formData.append('exercicios', JSON.stringify(exercicios));
-
+    
             var alunoId = window.location.pathname.split('/').pop();
             var url = '' + alunoId;
-
+    
             // Faça a solicitação POST para o servidor
             fetch(url, {
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.json())
-                .then(data => {
-                    // Limpa os exercícios após o envio
-                    exercicios = [];
-                    // Redireciona para a outra página após o cadastro
-                    window.location.href = '/alunos';
-                })
-                .catch(error => {
-                    // Lida com erros
-                    console.error(error);
-                });
-            return true;
-        
-    }
+            .then(response => response.json())
+            .then(data => {
+                // Limpa os exercícios após o envio
+                exercicios = [];
+                // Redireciona para a outra página após o cadastro
+                window.location.href = '/alunos';
+            })
+            .catch(error => {
+                // Lida com erros
+                console.error(error);
+            });
+        });
+    });
 
     $(document).ready(function () {
         // Ocultar o aviso quando a página é carregada

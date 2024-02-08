@@ -50,7 +50,7 @@
         </div>  
 
     <div class="conteudo">
-        <form method="post" onsubmit="return enviarExerciciosParaServidor()">
+        <form method="post" >
             <div class="dados-pessoais">
                 <h3 class="titulo-secao"></h3>
                 <div class="input-wrapper">
@@ -154,7 +154,19 @@
                         <option value="Sim">Sim</option>
                         <option value="Não">Não</option>
                     </select>
+                </div>  
+                <div class="input-wrapper">
+                    <label for="permissao">ATENÇÃO:</label>
+                    <select id="permissao" name="permissao" required>
+                        <option value="treino">ALUNO</option>
+                        <option value="admin">ADMINISTRADOR</option>
+                    </select>
                 </div>
+                <!-- Aviso para admin -->
+                <div id="aviso-admin" class="alert alert-warning">
+                    Você está prestes a adicionar um admin. Tem certeza?
+                </div>
+    
             </div>
     
             <div class="dados-pessoais">
@@ -163,7 +175,6 @@
                     <div class="input-wrapper">
                         <label for="tipoTreino">Dias da semana:</label>
                         <select id="tipoTreino" required>
-                            <option value="" disabled selected>Dia do treino</option>
                             <option value="segunda&sexta">Segunda & Sexta</option>
                             <option value="terca&quinta">Terça & Quinta</option>
                             <option value="quarta">Quarta</option>
@@ -212,26 +223,15 @@
                     </ul>
                 </div>
                 
-                <div class="input-wrapper">
-                    <label for="permissao">ATENÇÃO:</label>
-                    <select id="permissao" name="permissao" required>
-                        <option value="permissao"  selected>Seleciona a permissão</option>
-                        <option value="treino">ALUNO</option>
-                        <option value="admin">ADMINISTRADOR</option>
-                    </select>
-                </div>
-                <!-- Aviso para admin -->
-                <div id="aviso-admin" class="alert alert-warning">
-                    Você está prestes a adicionar um admin. Tem certeza?
-                </div>
-    
+              
                 <div class="enviar">
-                    <button class="registro-formulario" type="button" onclick="enviarExerciciosParaServidor()">Cadastrar</button>
+                    <button class="registro-formulario" type="submit">Cadastrar</button>
                 </div>
             </div>
         </form>
     </div> 
 </div>
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="{{ url_for('static', filename='js/cadastro.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
