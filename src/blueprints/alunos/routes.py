@@ -205,9 +205,7 @@ def deletar_ex(exercicio_id):
 @clientes_app.route("/cadastrar_ex", methods=["GET", "POST"])
 @admin_required
 def cadastrar_ex():
-
     if request.method == 'POST':
-        
         exercicio = request.get('exercicio')
         serie = request.get('serie')
         repeticao = request.get('repeticao')
@@ -215,7 +213,6 @@ def cadastrar_ex():
         carga = request.get('carga')
 
         session = current_app.db.session
-            # Crie uma instância da classe Querys
         querys_instance = Querys(session)
 
         querys_instance.cadastrar_ex(
@@ -234,7 +231,6 @@ def atualizar_ex(aluno_id):
     if request.method == "POST":
         data = request.form.get('exercicios')
         exercicios = json.loads(data) if data else []
-
         # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
         resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
 
@@ -249,6 +245,31 @@ def atualizar_ex(aluno_id):
         exercicios = querys_instance.criar_objeto_exercicio(aluno_id)
      
         return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios,aluno=aluno)
+
+@clientes_app.route("/busca_adicionar/<int:aluno_id>/<string:nome_aluno>", methods=["GET", "POST"])
+@admin_required
+def busca_adicionar(aluno_id, nome_aluno):
+    session = current_app.db.session
+    querys_instance = Querys(session)
+
+    aluno = querys_instance.buscar_exercicios_por_nome(nome_aluno)
+    exercicios = querys_instance.criar_objeto_exercicio(aluno.id)
+    
+    # exercicios = json.dumps(exercicios_json)
+   
+    # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
+    resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
+
+    if resultado_atualizacao:  # Adapte conforme necessário
+        return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
+    else:
+        return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
+
+    # As linhas abaixo não serão executadas se a condição acima for verdadeira
+    aluno = querys_instance.mostrar_detalhes(aluno_id)
+    exercicios = querys_instance.criar_objeto_exercicio(aluno_id)
+    
+    return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios, aluno=aluno)
 
 
 exercicio_aluno_view = ExerciciosView.as_view('exercicios_aluno_view')

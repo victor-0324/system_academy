@@ -38,22 +38,7 @@ class ExerciciosView(MethodView):
 
     def put(self):
         """Edita uma transação"""
-        data_json = request.json
-        first_key = next(iter(data_json['data']))
-
-        # Acessa o dicionário associado a essa chave
-        data_transacao = data_json['data'][first_key]
-
-        data_transacao["data"] = datetime.strptime(data_transacao["data"], "%d/%m/%Y")
-        data_transacao["valor"] = float(data_transacao["valor"])
-
-
-        print(data_transacao)
-        data_transacao["rubrica"] = RubricasQuerys.get_id(data_transacao["rubrica"]).id
-        data_transacao["projeto"] = ProjetosQuerys.get_id(data_transacao["projeto"]).id
-        data_transacao["favorecido"] = EquipesQuerys.get_id(data_transacao["favorecido"]).id
-
-        FinanceiroQuerys.atualizar(data_transacao)
+       
 
         return jsonify({"data": {}}), 200
     

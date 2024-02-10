@@ -1,6 +1,7 @@
 
 
 <script>
+    
     $(function() {
         
         $('#cadastrarProjeto').modal({
@@ -50,13 +51,11 @@
                         title: 'Houve algum problema em excluir o projeto' + error.data
                     });
                 }
+         });
         });
-        });
-
 
         $(document).on('click', '#excluirExercicio', function() {
             var exercicioCardId = $(this).data('exercicio-card-id'); 
-            console.log('Exercício Card ID:', exercicioCardId);  // Adicione este log para verificar o ID no console
        
             var Toast = Swal.mixin({
                 toast: true,
@@ -87,10 +86,49 @@
                 }
             });
         });
-
         
 
-
+        $(document).ready(function () {
+            // Captura o evento de envio do formulário de pesquisa
+            $('#searchForm').submit(function (e) {
+                // Impede o envio padrão do formulário
+                e.preventDefault();
+        
+                // Obtém o valor de pesquisa do campo de entrada
+                var nomeAluno = $('#searchInput').val();
+        
+                // Obtém o valor do campo oculto para o ID do aluno
+                var alunoId = $('#alunoIdInput').val();
+        
+                // Pergunta ao usuário se ele tem certeza que deseja buscar exercícios
+                var confirmacao = confirm('Tem certeza que deseja buscar os exercícios? Os exercícios existentes serão substituídos.');
+        
+                if (confirmacao) {
+                    // Faça uma solicitação ao servidor para buscar os exercícios do aluno pelo nome e id
+                    $.ajax({
+                        url: '/alunos/busca_adicionar/' + alunoId + '/' + nomeAluno,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        success: function (data) {
+                            
+                            // Verifique se a busca foi bem-sucedida
+                            if (data && data.success) {
+                                console.log('Dados recebidos:', data);
+                                // Redireciona para a nova rota
+                                window.location.href = '/alunos/atualizar_ex/' + alunoId;
+                            } else {
+                                alert('Aluno não encontrado ou sem exercícios');
+                            }
+                        },
+                        error: function (error) {
+                            console.error(error);
+                            alert('Erro ao buscar aluno');
+                        }
+                    });
+                }
+            });
+        });
+        
         //Date range picker
         $('#reservation').daterangepicker({
             locale: {

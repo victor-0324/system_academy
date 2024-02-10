@@ -79,6 +79,7 @@ def cadastrar():
 def busca_pornome():
     # Certifique-se de que os dados estão sendo enviados como JSON no corpo do POST
     data = request.get_json()
+    
     def serialize_exercicios(exercicio):
                         return {
                             'tipoTreino': exercicio.tipoTreino,
@@ -96,15 +97,12 @@ def busca_pornome():
             querys_instance = Querys(session)
             aluno = querys_instance.buscar_exercicios_por_nome(nome_aluno)
 
-            
-
             if aluno:
                 exercicios = aluno.exercicios
 
                 # Serializa a lista de exercícios
                 exercicios_serializados = [serialize_exercicios(exercicio) for exercicio in exercicios]
 
-                print(exercicios_serializados, type(exercicios_serializados))
                 # Retornar os detalhes do aluno em formato JSON
                 return jsonify({'status': 'success', 'aluno': {
                     'exercicios': exercicios_serializados,

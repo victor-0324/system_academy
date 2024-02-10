@@ -60,7 +60,7 @@
             alert('Erro ao buscar aluno');
         });
     }
-
+ 
     // Função para adicionar exercícios à lista
     function adicionarExercicios(novosExercicios) {
         // Adiciona cada novo exercício à lista global

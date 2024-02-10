@@ -251,7 +251,6 @@ class Querys():
         return None
 
     def atualizar_exercicios(self, aluno_id, exercicios):
-
         try:
             aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
 
@@ -273,22 +272,21 @@ class Querys():
             # Commit fora do loop para melhor desempenho e lógica de transação
             self.session.commit()
 
-            return True  # Indica sucesso
+            return True  
 
         except Exception as e:
             print(f'Erro ao atualizar exercícios: {str(e)}')
-            self.session.rollback()  # Desfaz quaisquer alterações em caso de erro
-            return False  # Indica falha
+            self.session.rollback()  
+            return False 
             
-  
     def criar_objeto_exercicio(self, aluno_id):
+
         exercicios = (
             self.session.query(ExerciciosAluno)
             .filter(ExerciciosAluno.aluno_id == aluno_id)
             .all()
         )
         aluno = aluno_id
-        # Converter os objetos ExerciciosAluno para dicionários com ID único
         exercicios_formatados = []
         for index, exercicio in enumerate(exercicios):
             exercicio_dict = {
@@ -303,3 +301,23 @@ class Querys():
             exercicios_formatados.append(exercicio_dict)
 
         return exercicios_formatados
+
+   
+        exercicios_list = []
+        exercicios_str = exercicios_str.strip("[]")  # Remove colchetes do início e do fim
+        exercicios_entries = exercicios_str.split(', ')
+        
+        for exercicio_entry in exercicios_entries:
+            dados_exercicio = exercicio_entry.split(' ')
+            exercicio_dict = {
+                'dia': dados_exercicio[0],
+                'exercicio': dados_exercicio[1],
+                'serie': dados_exercicio[2],
+                'repeticao': dados_exercicio[3],
+                'descanso': dados_exercicio[4],
+                'carga': dados_exercicio[5]
+                # Adicione outros atributos conforme necessário
+            }
+            exercicios_list.append(exercicio_dict)
+
+        return exercicios_list
