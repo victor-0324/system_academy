@@ -135,6 +135,46 @@
               format: 'DD/MM/YYYY'
             },
         });
+
+        $(document).ready(function() {
+            $('[id^="editarExercicio"]').on('click', function() {
+                var exercicioId = $(this).data('exercicio-id');
+        
+                var Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+        
+                $.ajax({
+                    url: `/alunos/editar/exercicio/${exercicioId}`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        tipoTreino: $("#tipoTreino" + exercicioId).val(),
+                        exercicio: $("#exercicioo" + exercicioId).val(),
+                        serie: $("#serie" + exercicioId).val(),
+                        repeticao: $("#repeticao" + exercicioId).val(),
+                        descanso: $("#descanso" + exercicioId).val(),
+                        carga: $("#carga" + exercicioId).val(),
+                    }),
+                    success: function(response) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Exercício editado com sucesso!'
+                        });
+                        window.location.reload();
+                    },
+                    error: function(error) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Houve algum problema em editar o exercício: ' + error.responseJSON.mensagem
+                        });
+                    }
+                });
+            });
+        });
         
     });
 </script>

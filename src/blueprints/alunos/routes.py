@@ -271,6 +271,39 @@ def busca_adicionar(aluno_id, nome_aluno):
     
     return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios, aluno=aluno)
 
+@clientes_app.route("/editar/exercicio/<int:exercicio_id>", methods=["POST"])
+@admin_required
+def editar_exercicio(exercicio_id):
+    session = current_app.db.session
+    querys_instance = Querys(session)
+    try:
+        if request.method == "POST":
+            # Obtém os novos dados do corpo da requisição em formato JSON
+            novos_dados = request.get_json()
+            print(exercicio_id)
+            print(novos_dados)
+            # Chama o método editar_exercicio da sua classe
+            sucesso = querys_instance.editar_exercicio(exercicio_id, novos_dados)
+
+            if sucesso:
+                return jsonify({'mensagem': 'Exercício editado com sucesso'}), 200
+            else:
+                return jsonify({'mensagem': 'Erro ao editar exercício'}), 404
+
+        # Se a requisição for GET, você pode renderizar um formulário de edição
+        # que permitirá ao usuário fornecer os novos dados.
+        else:
+            # Recupera o exercício pelo id
+            exercicio = querys_instance.obter_exercicio_por_id(exercicio_id)
+
+            if exercicio:
+                return render_template("formulario_edicao_exercicio.html", exercicio=exercicio)
+            else:
+                flash('Exercício não encontrado', 'danger')
+                return redirect(url_for("clientes_app.mostrar"))
+
+    except Exception as e:
+        return jsonify({'mensagem': f'Erro interno: {str(e)}'}), 500
 
 exercicio_aluno_view = ExerciciosView.as_view('exercicios_aluno_view')
 clientes_app.add_url_rule('/exercicios/rest', view_func=exercicio_aluno_view)

@@ -66,28 +66,27 @@
       <div class="modal-body">
         <!-- Adicione os campos do exercício aqui -->
         <label>Dias Da Semana:</label>
-            <select class="form-control" id="tipoTreino" required>
-                <option value="" disabled selected>{{ exercicio.tipoTreino }}</option>
-                <option value="segunda&sexta">Segunda & Sexta</option>
-                <option value="terca&quinta">Terça & Quinta</option>
-                <option value="quarta">Quarta</option>
-            </select>
+        <select class="form-control" id="tipoTreino{{ exercicio.id }}" required>
+            <option value="" disabled selected>{{ exercicio.tipoTreino }}</option>
+            <option value="segunda&sexta">Segunda & Sexta</option>
+            <option value="terca&quinta">Terça & Quinta</option>
+            <option value="quarta">Quarta</option>
+        </select>
         <label>Exercício:</label>
-        <input type="text" class="form-control" value="{{ exercicio.exercicio }}" >
+        <input type="text" class="form-control" id="exercicioo{{ exercicio.id }}" value="{{ exercicio.exercicio }}" >
         <label>Série:</label>
-        <input type="text" class="form-control" value="{{ exercicio.serie }}" >
+        <input type="text" class="form-control" id="serie{{ exercicio.id }}" value="{{ exercicio.serie }}" >
         <label>Repetição:</label>
-        <input type="text" class="form-control" value="{{ exercicio.repeticao }}" >
+        <input type="text" class="form-control" id="repeticao{{ exercicio.id }}" value="{{ exercicio.repeticao }}" >
         <label>Descanso:</label>
-        <input type="text" class="form-control" value="{{ exercicio.descanso }}" >
+        <input type="text" class="form-control" id="descanso{{ exercicio.id }}" value="{{ exercicio.descanso }}" >
         <label>Carga:</label>
-        <input type="text" class="form-control" value="{{ exercicio.carga }}" >
-        <!-- Adicione campos de edição aqui se necessário -->
+        <input type="text" class="form-control" id="carga{{ exercicio.id }}" value="{{ exercicio.carga }}" >
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
         <div class="button-group">
-          <button type="button" class="btn btn-primary" id="cadastrar" >Editar Exercicio</button>
+          <button type="button" class="btn btn-primary" id="editarExercicio{{ exercicio.id }}" data-exercicio-id="{{ exercicio.id }}">Editar Exercicio</button>
         </div>
       </div>
     </div>

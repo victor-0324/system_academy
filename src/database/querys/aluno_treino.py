@@ -97,6 +97,37 @@ class Querys():
         except Exception as e:
             print(f'Erro ao excluir exercício: {str(e)}')
             return False
+
+    def editar_exercicio(self, exercicio_id, novos_dados):
+        try:
+            # Obtém o exercício pelo seu id
+            exercicio = (
+                self.session.query(ExerciciosAluno)
+                .filter_by(id=exercicio_id)
+                .first()
+            )
+            print(exercicio)
+            if exercicio:
+               
+                exercicio.tipoTreino = novos_dados.get('tipoTreino', exercicio.tipoTreino)
+                exercicio.exercicio = novos_dados.get('exercicio', exercicio.exercicio)
+                exercicio.serie = novos_dados.get('serie', exercicio.serie)
+                exercicio.repeticao = novos_dados.get('repeticao', exercicio.repeticao)
+                exercicio.descanso = novos_dados.get('descanso', exercicio.descanso)
+                exercicio.carga = novos_dados.get('carga', exercicio.carga)
+
+                # Commit para salvar as alterações no banco de dados
+                self.session.commit()
+
+                return {'mensagem': 'Exercício editado com sucesso', 'status_code': 200}
+
+            else:
+                return {'mensagem': 'Exercício não encontrado', 'status_code': 404}
+
+        except Exception as e:
+            print(f'Erro ao editar exercício: {str(e)}')
+            return {'mensagem': 'Erro ao editar exercício. Consulte os logs para mais informações.', 'status_code': 500}
+            
     def verificar_credenciais(self, login, senha):
         aluno = (
             self.session.query(Aluno)
