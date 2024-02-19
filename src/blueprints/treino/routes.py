@@ -37,12 +37,12 @@ def mostrar():
     # Agora, use o aluno_id para recuperar os treinos específicos do aluno
     session = current_app.db.session
     querys_instance = Querys(session)
-
+    aluno = querys_instance.mostrar_detalhes(aluno_id)
     exercicios = querys_instance.get_exercicios_by_aluno(aluno_id)
 
     # Verificação de pagamento
     faltam_tres_dias = querys_instance.verificar_falta_tres_dias(aluno_id)
-    return render_template('treinos_alunos.html', exercicios=exercicios, faltam_tres_dias=faltam_tres_dias)
+    return render_template('aluno_treino.html', exercicios=exercicios, faltam_tres_dias=faltam_tres_dias, aluno=aluno)
 
 @treino_app.route("/evolucao/<int:aluno_id>", methods=["GET"])
 @treino_required

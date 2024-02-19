@@ -221,7 +221,6 @@ def cadastrar_ex():
         
     return jsonify({'success': True}), 200
 
-
 @clientes_app.route("/atualizar_ex/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
 def atualizar_ex(aluno_id):
@@ -280,8 +279,7 @@ def editar_exercicio(exercicio_id):
         if request.method == "POST":
             # Obtém os novos dados do corpo da requisição em formato JSON
             novos_dados = request.get_json()
-            print(exercicio_id)
-            print(novos_dados)
+            
             # Chama o método editar_exercicio da sua classe
             sucesso = querys_instance.editar_exercicio(exercicio_id, novos_dados)
 

@@ -71,7 +71,7 @@
 
                     <div class="input-wrapper">
                         <label for="idade">Data Nascimento:</label>
-                        <input type="date" name="idade" id="idade" value="{{ aluno.idade.strftime('%Y-%m-%d') if aluno.data_entrada else '' }}">
+                        <input type="date" name="idade" id="idade" value="{{ aluno.idade.strftime('%Y-%m-%d') if aluno.idade else '' }}">
                     </div>
                     <div class="input-wrapper">
                         <label for="peso">Peso (kg):</label>

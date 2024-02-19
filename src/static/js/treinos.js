@@ -124,7 +124,7 @@
 
             let elementoResultadoDia = document.getElementById('resultadoDia');
             if (elementoResultadoDia) {
-                elementoResultadoDia.textContent = `Treino Hoje: ${tempoTotal}`;
+                elementoResultadoDia.textContent = `Treinou hoje: ${tempoTotal}`;
             }
 
             calcularTempoSemana();
@@ -166,7 +166,7 @@
         let minutos = Math.floor(totalSegundos / 60);
         let segundos = totalSegundos % 60;
         
-        document.getElementById('resultadoSemana').textContent = `Tempo da Semana: ${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
+        document.getElementById('resultadoSemana').textContent = `Na Semana: ${formatarTempo(horas)}:${formatarTempo(minutos)}:${formatarTempo(segundos)}`;
     }
 
     function marcarDiasNaoTreinados(dias) {
