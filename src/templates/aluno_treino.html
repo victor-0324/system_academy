@@ -446,7 +446,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="exercicios exercicios-{{ nome_amigavel_dia|replace('&', 'and')|lower }}">
-                                    {% for exercicio in exercicios_por_dia|sort(attribute='exercicio') %}
+                                    {% for exercicio in exercicios_por_dia %}
                                         <tr>
                                             <td><strong>Exercício:</strong></td>
                                             <td>{{ exercicio.exercicio|capitalize }}</td>
@@ -483,6 +483,7 @@
         </div>
     </div>
 </div>
+
 
   
   <footer class="page-footer center social-colored ">
