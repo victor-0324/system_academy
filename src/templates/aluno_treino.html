@@ -414,7 +414,26 @@
     </div> -->
     </div>
   </div>
-  
+  {% if faltam_tres_dias is not none %}
+      <div id="modal1577950785" class="modal modal-mediabox default-open open" tabindex="0" style="z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);">
+        <div class="modal-content profile-card">
+          <div class="ui-profile">
+            <div class="primg">
+              <img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user">
+            </div>
+            <div class="prinfo card-panel">
+              <div class="prname">
+                <h4 class="name"></h4>
+                <div class="pos">
+                </div>
+                  <p>{{ faltam_tres_dias }}</p>              
+              </div>
+            </div>
+          </div>  
+        </div>
+      </div>
+  {% endif %}
+
   <div class="container over transparent pr0 pl0">
     <div class="section pt0 pb0">
         <div class="row">
