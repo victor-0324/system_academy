@@ -1,11 +1,11 @@
-from flask import Blueprint, request, render_template, url_for, redirect, current_app
+from flask import Blueprint, request, render_template, url_for, redirect, current_app, send_file
 from src.database.querys import Querys
 from functools import wraps
 from flask_login import current_user
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta 
-initial_app = Blueprint("initial_app", __name__, url_prefix="/", template_folder='templates',static_folder='static')
 
+initial_app = Blueprint("initial_app", __name__, url_prefix="/", template_folder='templates',static_folder='static')
 
 @app.route('/sw.js')
 def serve_sw():

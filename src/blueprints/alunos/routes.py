@@ -95,11 +95,10 @@ def atualizar(aluno_id):
     querys_instance = Querys(session)
     try:
         if request.method == "POST":
-            data = request.form.get('exercicios')
-            exercicios = json.loads(data) if data else []
             nome = request.form.get('nome')
             idade = request.form.get('idade')
             sexo = request.form.get('sexo')
+
             peso = request.form.get('peso')
             ombro = request.form.get("ombro")
             torax = request.form.get("torax")
@@ -114,6 +113,7 @@ def atualizar(aluno_id):
             coxa_e = request.form.get("coxa_e")
             pant_d = request.form.get("pant_d")
             pant_e = request.form.get("pant_e")
+
             observacao = request.form.get("observacao")
             telefone = request.form.get("telefone")
             login = request.form.get("login")
@@ -122,21 +122,18 @@ def atualizar(aluno_id):
             jatreino = request.form.get('jatreino')
             permissao = request.form.get('permissao')
             
-            if not all([ peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
-                        abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, telefone, login]):
-                raise ValueError("Preencha todos os campos obrigatórios.")
-
+           
             aluno = querys_instance.mostrar_detalhes(aluno_id)
 
             # Use a função atualizar_dados para atualizar as informações do aluno
             aluno_antes = deepcopy(aluno)  # Crie uma cópia profunda do aluno antes da atualização
             historico_antes, historico_depois = querys_instance.atualizar_dados(
                 aluno_id,nome, idade, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
-                abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios
+                abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha
             )
             
             return jsonify({'success': True, 'historico_antes': historico_antes, 'historico_depois': historico_depois}), 200
-
+ 
         else:
             aluno = querys_instance.mostrar_detalhes(aluno_id)
             return render_template("modificar.html", aluno=[aluno])
