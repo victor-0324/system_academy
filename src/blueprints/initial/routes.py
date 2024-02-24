@@ -7,12 +7,12 @@ from dateutil.relativedelta import relativedelta
 
 initial_app = Blueprint("initial_app", __name__, url_prefix="/", template_folder='templates',static_folder='static')
 
-@app.route('/sw.js')
+@initial_app.route('/sw.js')
 def serve_sw():
-    return send_file('sw.js', mimetype='application/javascript')
-@app.route('/manifest.json')
+    return send_file('static/sw.js', mimetype='application/javascript')
+@initial_app.route('/manifest.json')
 def serve_manifest():
-    return send_file('manifest.json', mimetype='application/manifest+json')
+    return send_file('static/manifest.json', mimetype='application/manifest+json')
 
 def admin_required(func):
     """Decorator para restringir o acesso apenas a usuários com permissão 'admin'."""
