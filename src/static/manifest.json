@@ -8,6 +8,12 @@
   "short_name": "innovare.krypta",
   "start_url": "/",
   "theme_color": "#ffffff",
+  "id": "krypta_innovare",
+  "description": "krypta_innovare",
+  "categories": [
+    "fitness",
+    "sports"
+  ],
   "icons": [
     {
       "src": "static/images/AppImages/windows11/SmallTile.scale-100.png",
