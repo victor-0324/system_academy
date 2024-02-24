@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, url_for, redirect, current_app, send_file
+from flask import Blueprint, request, render_template, url_for, redirect, current_app, send_file, jsonify
 from src.database.querys import Querys
 from functools import wraps
 from flask_login import current_user
@@ -10,10 +10,19 @@ initial_app = Blueprint("initial_app", __name__, url_prefix="/", template_folder
 @initial_app.route('/sw.js')
 def serve_sw():
     return send_file('static/sw.js', mimetype='application/javascript')
+
+
 @initial_app.route('/manifest.json')
 def serve_manifest():
     return send_file('static/manifest.json', mimetype='application/manifest+json')
 
+
+@initial_app.route('/offline')
+def offline():
+    return jsonify({"response": 0})
+
+
+@initial_app.route('/manifest.json')
 def admin_required(func):
     """Decorator para restringir o acesso apenas a usuários com permissão 'admin'."""
     @wraps(func)

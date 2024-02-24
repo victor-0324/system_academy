@@ -15,10 +15,21 @@
   <!-- Bootstrap CSS -->
 <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
-<link rel="shortcut icon" href="{{ url_for('static', filename='images/IMG.png') }}" type="image/x-icon">
+<link rel="shortcut icon" href="{{ url_for('static', filename='images/AppImages/windows11/LargeTile.scale-100.png') }}" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tabelas.css') }}">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register("/sw.js").then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+  }
+</script>
 </head>
 <body>
   <div class="container-fluid pl-0 pr-0 bg-img clearfix parallax-window2" data-parallax="scroll" data-image-src="{{ url_for('static', filename='images/inicio.jpg') }}">
