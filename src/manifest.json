@@ -1,0 +1,18 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "innovare.krypta",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "innovare.krypta",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/static/images/IMG.png",
+      "type": "image/jpeg",
+      "sizes": "3044x2760"
+    }
+  ]
+}
