@@ -21,6 +21,9 @@ def serve_manifest():
 def offline():
     return jsonify({"response": 0})
 
+@initial_app.route('/app')
+def index1():
+    return render_template("index1.html")
 
 @initial_app.route('/manifest.json')
 def admin_required(func):

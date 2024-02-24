@@ -6,7 +6,7 @@
   "orientation": "any",
   "scope": "/",
   "short_name": "innovare.krypta",
-  "start_url": "/",
+  "start_url": "/app",
   "theme_color": "#ffffff",
   "id": "krypta_innovare",
   "description": "krypta_innovare",
