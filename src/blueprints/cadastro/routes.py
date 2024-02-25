@@ -23,6 +23,8 @@ def admin_required(func):
 @cadastro_app.route("/", methods=["GET", "POST"])
 @admin_required
 def cadastrar():
+    with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
     if request.method == 'POST':
         try:
             data = request.form.get('exercicios')
@@ -71,7 +73,7 @@ def cadastrar():
             print(f'Erro no servidor: {str(e)}')
             return jsonify({'error': 'Erro no servidor'}), 500
 
-    return render_template("cadastro.html")
+    return render_template("cadastro.html",manifest=manifest)
 
 
 @cadastro_app.route("/busca_pornome", methods=["POST"])

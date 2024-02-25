@@ -8,8 +8,16 @@
     <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
-    <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='images/IMG.png') }}">
+    <meta name="description" content="{{ manifest.description }}">
 
+    <!-- Vincula o manifest.json usando url_for -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+    <!-- Adicione as tags de ícone para diferentes tamanhos usando um loop -->
+    {% for icon in manifest.icons %}
+        {% set icon_path = url_for('static', filename=icon.src) %}
+        <link rel="icon" type="image/png" sizes="{{ icon.sizes }}" href="{{ icon_path }}">
+    {% endfor %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
 </head>

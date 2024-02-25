@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for,current_app, request, abort
+from flask import Blueprint, render_template, flash, redirect, url_for,current_app, request, abort, json
 from flask_login import current_user, login_required
 from src.database.querys import Querys
 from functools import wraps
@@ -39,10 +39,13 @@ def mostrar():
     querys_instance = Querys(session)
     aluno = querys_instance.mostrar_detalhes(aluno_id)
     exercicios = querys_instance.get_exercicios_by_aluno(aluno_id)
-
+    aluno = querys_instance.session.query(Aluno).filter_by(id=aluno_id).first()
+    with open('src/static/manifest.json', 'r') as file:
+        manifest = json.load(file)
+        
     # Verificação de pagamento
     faltam_tres_dias = querys_instance.verificar_falta_tres_dias(aluno_id)
-    return render_template('aluno_treino.html', exercicios=exercicios, faltam_tres_dias=faltam_tres_dias, aluno=aluno)
+    return render_template('aluno_treino.html', exercicios=exercicios, faltam_tres_dias=faltam_tres_dias, aluno=aluno, manifest=manifest)
 
 @treino_app.route("/evolucao/<int:aluno_id>", methods=["GET"])
 @treino_required
@@ -51,12 +54,15 @@ def evolucao(aluno_id):
     querys_instance = Querys(session)
 
     aluno = querys_instance.session.query(Aluno).filter_by(id=aluno_id).first()
+    with open('src/static/manifest.json', 'r') as file:
+        manifest = json.load(file)
+
 
     if aluno:
         historico = aluno.medidas_historico()
         historico_medidas_peso = aluno.historico_medidas_peso
         historico_depois = [historico[-1]]  
-        return render_template('evolucao.html', historico_medidas_peso=historico_medidas_peso, historico_depois=historico_depois,formatar_data=formatar_data)
+        return render_template('evolucao.html', historico_medidas_peso=historico_medidas_peso, historico_depois=historico_depois,formatar_data=formatar_data, manifest=manifest)
     else:
         # Retorna uma página de erro 404
         abort(404) 

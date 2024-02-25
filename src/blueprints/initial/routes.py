@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, url_for, redirect, current_app, send_file, jsonify
+from flask import Blueprint, request, render_template, url_for, redirect, current_app, send_file, jsonify, json
 from src.database.querys import Querys
 from functools import wraps
 from flask_login import current_user
@@ -56,6 +56,8 @@ def calcular_proxima_data_pagamento(data_pagamento_atual):
 @admin_required
 def mostrar():
     with current_app.app_context():
+        with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
         session = current_app.db.session
         querys_instance = Querys(session)
         alunos = querys_instance.mostrar(session)
@@ -92,4 +94,4 @@ def mostrar():
             
 
         quantidade_alunos = len(alunos)
-    return render_template("index.html", alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos)
+    return render_template("index.html", alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)

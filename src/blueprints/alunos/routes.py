@@ -40,6 +40,8 @@ def calcular_proxima_data_pagamento(data_pagamento_atual):
 @clientes_app.route("/", methods=["GET", "POST"])
 @admin_required
 def mostrar():
+    with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
     with current_app.app_context():
         session = current_app.db.session
         querys_instance = Querys(session)
@@ -70,11 +72,13 @@ def mostrar():
         return render_template("alunos.html", alunos=alunos, quantidade_alunos=len(alunos),
                                data_pagamento_atual_list=data_pagamento_atual_list,
                                proxima_data_pagamento_list=proxima_data_pagamento_list,
-                               inadimplente_list=inadimplente_list,proxima_data_pagamento=proxima_data_pagamento)
+                               inadimplente_list=inadimplente_list,proxima_data_pagamento=proxima_data_pagamento, manifest=manifest)
 
 @clientes_app.route("/detalhes/<int:aluno_id>", methods=["GET"])
 @admin_required
 def mostrar_detalhes(aluno_id):
+    with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
     with current_app.app_context():
         session = current_app.db.session
         querys_instance = Querys(session)
@@ -87,14 +91,15 @@ def mostrar_detalhes(aluno_id):
             
         # Verificar se o aluno é inadimplente
         inadimplente = aluno.inadimplente
-    return render_template("pages/alunos/detalhes/index.jinja", aluno=[aluno], inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual)
+    return render_template("pages/alunos/detalhes/index.jinja", aluno=[aluno], inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual, manifest=manifest)
 
 @clientes_app.route("/atualizar_ex/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
 def atualizar_ex(aluno_id):
+    with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
     session = current_app.db.session
     querys_instance = Querys(session)
-    
     if request.method == "POST":
         data = request.form.get('exercicios')
         exercicios = json.loads(data) if data else []
@@ -108,10 +113,8 @@ def atualizar_ex(aluno_id):
 
     else:
         aluno = querys_instance.mostrar_detalhes(aluno_id)
-      
         exercicios = querys_instance.criar_objeto_exercicio(aluno_id)
-     
-        return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios,aluno=aluno)
+        return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios,aluno=aluno, manifest=manifest)
 
 @clientes_app.route("/atualizar_medidas/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
