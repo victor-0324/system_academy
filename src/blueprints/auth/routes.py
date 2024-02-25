@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, json
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
 from src.database.querys import Querys 
@@ -7,6 +7,8 @@ login_app = Blueprint("login_app", __name__, url_prefix="/login", template_folde
 
 @login_app.route('/', methods=['GET', 'POST'])
 def login():
+    with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
     if request.method == 'POST':
         login = request.form.get('username')
         senha = request.form.get('password')
@@ -32,7 +34,7 @@ def login():
         else:
             flash('Credenciais inválidas. Tente novamente.', 'danger')
 
-    return render_template('pages/auth/login.html')
+    return render_template('pages/auth/login.html', manifest=manifest)
    
 
 @login_app.route('/logout')
