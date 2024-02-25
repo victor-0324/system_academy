@@ -26,14 +26,41 @@
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
           Filtrar<span class="caret"></span>
         </a>
+        
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item filtro-status" data-status="todos">Todos</a>
             <a class="dropdown-item filtro-status" data-status="segunda&sexta">Segunda e Sexta</a>
             <a class="dropdown-item filtro-status" data-status="terca&quinta">Terça e Quinta</a>
             <a class="dropdown-item filtro-status" data-status="quarta">Quarta</a>
+          
         </div>
     </ul>
-    
+        <!-- SEARCH FORM -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <li class="nav-item">
+          <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+              Busca<i class="fas fa-search"></i>
+          </a>
+          <div class="navbar-search-block">
+            <form class="form-inline" id="searchForm">
+              <div class="input-group input-group-sm">
+                  <input class="form-control form-control-navbar" type="search" id="searchInput" name="alunoIdInput{{aluno.id}}" placeholder="Busca Exercicios" aria-label="Search">
+                  <input type="hidden" id="alunoIdInput" name="alunoIdInput" value="{{ aluno.id }}">
+                  <div class="input-group-append">
+                      <button class="btn btn-navbar" type="submit">
+                         <i class="fas fa-search"></i>
+                      </button>
+                      <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                          <i class="fas fa-times"></i>
+                      </button>
+                  </div>
+              </div>
+          </form>
+          
+          </div>
+      </li>
+    </ul>
     <ul class="nav nav-pills ml-auto p-2">
       <li class="nav-item">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastrarProjeto">
@@ -42,7 +69,7 @@
       </li>
     </ul>
     </li>
-    
+   
   </div>
 </div>
 

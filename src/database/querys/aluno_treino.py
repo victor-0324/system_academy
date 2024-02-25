@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from src.database.config import db_connector, DBConnectionHandler
 from sqlalchemy.orm import joinedload, load_only
 from datetime import datetime, timedelta
-
+from flask import jsonify
 
 class Querys():
    
@@ -186,7 +186,7 @@ class Querys():
         self.session.commit()
         return aluno
         
-    def atualizar_dados(self, aluno_id, nome, idade, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha, exercicios):
+    def atualizar_medidas(self, aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e):
         aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
         historico_antes = aluno.medidas_historico()
 
@@ -197,8 +197,6 @@ class Querys():
           
             # Restringir a atualização apenas para medidas válidas
             if peso is not None and ombro is not None:
-                aluno.nome = nome
-                aluno.idade= idade
                 aluno.peso = peso
                 aluno.ombro = ombro
                 aluno.torax = torax
@@ -213,26 +211,7 @@ class Querys():
                 aluno.coxa_e = coxa_e
                 aluno.pant_d = pant_d
                 aluno.pant_e = pant_e
-                aluno.observacao = observacao
-                aluno.telefone = telefone
-                aluno.login = login
-                aluno.data_pagamento = datetime.strptime(data_pagamento, '%d/%m/%Y') if data_pagamento else None
-                aluno.senha = senha
                 aluno.data_atualizacao = datetime.utcnow()
-
-               
-                if exercicios:
-                    aluno.exercicios.clear()
-                    for exercicio_info in exercicios:
-                        exercicio = ExerciciosAluno(
-                            tipoTreino=exercicio_info['tipoTreino'],
-                            exercicio=exercicio_info['exercicio'],
-                            serie=exercicio_info['serie'],
-                            repeticao=exercicio_info['repeticao'],
-                            descanso=exercicio_info['descanso'],
-                            carga=exercicio_info['carga']
-                        )
-                        aluno.exercicios.append(exercicio)
 
                 historico_antes = aluno_antes.medidas_historico()
                 historico_depois = aluno.medidas_historico()
@@ -271,7 +250,7 @@ class Querys():
             # Calcular a diferença de dias entre a data de vencimento e a data atual
             diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
             
-            if diferenca_dias == 3:
+            if diferenca_dias == 2:
                 return "Seu pagamento está próximo de vencer! Por favor, efetue o pagamento nos próximos 2 dias para continuar acessando os treinos."
             elif diferenca_dias == 1:
                 return "Seu pagamento está prestes a vencer! Por favor, efetue o pagamento até amanhã para continuar acessando os treinos."
@@ -311,7 +290,6 @@ class Querys():
             return False 
             
     def criar_objeto_exercicio(self, aluno_id):
-
         exercicios = (
             self.session.query(ExerciciosAluno)
             .filter(ExerciciosAluno.aluno_id == aluno_id)
@@ -333,7 +311,6 @@ class Querys():
 
         return exercicios_formatados
 
-   
         exercicios_list = []
         exercicios_str = exercicios_str.strip("[]")  # Remove colchetes do início e do fim
         exercicios_entries = exercicios_str.split(', ')
@@ -352,3 +329,33 @@ class Querys():
             exercicios_list.append(exercicio_dict)
 
         return exercicios_list
+
+    def atualizardados(self, aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao):
+        # Verificar se o aluno existe
+        aluno = self.session.query(Aluno).filter_by(id=aluno_id).first()
+        
+        if aluno:
+            # Restringir a atualização apenas para medidas válidas
+            if nome is not None and idade is not None:
+                # Atualizar os atributos diretamente no objeto existente
+                aluno.nome = nome
+                aluno.idade = idade
+                aluno.observacao = observacao
+                aluno.telefone = telefone
+                aluno.login = login
+                aluno.senha = senha
+                aluno.data_pagamento = datetime.strptime(data_pagamento, '%d/%m/%Y') if data_pagamento else None
+                aluno.permissao = permissao
+
+                # Commit apenas a atualização do aluno
+                self.session.commit()
+                print(aluno)
+                return jsonify({'success': True}), 200
+            
+            else:
+                # Lógica para lidar com medidas inválidas
+                return jsonify({'error': 'Dados inválidos'}), 400
+        else:
+            # Lógica para lidar com o aluno não encontrado
+            return jsonify({'error': 'Aluno não encontrado'}), 404
+

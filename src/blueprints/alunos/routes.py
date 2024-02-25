@@ -79,26 +79,47 @@ def mostrar_detalhes(aluno_id):
         session = current_app.db.session
         querys_instance = Querys(session)
         aluno = querys_instance.mostrar_detalhes(aluno_id) 
+        
         # Obter apenas a data de pagamento do aluno
         data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
         # Calcular a próxima data de pagamento
         proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
-        
+            
         # Verificar se o aluno é inadimplente
         inadimplente = aluno.inadimplente
-    return render_template('detalhes.html', aluno=[aluno], inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual)
+    return render_template("pages/alunos/detalhes/index.jinja", aluno=[aluno], inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual)
 
-@clientes_app.route("/atualizar/<int:aluno_id>", methods=["GET", "POST"])
+@clientes_app.route("/atualizar_ex/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
-def atualizar(aluno_id):
+def atualizar_ex(aluno_id):
+    session = current_app.db.session
+    querys_instance = Querys(session)
+    
+    if request.method == "POST":
+        data = request.form.get('exercicios')
+        exercicios = json.loads(data) if data else []
+        # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
+        resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
+
+        if resultado_atualizacao:  # Adapte conforme necessário
+            return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
+        else:
+            return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
+
+    else:
+        aluno = querys_instance.mostrar_detalhes(aluno_id)
+      
+        exercicios = querys_instance.criar_objeto_exercicio(aluno_id)
+     
+        return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios,aluno=aluno)
+
+@clientes_app.route("/atualizar_medidas/<int:aluno_id>", methods=["GET", "POST"])
+@admin_required
+def atualizar_medidas(aluno_id):
     session = current_app.db.session
     querys_instance = Querys(session)
     try:
         if request.method == "POST":
-            nome = request.form.get('nome')
-            idade = request.form.get('idade')
-            sexo = request.form.get('sexo')
-
             peso = request.form.get('peso')
             ombro = request.form.get("ombro")
             torax = request.form.get("torax")
@@ -113,26 +134,50 @@ def atualizar(aluno_id):
             coxa_e = request.form.get("coxa_e")
             pant_d = request.form.get("pant_d")
             pant_e = request.form.get("pant_e")
+            aluno = querys_instance.mostrar_detalhes(aluno_id)
 
+            # Use a função atualizar_dados para atualizar as informações do aluno
+            aluno_antes = deepcopy(aluno)  # Crie uma cópia profunda do aluno antes da atualização
+            historico_antes, historico_depois = querys_instance.atualizar_medidas(
+                aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
+                abdome, quadril, coxa_d, coxa_e, pant_d, pant_e
+            )
+            
+            return jsonify({'success': True, 'historico_antes': historico_antes, 'historico_depois': historico_depois}), 200
+ 
+        else:
+            aluno = querys_instance.mostrar_detalhes(aluno_id)
+            return render_template("modificar.html", aluno=[aluno])
+
+    except Exception as e:
+        print(f'Erro no servidor: {str(e)}')
+        return jsonify({'error': 'Erro no servidor'}), 500
+
+@clientes_app.route("/atualizar/<int:aluno_id>", methods=["GET", "POST"])
+@admin_required
+def atualizar(aluno_id):
+    session = current_app.db.session
+    querys_instance = Querys(session)
+    try:
+        if request.method == "POST":
+            nome = request.form.get('nome')
+            idade = request.form.get('idade')
             observacao = request.form.get("observacao")
             telefone = request.form.get("telefone")
             login = request.form.get("login")
             senha = request.form.get("senha")
             data_pagamento = request.form.get("data_pagamento")
-            jatreino = request.form.get('jatreino')
             permissao = request.form.get('permissao')
-            
-           
+
             aluno = querys_instance.mostrar_detalhes(aluno_id)
 
             # Use a função atualizar_dados para atualizar as informações do aluno
-            aluno_antes = deepcopy(aluno)  # Crie uma cópia profunda do aluno antes da atualização
-            historico_antes, historico_depois = querys_instance.atualizar_dados(
-                aluno_id,nome, idade, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
-                abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, data_pagamento, senha
+           
+            aluno = querys_instance.atualizardados(
+                aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao
             )
             
-            return jsonify({'success': True, 'historico_antes': historico_antes, 'historico_depois': historico_depois}), 200
+            return jsonify({'success': True}), 200
  
         else:
             aluno = querys_instance.mostrar_detalhes(aluno_id)
@@ -218,29 +263,7 @@ def cadastrar_ex():
         
     return jsonify({'success': True}), 200
 
-@clientes_app.route("/atualizar_ex/<int:aluno_id>", methods=["GET", "POST"])
-@admin_required
-def atualizar_ex(aluno_id):
-    session = current_app.db.session
-    querys_instance = Querys(session)
-    
-    if request.method == "POST":
-        data = request.form.get('exercicios')
-        exercicios = json.loads(data) if data else []
-        # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
-        resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
 
-        if resultado_atualizacao:  # Adapte conforme necessário
-            return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
-        else:
-            return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
-
-    else:
-        aluno = querys_instance.mostrar_detalhes(aluno_id)
-      
-        exercicios = querys_instance.criar_objeto_exercicio(aluno_id)
-     
-        return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios,aluno=aluno)
 
 @clientes_app.route("/busca_adicionar/<int:aluno_id>/<string:nome_aluno>", methods=["GET", "POST"])
 @admin_required
@@ -299,6 +322,7 @@ def editar_exercicio(exercicio_id):
 
     except Exception as e:
         return jsonify({'mensagem': f'Erro interno: {str(e)}'}), 500
+
 
 exercicio_aluno_view = ExerciciosView.as_view('exercicios_aluno_view')
 clientes_app.add_url_rule('/exercicios/rest', view_func=exercicio_aluno_view)

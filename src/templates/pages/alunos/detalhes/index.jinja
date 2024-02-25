@@ -1,0 +1,58 @@
+{% extends 'base.jinja' %}
+
+{% block head %}
+
+<style>
+  .text-small-top {
+    font-size: 12px; /* Tamanho de fonte menor */
+    position: absolute; /* Posição absoluta para sobrepor o conteúdo */
+    top: 10px; /* Posição superior de 10px */
+    left: 10px; /* Posição esquerda de 10px */
+    margin: 0; /* Margem zero para evitar espaçamento extra */
+    padding: 0; /* Preenchimento zero para evitar espaçamento extra */
+    font-weight: bold; /* Deixa o texto em negrito */
+
+}
+</style>
+{% endblock %}
+{% block content %}
+
+{% for aluno in aluno %}
+<div class="card">
+  <div class="card-header d-flex p-0">
+    <h3 class="card-title p-3">{{ aluno.nome }}</h3>
+    <ul class="nav nav-pills ml-auto p-2">
+      <li class="nav-item dropdown mr-2">
+       {% if inadimplente %}
+            <p class="text-danger">INADIMPLENTE</p>
+        {% else %}
+            <p class="text-success">PAGO</p>
+        {% endif %}
+    </ul>
+     <ul class="nav nav-pills ml-auto p-2">
+      <li class="nav-item">
+           <a href="/alunos/atualizar_ex/{{aluno.id}}"> <button type="button" class="btn btn-primary">EXERCICIOS</button></a>
+      </li>
+    </ul>
+    </li>
+   
+  </div>
+</div>
+
+
+<div class="row">
+{% include 'pages/alunos/detalhes/detalhes.jinja' with context %}
+{% endfor %}
+{% endblock %}
+
+
+{% block scripts %}
+<!-- Inclua o JS do Moment.js, que é uma dependência do Date Range Picker -->
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<!-- Inclua o JS do Date Range Picker -->
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js">
+</script>
+{% include 'pages/alunos/detalhes/script.html'%}
+
+{% endblock %}
