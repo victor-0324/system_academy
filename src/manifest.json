@@ -12,7 +12,7 @@
     {
       "src": "/static/images/IMG.png",
       "type": "image/jpeg",
-      "sizes": "3044x2760"
+      "sizes":  "512x512"
     }
   ]
 }
