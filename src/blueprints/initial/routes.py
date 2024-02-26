@@ -23,7 +23,9 @@ def offline():
 
 @initial_app.route('/app')
 def index1():
-    return render_template("index1.html")
+    with open('src/static/manifest.json', 'r') as file:
+        manifest = json.load(file)
+    return render_template("index1.html", manifest=manifest)
 
 @initial_app.route('/manifest.json')
 def admin_required(func):
