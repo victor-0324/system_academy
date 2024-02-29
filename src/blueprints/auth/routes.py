@@ -8,7 +8,7 @@ login_app = Blueprint("login_app", __name__, url_prefix="/login", template_folde
 @login_app.route('/', methods=['GET', 'POST'])
 def login():
     with open('src/static/manifest.json', 'r') as file:
-            manifest = json.load(file)
+        manifest = json.load(file)
     if request.method == 'POST':
         login = request.form.get('username')
         senha = request.form.get('password')
@@ -20,7 +20,7 @@ def login():
 
         if aluno == None or  aluno.inadimplente:
                 mensagem_erro = 'Credenciais inválidas ou acesso não autorizado. Tente novamente.'
-                return render_template('pages/auth/login.html', mensagem_erro=mensagem_erro)
+                return render_template('pages/auth/login.html', mensagem_erro=mensagem_erro, manifest=manifest)
 
         if aluno:
             if permissao == 'admin':
