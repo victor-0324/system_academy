@@ -42,6 +42,11 @@ def calcular_proxima_data_pagamento(data_pagamento_atual):
 def mostrar():
     with open('src/static/manifest.json', 'r') as file:
             manifest = json.load(file)
+    
+    with open("feedback_alunos.txt", "r") as arquivo:
+        feedbacks = arquivo.read().splitlines()
+        
+
     with current_app.app_context():
         session = current_app.db.session
         querys_instance = Querys(session)
@@ -72,7 +77,7 @@ def mostrar():
         return render_template("alunos.html", alunos=alunos, quantidade_alunos=len(alunos),
                                data_pagamento_atual_list=data_pagamento_atual_list,
                                proxima_data_pagamento_list=proxima_data_pagamento_list,
-                               inadimplente_list=inadimplente_list,proxima_data_pagamento=proxima_data_pagamento, manifest=manifest)
+                               inadimplente_list=inadimplente_list,proxima_data_pagamento=proxima_data_pagamento, manifest=manifest, feedbacks=feedbacks)
 
 @clientes_app.route("/detalhes/<int:aluno_id>", methods=["GET"])
 @admin_required

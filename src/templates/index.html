@@ -100,7 +100,7 @@
                           <tbody>
                               {% for aluno in inadimplentes %}
                                   <tr>
-                                      <td>{{ aluno.nome }}</td>
+                                    <td><a href="alunos/detalhes/{{ aluno.id }}">{{ aluno.nome }}</a></td>
                                       <td>{{ aluno.dataPagamento }}</td>
                                   </tr>
                               {% endfor %}
@@ -120,7 +120,7 @@
                           <tbody>
                               {% for aluno in alunosPagamSemana %}
                                   <tr>
-                                      <td>{{ aluno.nome }}</td>
+                                    <td><a href="alunos/detalhes/{{ aluno.id }}">{{ aluno.nome }}</a></td> 
                                       <td>{{ aluno.proximaDataPagamento }}</td>
                                   </tr>
                               {% endfor %}

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for,current_app, request, abort, json
+from flask import Blueprint, render_template, flash, redirect, url_for,current_app, request, abort, json, jsonify
 from flask_login import current_user, login_required
 from src.database.querys import Querys
 from functools import wraps
@@ -66,3 +66,19 @@ def evolucao(aluno_id):
     else:
         # Retorna uma página de erro 404
         abort(404) 
+
+@treino_app.route("/feedback/<int:aluno_id>/<string:feedback>", methods=["GET", "POST"])
+@treino_required
+def feedback(aluno_id, feedback):
+    session = current_app.db.session
+    querys_instance = Querys(session)
+    arquivo_feedback = "feedback_alunos.txt"
+    aluno = querys_instance.mostrar_detalhes(aluno_id)
+    # Abre o arquivo no modo de escrita
+    with open(arquivo_feedback, "a") as arquivo:
+    # Escreve o feedback no arquivo
+        arquivo.write(f"Aluno: {aluno.nome}\nFeedback: {feedback}\n\n")
+
+    return jsonify({'success': True}), 200
+
+

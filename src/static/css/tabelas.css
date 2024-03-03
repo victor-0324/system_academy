@@ -21,7 +21,7 @@ h4 {
   margin-bottom: 20px;
 }
 
-th {
+th, a{
   color: black;
 }
 table {

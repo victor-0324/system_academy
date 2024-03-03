@@ -32,11 +32,6 @@
  
   <meta name="theme-color" content="#ffffff">
 
-
-
-
-
-
   <!-- CORE CSS FRAMEWORK - START -->
   <link href="{{ url_for('static', filename='assets/css/preloader.css') }}" type="text/css" rel="stylesheet" media="screen" />
 
@@ -360,8 +355,8 @@
     </div>
   </div>
 
-  <div class="container full subpage ">
-    <div class="section">
+<div class="container full subpage ">
+  <div class="section">
     <!-- <div class="container">
     <div class="section"> -->
       <ul class="subpages collection z-depth-1">
@@ -408,8 +403,9 @@
       
       <!-- </div>
     </div> -->
-    </div>
   </div>
+</div>
+
   {% if faltam_tres_dias is not none %}
       <div id="modal1577950785" class="modal modal-mediabox default-open open" tabindex="0" style="z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);">
         <div class="modal-content profile-card">
@@ -431,76 +427,99 @@
   {% endif %}
 
   <div class="container over transparent pr0 pl0">
-    <div class="section pt0 pb0">
-        <div class="row">
-          <div class="col s12 pad-0">
-            <h5 class="bot-20 sec-tit">Exercicios</h5>
-            <ul class="collapsible">
-                {% set dias_exercicios = {
-                    'segunda&sexta': 'Segunda e Sexta',
-                    'terca&quinta': 'Terca e Quinta',
-                    'quarta': 'Quarta',
-                } %}
-                {% for dia, nome_amigavel_dia in dias_exercicios.items() %}
-                    {% set exercicios_por_dia = [] %}
-                    {% for exercicio in exercicios %}
-                        {% if exercicio.tipoTreino == dia %}
-                            {% set _ = exercicios_por_dia.append(exercicio) %}
-                        {% endif %}
-                    {% endfor %}
-                    <li>
-                        <div class="collapsible-header" tabindex="0">
-                          <i class="mdi mdi-calendar"></i>
-                          {{ nome_amigavel_dia }}
-                        </div>
-                        <div class="collapsible-body">
-                            <table class="table text-left">
-                                <thead>
-                                    <tr>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody class="exercicios exercicios-{{ nome_amigavel_dia|replace('&', 'and')|lower }}">
-                                    {% for exercicio in exercicios_por_dia %}
-                                        <tr>
-                                            <td><strong>Exercício:</strong></td>
-                                            <td>{{ exercicio.exercicio|capitalize }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Série:</strong></td>
-                                            <td>{{ exercicio.serie }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Repetição:</strong></td>
-                                            <td>{{ exercicio.repeticao }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Descanso:</strong></td>
-                                            <td>{{ exercicio.descanso }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Carga:</strong></td>
-                                            <td>{{ exercicio.carga }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <br>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+      <div class="section pt0 pb0">
+          <div class="row">
+            <div class="col s12 pad-0">
+              <h5 class="bot-20 sec-tit">Exercicios</h5>
+              <ul class="collapsible">
+                  {% set dias_exercicios = {
+                      'segunda&sexta': 'Segunda e Sexta',
+                      'terca&quinta': 'Terca e Quinta',
+                      'quarta': 'Quarta',
+                  } %}
+                  {% for dia, nome_amigavel_dia in dias_exercicios.items() %}
+                      {% set exercicios_por_dia = [] %}
+                      {% for exercicio in exercicios %}
+                          {% if exercicio.tipoTreino == dia %}
+                              {% set _ = exercicios_por_dia.append(exercicio) %}
+                          {% endif %}
+                      {% endfor %}
+                      <li>
+                          <div class="collapsible-header" tabindex="0">
+                            <i class="mdi mdi-calendar"></i>
+                            {{ nome_amigavel_dia }}
+                          </div>
+                          <div class="collapsible-body">
+                              <table class="table text-left">
+                                  <thead>
+                                      <tr>
+                                          
+                                      </tr>
+                                  </thead>
+                                  <tbody class="exercicios exercicios-{{ nome_amigavel_dia|replace('&', 'and')|lower }}">
+                                      {% for exercicio in exercicios_por_dia %}
+                                          <tr>
+                                              <td><strong>Exercício:</strong></td>
+                                              <td>{{ exercicio.exercicio|capitalize }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Série:</strong></td>
+                                              <td>{{ exercicio.serie }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Repetição:</strong></td>
+                                              <td>{{ exercicio.repeticao }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Descanso:</strong></td>
+                                              <td>{{ exercicio.descanso }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Carga:</strong></td>
+                                              <td>{{ exercicio.carga }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td colspan="2">
+                                                  <br>
+                                              </td>
+                                          </tr>
+                                      {% endfor %}
+                                  </tbody>
+                              </table>
+                          </div>
+                      </li>
+                  {% endfor %}
+              </ul>
+            </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      
+      <div class="row">
+        <div class="col s12 pad-0">
+          <h5 class="bot-20 sec-tit">Feedback </h5>    
+          <div class="col s12">
+            <div class="row">
+              <div class="input-field col s12 textarea">
+                <textarea id="textarea-prefix" class="materialize-textarea"></textarea>
+                <label for="textarea-prefix">Deixe sua sugestão, dúvida ou crítica.</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="">
+                <a id="enviarFeedback" class="waves-effect waves-light btn bg-primary">Enviar</a>&nbsp; &nbsp;
+              </div>
+            </div>
           </div>
         </div>
+      </div>
     </div>
-</div>
-
-
+  </div>
   
+
   <footer class="page-footer center social-colored ">
     <div class="container footer-content">
       <div class="row">
@@ -551,7 +570,36 @@
 <script src="{{ url_for('static', filename='modules/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
 <script src="{{ url_for('static', filename='assets/js/variables.js') }}"></script>
 <!-- CORE JS FRAMEWORK - END -->
+<script>
+  $(document).ready(function(){
+    $("#enviarFeedback").on("click", function(){
+      var alunoId = {{aluno.id}};
+      var feedback = $("#textarea-prefix").val();
 
+      // Realize a requisição AJAX para a rota de feedback
+      $.ajax({
+        type: "POST",
+        url: "feedback/" + alunoId + "/" + feedback,
+        success: function(data){
+          // Manipule a resposta do servidor, se necessário
+          console.log("Feedback enviado com sucesso!");
+
+          // Exiba o tost (notificação)
+          M.toast({html: 'Feedback enviado com sucesso!', classes: 'rounded'});
+
+          // Atualize a página
+          location.reload();
+        },
+        error: function(error){
+          console.error("Erro ao enviar feedback:", error);
+
+          // Exiba o tost (notificação) de erro
+          M.toast({html: 'Erro ao enviar feedback. Por favor, tente novamente.', classes: 'rounded red'});
+        }
+      });
+    });
+  });
+</script>
 
 <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
 <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->

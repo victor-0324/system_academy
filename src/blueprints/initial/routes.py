@@ -60,6 +60,7 @@ def mostrar():
     with current_app.app_context():
         with open('src/static/manifest.json', 'r') as file:
             manifest = json.load(file)
+
         session = current_app.db.session
         querys_instance = Querys(session)
         alunos = querys_instance.mostrar(session)
@@ -83,6 +84,7 @@ def mostrar():
                 
                 if proxima_data_pagamento_dt <= data_limite and not inadimplente:
                     alunos_pagam_semana.append({
+                        'id': aluno.id,
                         'nome': aluno.nome,
                         'proximaDataPagamento': proxima_data_pagamento
                     })
@@ -90,6 +92,7 @@ def mostrar():
             if inadimplente:
                 data_pagamento_atual_str = aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else 'N/A'
                 inadimplentes.append({
+                    'id': aluno.id,
                     'nome': aluno.nome,
                     'dataPagamento': data_pagamento_atual_str
                 })
