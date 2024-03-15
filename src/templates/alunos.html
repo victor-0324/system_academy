@@ -87,25 +87,24 @@
                         </tr>
                     </thead>
                     <tbody id="tabelaAlunosBody">
-                        {% for i in range(quantidade_alunos) %}
+                        {% for aluno in alunos|sort(attribute='nome') %}
                         <tr>
-                            <td>{{ alunos[i].nome }}</td>
+                            <td>{{ aluno.nome }}</td>
                             <td>
-                                {% if inadimplente_list[i] %}
+                                {% if inadimplente_list[loop.index0] %}
                                     <span class="text-danger">Inadimplente</span>
                                     <br>
-                                    Referente: {{ proxima_data_pagamento_list[i] }}
+                                    Referente: {{ proxima_data_pagamento_list[loop.index0] }}
                                 {% else %}
                                     <span class="text-success">Pago</span>
                                 {% endif %}
                             </td>
                             <td>
                                 <div class="botoes-acoes">  
-                                    <a href="detalhes/{{ alunos[i].id }}">
+                                    <a href="detalhes/{{ aluno.id }}">
                                         <button type="button">Detalhes</button>
                                     </a>
-                                
-                                    <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ alunos[i].id }}')">
+                                    <button class="registro-formulario" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">
                                         Deletar
                                     </button>
                                 </div>
