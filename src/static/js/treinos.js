@@ -216,7 +216,7 @@
         let diaDaSemana = new Date().getDay();
     
         // Verifica se o dia da semana é domingo (0)
-        if (diaDaSemana === 0 || diaDaSemana === 6) {
+        if (diaDaSemana === 0) {
             reiniciar();
         }
     }
