@@ -302,7 +302,7 @@
             exercicios = [];
             atualizarListaExercicios();
             // Redireciona para a outra página após o cadastro
-            window.location.href = '/alunos';
+            window.location.href = '/';
         })
         .catch(error => {
             // Lida com erros
@@ -331,7 +331,7 @@
             .then(data => {
        
                 // Redireciona para a outra página após o cadastro
-                window.location.href = '/alunos';
+                window.location.href = '/';
             })
             .catch(error => {
                 // Lida com erros

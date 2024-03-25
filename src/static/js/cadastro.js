@@ -168,7 +168,7 @@
                 // Limpa os exercícios após o envio
                 exercicios = [];
                 // Redireciona para a outra página após o cadastro
-                window.location.href = '/alunos';
+                window.location.href = '/';
             })
             .catch(error => {
                 // Lida com erros
