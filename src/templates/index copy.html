@@ -79,63 +79,61 @@
 <div class="container-fluid fh5co-network">
   <div class="container">
     <div class="row">
-      <div class="col-12 col-sm-6 col-md-3">
-        <div class="info-box">
-            <a href="#alunos-ativos" class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></a>
-  
-            <div class="info-box-content">
-                <span class="info-box-text">Alunos Ativos</span>
-                <span class="info-box-number">
-                    {{ alunos_ativos_nao_inadimplentes }}
-                    <small>total</small>
-                </span>
-            </div>
+      <div class="col-md-12">
+        <h3 class="wow bounceInUp">Página Do Administrador</h3>
+        <div class="total-alunos">
+          <h4>Total de Alunos: {{ quantidade_alunos }}</h4>
+        </div>
+        <br>
+        <div class="alunos-pagam-semana">
+          {% if inadimplentes or alunosPagamSemana %}
+              <div class="table-container">
+                  <div class="inadimplentes">
+                      <h5>Alunos Inadimplentes</h5>
+                      <table>
+                          <thead>
+                              <tr>
+                                  <th>Nome</th>
+                                  <th>Último Pagamento</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for aluno in inadimplentes %}
+                                  <tr>
+                                    <td><a href="alunos/detalhes/{{ aluno.id }}">{{ aluno.nome }}</a></td>
+                                      <td>{{ aluno.dataPagamento }}</td>
+                                  </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              
+                  <div class="proximo-pagamento">
+                      <h5>Pagamentos Da Semana</h5>
+                      <table>
+                          <thead>
+                              <tr>
+                                  <th>Nome</th>
+                                  <th>Próx. Pagamento</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for aluno in alunosPagamSemana %}
+                                  <tr>
+                                    <td><a href="alunos/detalhes/{{ aluno.id }}">{{ aluno.nome }}</a></td> 
+                                      <td>{{ aluno.proximaDataPagamento }}</td>
+                                  </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          {% else %}
+              <p>Não há alunos para exibir.</p>
+          {% endif %}
         </div>
       </div>
-     <div class="col-12 col-sm-6 col-md-3">
-        <div class="info-box">
-            <a href="#inadimplentes" class="info-box-icon bg-danger elevation-1"><i class="fas fa-user-times"></i></a>
-  
-            <div class="info-box-content">
-                <span class="info-box-text">Inadimplentes</span>
-                <span class="info-box-number">
-                    {{ inadimplentes|length }}
-                    <small>total</small>
-                </span>
-            </div>
-        </div>
-      </div>
-  
-      <!-- fix for small devices only -->
-      <div class="clearfix hidden-md-up"></div>
-  
-      <div class="col-12 col-sm-6 col-md-3">
-          <div class="info-box mb-3">
-              <a href="#pagantes-semana" class="info-box-icon bg-success elevation-1"><i class="fas fa-wallet"></i></a>
-  
-              <div class="info-box-content">
-                  <span class="info-box-text">Pagantes da Semana</span>
-                  <span class="info-box-number">{{alunosPagamSemana|length}}</span>
-              </div>
-              <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-      </div>
-      <!-- /.col -->
-      <div class="col-12 col-sm-6 col-md-3">
-          <div class="info-box mb-3">
-              <a href="#atualizar-medidas" class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></a>
-  
-              <div class="info-box-content">
-                  <span class="info-box-text">Atualizar Medidas</span>
-                  <span class="info-box-number">2,000</span>
-              </div>
-              <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-      </div>
-      <!-- /.col -->
-  </div>
+    </div>
   </div>
 </div>
 

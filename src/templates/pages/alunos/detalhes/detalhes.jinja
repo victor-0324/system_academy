@@ -16,6 +16,10 @@
               <form id="formAtualizar">
                 <div class="card-body">
                     <div class="form-group">
+                        <label for="nome">Nome:</label>
+                        <input type="text" name="nome" class="form-control" id="nome" value="{{ aluno.nome }}">
+                    </div>
+                    <div class="form-group">
                         <label for="exampleInputEmail1">Ultimo Pagamento</label>
                         <input type="text" name="data_pagamento" class="form-control" id="dia" value="{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}">
                         <br>
@@ -26,21 +30,19 @@
                         </ul>
                     </div>
                     <div class="form-group">
-                        <label for="nome">Nome:</label>
-                            <input type="text" name="nome" class="form-control" id="nome" value="{{ aluno.nome }}">
+                        <label for="data_pagamento">Proximo Pagamento:</label>
+                        <p class="form-control">{{ proxima_data_pagamento }}</p>
                     </div>
                     <div class="form-group">
                         <label for="data_entrada">Inicio:</label>
                         <input type="date" name="data_entrada" class="form-control" id="data_entrada" value="{{ aluno.data_entrada.strftime('%Y-%m-%d') if aluno.data_entrada else ''  }}">
                     </div>
-                    <div class="form-group">
-                        <label for="data_pagamento">Proximo Pagamento:</label>
-                        <p class="form-control">{{ proxima_data_pagamento }}</p>
-                    </div>
+                  
                     <div class="form-group">
                        <label for="idade">Data Nascimento:</label>
                         <input type="date" name="idade" class="form-control" id="idade" value="{{ aluno.idade.strftime('%Y-%m-%d') if aluno.idade else '' }}">
                     </div>
+                    
                     <div class="form-group">
                         <label for="observacao">Observação:</label>
                         <input type="text"  class="form-control" name="observacao" id="observacao" value="{{ aluno.observacao }}">

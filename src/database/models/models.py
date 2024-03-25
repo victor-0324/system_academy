@@ -93,11 +93,30 @@ class Aluno(Base):
         
         # medidas_dict.update(kwargs)  # Atualiza o dicionário com argumentos adicionais
         return medidas_dict
-    
+
+    # @property
+    # def inadimplente(self):
+    #     if self.data_pagamento:
+    #         # Calcula o último dia do mês seguinte ao mês de vencimento
+    #         mes_seguinte_final = (self.data_pagamento + relativedelta(months=1)).replace(day=1) + relativedelta(months=1, days=-1)
+            
+    #         # Obtém o fuso horário UTC
+    #         tz_utc = timezone.utc
+            
+    #         # Obtém a data e hora atual com o fuso horário UTC
+    #         data_atual_utc = datetime.now(tz=tz_utc)
+            
+    #         # Converte a data limite para o fuso horário UTC
+    #         data_limite_utc = mes_seguinte_final.replace(tzinfo=tz_utc)
+            
+    #         # Verifica se a data atual é maior que a data limite
+    #         return data_atual_utc > data_limite_utc
+    #     else:
+    #         return True
     @property
     def inadimplente(self):
         if self.data_pagamento:
-            prazo_pagamento = timedelta(days=32)
+            prazo_pagamento = timedelta(days=31)
             data_limite = self.data_pagamento + prazo_pagamento
 
             # Obtém o fuso horário UTC

@@ -1,0 +1,248 @@
+{% extends 'base.jinja' %}
+
+{% block head %}
+
+<style>
+  .text-small-top {
+    font-size: 12px; /* Tamanho de fonte menor */
+    position: absolute; /* Posição absoluta para sobrepor o conteúdo */
+    top: 10px; /* Posição superior de 10px */
+    left: 10px; /* Posição esquerda de 10px */
+    margin: 0; /* Margem zero para evitar espaçamento extra */
+    padding: 0; /* Preenchimento zero para evitar espaçamento extra */
+    font-weight: bold; /* Deixa o texto em negrito */
+
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12 col-sm-6 col-md-3">
+      <div class="info-box">
+          <a href="/" class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></a>
+
+          <div class="info-box-content">
+              <span class="info-box-text">Alunos</span>
+              <span class="info-box-number">
+                  {{ quantidade_alunos }}
+                  <small>total</small>
+              </span>
+          </div>
+      </div>
+    </div>
+   <div class="col-12 col-sm-6 col-md-3">
+      <div class="info-box">
+          <a href="/inadimplentes" class="info-box-icon bg-danger elevation-1"><i class="fas fa-user-times"></i></a>
+
+          <div class="info-box-content">
+              <span class="info-box-text">Inadimplentes</span>
+              <span class="info-box-number">
+                  {{ inadimplentes|length }}
+                  <small>total</small>
+              </span>
+          </div>
+      </div>
+    </div>
+
+    <!-- fix for small devices only -->
+    <div class="clearfix hidden-md-up"></div>
+
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box mb-3">
+            <a href="/pagamsemana" class="info-box-icon bg-success elevation-1"><i class="fas fa-wallet"></i></a>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Pagantes da Semana</span>
+                <span class="info-box-number">{{alunosPagamSemana|length}}</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box mb-3">
+            <a href="#atualizar-medidas" class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></a>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Atualizar Medidas</span>
+                <span class="info-box-number">12</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+</div>
+<section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <form action="simple-results.html">
+                        <div class="input-group">
+                            <input type="search" id="pesquisa" class="form-control form-control-lg" placeholder="Pesquisa por alunos">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-lg btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+ <div class="resultados-pesquisa">
+                
+    <ul id="listaPesquisa"></ul>
+</div>
+<br>
+<div class="card">
+    <div class="card-header border-transparent">
+      <h3 class="card-title">Todos os Aluno</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table m-0">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaAlunosBody">
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td>{{ aluno.nome }}</td>
+                        <td>
+                            {% if aluno.inadimplente %}
+                            <span class="badge badge-danger">Inadimplente</span>
+                            <br>
+                            Referente: {{ proxima_data_pagamento_list[loop.index0] }}
+                            {% else %}
+                            <span class="badge badge-success">Pago</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="botoes-acoes">
+                                <a href="alunos/detalhes/{{ aluno.id }}" class="btn btn-primary btn-sm">Detalhes</a>                                
+                            </div>
+                            <br>
+                            <div class="botoes-acoes">
+                                <button class="btn btn-danger btn-sm" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+    <!-- /.card-body -->
+    <!-- Aqui poderia ir um .card-footer se necessário -->
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<!-- Inclua o JS do Moment.js, que é uma dependência do Date Range Picker -->
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script>
+    var alunos = [
+        {% for aluno in alunos %}
+            {
+                "id": "{{ aluno.id }}",
+                "nome": "{{ aluno.nome }}",
+                "inadimplente": {{ aluno.inadimplente|lower }},
+            },
+        {% endfor %}
+    ];
+
+    var pesquisaInput = document.getElementById('pesquisa');
+    var listaPesquisa = document.getElementById('listaPesquisa');
+    var tabelaAlunosBody = document.getElementById('tabelaAlunosBody');
+
+    pesquisaInput.addEventListener('input', function () {
+        var termoPesquisa = pesquisaInput.value.trim().toLowerCase();
+    
+        if (termoPesquisa === '') {
+            listaPesquisa.innerHTML = '';
+            atualizarTabela(alunos);
+            return;
+        }
+    
+        var resultados = alunos.filter(function (aluno) {
+            return aluno.nome.toLowerCase().includes(termoPesquisa);
+        });
+    
+       
+    
+        // Atualiza a tabela de alunos
+        atualizarTabela(resultados);
+    });
+
+    function atualizarTabela(resultados) {
+        tabelaAlunosBody.innerHTML = '';
+    
+        resultados.forEach(function (resultado) {
+            var newRow = tabelaAlunosBody.insertRow(tabelaAlunosBody.rows.length);
+            var cellNome = newRow.insertCell(0);
+            var cellStatus = newRow.insertCell(1);
+            var cellAcoes = newRow.insertCell(2);
+    
+            cellNome.innerHTML = resultado.nome;
+    
+            cellStatus.innerHTML = resultado.inadimplente
+                ? '<span class="text-danger">Inadimplente</span><br>'
+                : '<span class="text-success">Pago</span>';
+    
+            var detalhesButton = document.createElement('button');
+            detalhesButton.textContent = 'Detalhes';
+            detalhesButton.className = 'btn btn-primary btn-sm';
+            detalhesButton.onclick = function () {
+                window.open('alunos/detalhes/' + resultado.id);
+            };
+    
+            cellAcoes.appendChild(detalhesButton);
+    
+            var deletarButton = document.createElement('button');
+            deletarButton.textContent = 'Deletar';
+            deletarButton.className = 'btn btn-danger btn-sm';
+            deletarButton.onclick = function () {
+                var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+                if (confirmacao) {
+                    window.location.href = "/alunos/deletar/" + resultado.id;
+                }
+            };
+    
+            cellAcoes.appendChild(deletarButton);
+        });
+    }
+
+    function confirmarExclusao(alunoId) {
+        var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+        if (confirmacao) {
+            window.location.href = "/alunos/deletar/" + alunoId;
+        }
+    }
+</script>
+<!-- Inclua o JS do Date Range Picker -->
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js">
+</script>
+{% include 'pages/alunos/detalhes/script.html'%}
+
+{% endblock %}
