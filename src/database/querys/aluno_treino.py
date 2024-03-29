@@ -245,17 +245,21 @@ class Querys():
 
         if aluno and aluno.data_pagamento:
             # Calcular a data de vencimento do próximo pagamento (30 dias após o último pagamento)
-            data_pagamento_proximo = aluno.data_pagamento + timedelta(days=32)
+            data_pagamento_proximo = aluno.data_pagamento + timedelta(days=30)
+
+            # Verificar se o mês da próxima data de pagamento é diferente do mês atual
+            if aluno.data_pagamento.month == data_pagamento_proximo.month:
+                data_pagamento_proximo += timedelta(days=1)
 
             # Calcular a diferença de dias entre a data de vencimento e a data atual
             diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
-            
+
             if diferenca_dias == 2:
                 return "Seu pagamento está próximo de vencer! Por favor, efetue o pagamento nos próximos 2 dias para continuar acessando os treinos."
             elif diferenca_dias == 1:
                 return "Seu pagamento está prestes a vencer! Por favor, efetue o pagamento até amanhã para continuar acessando os treinos."
             elif diferenca_dias == 0:
-                return "Seu pagamento  vence hoje! Efetue o pagamento e continue acessando os treinos."
+                return "Seu pagamento vence hoje! Efetue o pagamento e continue acessando os treinos."
             else:
                 return None 
         return None

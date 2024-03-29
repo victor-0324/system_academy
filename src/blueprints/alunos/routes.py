@@ -4,6 +4,7 @@ from datetime import datetime
 from src.database.config import db, db_connector, DBConnectionHandler
 from flask_login import current_user, login_required
 from functools import wraps
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta 
 import json
 from copy import deepcopy 
@@ -23,14 +24,17 @@ def admin_required(func):
 
 def calcular_proxima_data_pagamento(data_pagamento_atual):
     if data_pagamento_atual:
-        # Converter a string da data atual para um objeto datetime
+        # Converter a string da data de pagamento atual para um objeto datetime
         data_pagamento_atual = datetime.strptime(data_pagamento_atual, '%Y-%m-%d')
 
-        # Calcular a próxima data de pagamento (por exemplo, mensalmente)
-        proxima_data_pagamento = data_pagamento_atual + relativedelta(months=1)
+        # Calcular a próxima data de pagamento com base em 30 dias de inadimplência
+        proxima_data_pagamento = data_pagamento_atual + timedelta(days=30)
+
+        # Verificar se o mês atual tem mais de 30 dias e adicionar um dia extra se necessário
+        if data_pagamento_atual.month == proxima_data_pagamento.month:
+            proxima_data_pagamento += timedelta(days=1)
 
         # Formatando a próxima data de pagamento como string
-       
         proxima_data_pagamento_str = proxima_data_pagamento.strftime('%d/%m/%Y')
         return proxima_data_pagamento_str
 

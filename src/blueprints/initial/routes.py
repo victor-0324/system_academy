@@ -40,14 +40,17 @@ def admin_required(func):
 
 def calcular_proxima_data_pagamento(data_pagamento_atual):
     if data_pagamento_atual:
-        # Converter a string da data atual para um objeto datetime
+        # Converter a string da data de pagamento atual para um objeto datetime
         data_pagamento_atual = datetime.strptime(data_pagamento_atual, '%Y-%m-%d')
 
-        # Calcular a próxima data de pagamento (por exemplo, mensalmente)
-        proxima_data_pagamento = data_pagamento_atual + relativedelta(months=1)
+        # Calcular a próxima data de pagamento com base em 30 dias de inadimplência
+        proxima_data_pagamento = data_pagamento_atual + timedelta(days=30)
+
+        # Verificar se o mês atual tem mais de 30 dias e adicionar um dia extra se necessário
+        if data_pagamento_atual.month == proxima_data_pagamento.month:
+            proxima_data_pagamento += timedelta(days=1)
 
         # Formatando a próxima data de pagamento como string
-       
         proxima_data_pagamento_str = proxima_data_pagamento.strftime('%d/%m/%Y')
         return proxima_data_pagamento_str
 
@@ -73,10 +76,11 @@ def mostrar():
         for aluno in alunos:
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
             proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
-            proxima_data_pagamento_list.append(proxima_data_pagamento)
             inadimplente = aluno.inadimplente
             
-            
+            if inadimplente:
+                proxima_data_pagamento_list.append(proxima_data_pagamento)
+
             if proxima_data_pagamento:
                 # Converta proxima_data_pagamento para datetime para comparação
                 proxima_data_pagamento_dt = datetime.strptime(proxima_data_pagamento, '%d/%m/%Y')
@@ -88,8 +92,6 @@ def mostrar():
                         'proximaDataPagamento': proxima_data_pagamento
                     })
 
-           
-
             if inadimplente:
                 data_pagamento_atual_str = aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else 'N/A'
                 inadimplentes.append({
@@ -98,7 +100,8 @@ def mostrar():
                     'dataPagamento': data_pagamento_atual_str
                 })
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/index.jinja",alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest, proxima_data_pagamento_list=proxima_data_pagamento_list)
+    return render_template("pages/adm/home/index.jinja", alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest, proxima_data_pagamento_list=proxima_data_pagamento_list)
+
 
 # Tela inadimpletes do app
 @initial_app.route("/inadimplentes", methods=["GET", "POST"])
@@ -114,16 +117,15 @@ def inadimplentes():
 
         alunos_pagam_semana = []
         inadimplentes = []
-        proxima_data_pagamento_list = []
+        
 
         # Iterar sobre cada aluno na lista
         for aluno in alunos:
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
             proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
-            proxima_data_pagamento_list.append(proxima_data_pagamento)
             inadimplente = aluno.inadimplente
             
-            
+           
             if proxima_data_pagamento:
                 # Converta proxima_data_pagamento para datetime para comparação
                 proxima_data_pagamento_dt = datetime.strptime(proxima_data_pagamento, '%d/%m/%Y')
@@ -135,19 +137,20 @@ def inadimplentes():
                         'proximaDataPagamento': proxima_data_pagamento
                     })
 
-           
-
             if inadimplente:
-                data_pagamento_atual_str = aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else 'N/A'
+                data_pagamento_atual_str = datetime.strptime(proxima_data_pagamento, '%d/%m/%Y')
                 inadimplentes.append({
                     'id': aluno.id,
                     'nome': aluno.nome,
                     'dataPagamento': data_pagamento_atual_str
                 })
+
+                
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/inadimplentes.jinja",alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest, proxima_data_pagamento_list=proxima_data_pagamento_list)
+    return render_template("pages/adm/home/inadimplentes.jinja", alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
 
 
+# Tela pagantes da semana
 @initial_app.route("/pagamsemana", methods=["GET", "POST"])
 @admin_required
 def pagamsemana():
@@ -161,13 +164,12 @@ def pagamsemana():
 
         alunos_pagam_semana = []
         inadimplentes = []
-        proxima_data_pagamento_list = []
+        
 
         # Iterar sobre cada aluno na lista
         for aluno in alunos:
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
             proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
-            proxima_data_pagamento_list.append(proxima_data_pagamento)
             inadimplente = aluno.inadimplente
             
             
@@ -182,8 +184,6 @@ def pagamsemana():
                         'proximaDataPagamento': proxima_data_pagamento
                     })
 
-           
-
             if inadimplente:
                 data_pagamento_atual_str = aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else 'N/A'
                 inadimplentes.append({
@@ -192,4 +192,4 @@ def pagamsemana():
                     'dataPagamento': data_pagamento_atual_str
                 })
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/pagamsemana.jinja",alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest, proxima_data_pagamento_list=proxima_data_pagamento_list)
+    return render_template("pages/adm/home/pagamsemana.jinja", alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
