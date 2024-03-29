@@ -88,7 +88,7 @@ def mostrar():
         alunos_pagam_semana = []
         inadimplentes = []
         proxima_data_pagamento_list = []
-
+        alunos_atualizar_medidas = []
         # Iterar sobre cada aluno na lista
         for aluno in alunos:
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
@@ -116,8 +116,31 @@ def mostrar():
                     'nome': aluno.nome,
                     'dataPagamento': data_pagamento_atual_str
                 })
+            
+            if aluno.data_atualizacao:
+                # Calcular a data limite para a próxima atualização de medidas (60 dias após a última atualização)
+                data_limite_atualizacao = aluno.data_atualizacao + timedelta(days=60)
+                
+                # Calcular a data atual mais 6 dias
+                data_limite_seis_dias = datetime.now() + timedelta(days=6)
+
+                # Verificar se a data limite está dentro dos próximos 6 dias
+                if datetime.now() <= data_limite_atualizacao <= data_limite_seis_dias and not inadimplente:
+                    alunos_atualizar_medidas.append({
+                        'id': aluno.id,
+                        'nome': aluno.nome,
+                        'ultimaAtualizacaoMedidas': aluno.data_atualizacao.strftime('%d/%m/%Y'),
+                        'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
+                    })
+            else:
+                # Se a data de atualização estiver faltando, adicione o aluno à lista com a indicação para atualizar
+                alunos_atualizar_medidas.append({
+                    'id': aluno.id,
+                    'nome': aluno.nome,
+                    'mensagem': 'Atualizar medidas'
+                })
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/index.jinja", alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest, proxima_data_pagamento_list=proxima_data_pagamento_list)
+    return render_template("pages/adm/home/index.jinja", alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest, proxima_data_pagamento_list=proxima_data_pagamento_list)
 
 
 # Tela inadimpletes do app
@@ -134,7 +157,7 @@ def inadimplentes():
 
         alunos_pagam_semana = []
         inadimplentes = []
-        
+        alunos_atualizar_medidas = []
 
         # Iterar sobre cada aluno na lista
         for aluno in alunos:
@@ -162,9 +185,31 @@ def inadimplentes():
                     'dataPagamento': data_pagamento_atual_str
                 })
 
+            if aluno.data_atualizacao:
+                # Calcular a data limite para a próxima atualização de medidas (60 dias após a última atualização)
+                data_limite_atualizacao = aluno.data_atualizacao + timedelta(days=60)
+                
+                # Calcular a data atual mais 6 dias
+                data_limite_seis_dias = datetime.now() + timedelta(days=6)
+
+                # Verificar se a data limite está dentro dos próximos 6 dias
+                if datetime.now() <= data_limite_atualizacao <= data_limite_seis_dias and not inadimplente:
+                    alunos_atualizar_medidas.append({
+                        'id': aluno.id,
+                        'nome': aluno.nome,
+                        'ultimaAtualizacaoMedidas': aluno.data_atualizacao.strftime('%d/%m/%Y'),
+                        'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
+                    })
+            else:
+                # Se a data de atualização estiver faltando, adicione o aluno à lista com a indicação para atualizar
+                alunos_atualizar_medidas.append({
+                    'id': aluno.id,
+                    'nome': aluno.nome,
+                    'mensagem': 'Atualizar medidas'
+                })
                 
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/inadimplentes.jinja", alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
+    return render_template("pages/adm/home/inadimplentes.jinja", alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
 
 
 # Tela pagantes da semana
@@ -181,7 +226,7 @@ def pagamsemana():
 
         alunos_pagam_semana = []
         inadimplentes = []
-        
+        alunos_atualizar_medidas = []
 
         # Iterar sobre cada aluno na lista
         for aluno in alunos:
@@ -208,8 +253,31 @@ def pagamsemana():
                     'nome': aluno.nome,
                     'dataPagamento': data_pagamento_atual_str
                 })
+
+            if aluno.data_atualizacao:
+                # Calcular a data limite para a próxima atualização de medidas (60 dias após a última atualização)
+                data_limite_atualizacao = aluno.data_atualizacao + timedelta(days=60)
+                
+                # Calcular a data atual mais 6 dias
+                data_limite_seis_dias = datetime.now() + timedelta(days=6)
+
+                # Verificar se a data limite está dentro dos próximos 6 dias
+                if datetime.now() <= data_limite_atualizacao <= data_limite_seis_dias and not inadimplente:
+                    alunos_atualizar_medidas.append({
+                        'id': aluno.id,
+                        'nome': aluno.nome,
+                        'ultimaAtualizacaoMedidas': aluno.data_atualizacao.strftime('%d/%m/%Y'),
+                        'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
+                    })
+            else:
+                # Se a data de atualização estiver faltando, adicione o aluno à lista com a indicação para atualizar
+                alunos_atualizar_medidas.append({
+                    'id': aluno.id,
+                    'nome': aluno.nome,
+                    'mensagem': 'Atualizar medidas'
+                })
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/pagamsemana.jinja", alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
+    return render_template("pages/adm/home/pagamsemana.jinja", alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
 
 @initial_app.route("/atualizarmedidas", methods=["GET", "POST"])
 @admin_required
@@ -275,5 +343,4 @@ def atualizarmedidas():
                     'mensagem': 'Atualizar medidas'
                 })
         quantidade_alunos = len(alunos)
-        
     return render_template("pages/adm/home/atualizarmedidas.jinja", alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, alunos_atualizar_medidas=alunos_atualizar_medidas, quantidade_alunos=quantidade_alunos, manifest=manifest)
