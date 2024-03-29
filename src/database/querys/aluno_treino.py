@@ -165,6 +165,7 @@ class Querys():
             observacao=observacao, telefone=telefone, login=login, senha=senha,
             data_entrada=data_entrada,
             data_pagamento=data_pagamento,
+            data_atualizacao = datetime.now(),
             jatreino=jatreino, permissao=permissao
         )
      # Adiciona o aluno ao histórico antes de fazer o commit

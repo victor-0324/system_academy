@@ -54,6 +54,7 @@ def cadastrar():
             data_pagamento = request.form.get('data_pagamento')
             jatreino = request.form.get('jatreino')
             permissao = request.form.get('permissao')
+            
 
             session = current_app.db.session
             # Crie uma instância da classe Querys

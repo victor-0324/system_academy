@@ -64,7 +64,7 @@
     <!-- /.col -->
     <div class="col-12 col-sm-6 col-md-3">
         <div class="info-box mb-3">
-            <a href="/atualizarmedidas" class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></a>
+            <a href="#atualizar-medidas" class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></a>
 
             <div class="info-box-content">
                 <span class="info-box-text">Atualizar Medidas</span>
@@ -101,18 +101,15 @@
                         <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody id="tabelaAlunosBody">
-                    {% for aluno in alunosPagamSemana %}
+               <tbody id="tabelaAlunosBody">
+                    {% for aluno in alunos_atualizar_medidas %}
                     <tr>
                         <td>{{ aluno.nome }}</td>
-                         <td>
-                            {% if aluno.inadimplente %}
-                            <span class="badge badge-danger">Inadimplente</span>
-                            <br>
-                            Referente: {{ aluno.proximaDataPagamento }}
+                        <td>
+                            {% if aluno.ultimaAtualizacaoMedidas %}
+                                <span class="badge badge-success">Prox. Atualização:</span> {{ aluno.dataLimiteAtualizacao }}
                             {% else %}
-                            <span class="badge badge-success">Pago</span>
-                             Referente: {{ aluno.proximaDataPagamento }}
+                                <em>{{ aluno.mensagem }}</em>
                             {% endif %}
                         </td>
                         <td>
