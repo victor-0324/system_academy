@@ -106,9 +106,9 @@
 
       </div>
             <div class="col s9 infoarea">
-        <a href=""><span class="name"></span></a>
+        <a href=""><span class="name"> {{aluno.nome}}</span></a>
         <a href="">
-          <span class="date">Inicio: </span>
+          <span class="date">Inicio: {{aluno.data_entrada.strftime('%d/%m/%Y')}} </span>
         </a>
       </div>
     </div>
@@ -276,13 +276,12 @@
 </div>
 
 <div class="content-area">
-
   <div class="pagehead-bg   primary-bg" >
   </div> 
 
   <div class="container has-pagehead is-pagetitle">
     <div class="section">
-      <h5 class="pagetitle"></h5>
+      <h5 class="pagetitle">{{ aluno.nome }}</h5>
 
     </div>
   </div>
@@ -308,7 +307,7 @@
                         <tbody>
                             <!-- Linha para Data Atualização -->
                             <tr>
-                                <th scope="row">Data Atualização</th>
+                                <th scope="row">Atualização</th>
                                 <!-- Exibir data atualização antes -->
                                 <td>{{ formatar_data(historico_medidas_peso[-1]['data_atualizacao']) }}</td>
                                 <!-- Exibir data atualização depois -->

@@ -4,7 +4,7 @@ from src.database.querys import Querys
 from functools import wraps
 from src.database.config import DBConnectionHandler, db
 from src.database.models import Aluno
-from datetime import datetime
+from datetime import datetime, timedelta
 
 treino_app = Blueprint("treino_app", __name__, url_prefix="/treino", template_folder='templates', static_folder='static')
 
@@ -27,6 +27,23 @@ def treino_required(func):
             return redirect(url_for('login_app.login'))
     return wrapper
 
+def calcular_proxima_data_pagamento(data_pagamento_atual):
+    if data_pagamento_atual:
+        # Converter a string da data de pagamento atual para um objeto datetime
+        data_pagamento_atual = datetime.strptime(data_pagamento_atual, '%Y-%m-%d')
+
+        # Calcular a próxima data de pagamento com base em 30 dias de inadimplência
+        proxima_data_pagamento = data_pagamento_atual + timedelta(days=30)
+
+        # Verificar se o mês atual tem mais de 30 dias e adicionar um dia extra se necessário
+        if data_pagamento_atual.month == proxima_data_pagamento.month:
+            proxima_data_pagamento += timedelta(days=1)
+
+        # Formatando a próxima data de pagamento como string
+        proxima_data_pagamento_str = proxima_data_pagamento.strftime('%d/%m/%Y')
+        return proxima_data_pagamento_str
+
+    return None
 
 @treino_app.route("/", methods=["GET", "POST"])
 @treino_required
@@ -40,12 +57,14 @@ def mostrar():
     aluno = querys_instance.mostrar_detalhes(aluno_id)
     exercicios = querys_instance.get_exercicios_by_aluno(aluno_id)
     aluno = querys_instance.session.query(Aluno).filter_by(id=aluno_id).first()
+    data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
+    proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
     with open('src/static/manifest.json', 'r') as file:
         manifest = json.load(file)
         
     # Verificação de pagamento
     faltam_tres_dias = querys_instance.verificar_falta_tres_dias(aluno_id)
-    return render_template('aluno_treino.html', exercicios=exercicios, faltam_tres_dias=faltam_tres_dias, aluno=aluno, manifest=manifest)
+    return render_template('aluno_treino.html',proxima_data_pagamento=proxima_data_pagamento, exercicios=exercicios, faltam_tres_dias=faltam_tres_dias, aluno=aluno, manifest=manifest)
 
 @treino_app.route("/evolucao/<int:aluno_id>", methods=["GET"])
 @treino_required
@@ -62,23 +81,8 @@ def evolucao(aluno_id):
         historico = aluno.medidas_historico()
         historico_medidas_peso = aluno.historico_medidas_peso
         historico_depois = [historico[-1]]  
-        return render_template('evolucao.html', historico_medidas_peso=historico_medidas_peso, historico_depois=historico_depois,formatar_data=formatar_data, manifest=manifest)
+        return render_template('evolucao.html',aluno=aluno, historico_medidas_peso=historico_medidas_peso, historico_depois=historico_depois,formatar_data=formatar_data, manifest=manifest)
     else:
         # Retorna uma página de erro 404
         abort(404) 
-
-@treino_app.route("/feedback/<int:aluno_id>/<string:feedback>", methods=["GET", "POST"])
-@treino_required
-def feedback(aluno_id, feedback):
-    session = current_app.db.session
-    querys_instance = Querys(session)
-    arquivo_feedback = "feedback_alunos.txt"
-    aluno = querys_instance.mostrar_detalhes(aluno_id)
-    # Abre o arquivo no modo de escrita
-    with open(arquivo_feedback, "a") as arquivo:
-    # Escreve o feedback no arquivo
-        arquivo.write(f"Aluno: {aluno.nome}\nFeedback: {feedback}\n\n")
-
-    return jsonify({'success': True}), 200
-
 

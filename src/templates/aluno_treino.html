@@ -174,6 +174,7 @@
         <a href=""><span class="name">{{aluno.nome}}</span></a>
         <a href="">
           <span class="date">Inicio: {{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</span>
+          <span class="date">Prox. Pagamento: {{ proxima_data_pagamento }}</span>
         </a>
       </div>
     </div>
@@ -495,29 +496,7 @@
       </div>
   </div>
 
-  <div class="container">
-    <div class="section">
-      
-      <div class="row">
-        <div class="col s12 pad-0">
-          <h5 class="bot-20 sec-tit">Feedback </h5>    
-          <div class="col s12">
-            <div class="row">
-              <div class="input-field col s12 textarea">
-                <textarea id="textarea-prefix" class="materialize-textarea"></textarea>
-                <label for="textarea-prefix">Deixe sua sugestão, dúvida ou crítica.</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="">
-                <a id="enviarFeedback" class="waves-effect waves-light btn bg-primary">Enviar</a>&nbsp; &nbsp;
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+ 
   
 
   <footer class="page-footer center social-colored ">
