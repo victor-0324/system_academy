@@ -140,7 +140,7 @@ def mostrar():
                     'mensagem': 'Atualizar medidas'
                 })
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/index.jinja", alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest, proxima_data_pagamento_list=proxima_data_pagamento_list)
+    return render_template("pages/adm/home/index.jinja", alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
 
 
 # Tela inadimpletes do app
