@@ -162,14 +162,16 @@ def inadimplentes():
         alunos_pagam_semana = []
         inadimplentes = []
         alunos_atualizar_medidas = []
-
+        total_alunos_ativos = 0
         # Iterar sobre cada aluno na lista
         for aluno in alunos:
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
             proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
             inadimplente = aluno.inadimplente
             
-           
+            if not inadimplente:
+                total_alunos_ativos += 1
+
             if proxima_data_pagamento:
                 # Converta proxima_data_pagamento para datetime para comparação
                 proxima_data_pagamento_dt = datetime.strptime(proxima_data_pagamento, '%d/%m/%Y')
@@ -213,7 +215,7 @@ def inadimplentes():
                 })
                 
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/inadimplentes.jinja", alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
+    return render_template("pages/adm/home/inadimplentes.jinja",total_alunos_ativos=total_alunos_ativos, alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
 
 
 # Tela pagantes da semana
@@ -231,14 +233,16 @@ def pagamsemana():
         alunos_pagam_semana = []
         inadimplentes = []
         alunos_atualizar_medidas = []
-
+        total_alunos_ativos = 0
         # Iterar sobre cada aluno na lista
         for aluno in alunos:
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
             proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
             inadimplente = aluno.inadimplente
             
-            
+            if not inadimplente:
+                total_alunos_ativos += 1
+
             if proxima_data_pagamento:
                 # Converta proxima_data_pagamento para datetime para comparação
                 proxima_data_pagamento_dt = datetime.strptime(proxima_data_pagamento, '%d/%m/%Y')
@@ -281,7 +285,7 @@ def pagamsemana():
                     'mensagem': 'Atualizar medidas'
                 })
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/pagamsemana.jinja", alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
+    return render_template("pages/adm/home/pagamsemana.jinja",total_alunos_ativos=total_alunos_ativos, alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
 
 @initial_app.route("/atualizarmedidas", methods=["GET", "POST"])
 @admin_required
@@ -297,13 +301,16 @@ def atualizarmedidas():
         alunos_atualizar_medidas = []
         alunos_pagam_semana = []
         inadimplentes = []
-       
+        total_alunos_ativos = 0
 
         # Iterar sobre cada aluno na lista
         for aluno in alunos:
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
             proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
             inadimplente = aluno.inadimplente
+
+            if not inadimplente:
+                total_alunos_ativos += 1
 
             if inadimplente:
                 data_pagamento_atual_str = aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else 'N/A'
@@ -347,4 +354,4 @@ def atualizarmedidas():
                     'mensagem': 'Atualizar medidas'
                 })
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/atualizarmedidas.jinja", alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, alunos_atualizar_medidas=alunos_atualizar_medidas, quantidade_alunos=quantidade_alunos, manifest=manifest)
+    return render_template("pages/adm/home/atualizarmedidas.jinja",total_alunos_ativos=total_alunos_ativos, alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, alunos_atualizar_medidas=alunos_atualizar_medidas, quantidade_alunos=quantidade_alunos, manifest=manifest)

@@ -97,7 +97,7 @@ class Aluno(Base):
     @property
     def inadimplente(self):
         if self.data_pagamento:
-            prazo_pagamento = timedelta(days=30)
+            prazo_pagamento = timedelta(days=31)
 
             # Calcular a data limite com base na última data de pagamento
             data_limite = self.data_pagamento + prazo_pagamento

@@ -256,7 +256,7 @@ class Querys():
             diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
 
          
-            if diferenca_dias == 0:
+            if diferenca_dias == -1:
                 return "Seu pagamento vence hoje! Efetue o pagamento e continue acessando os treinos."
             else:
                 return None 
