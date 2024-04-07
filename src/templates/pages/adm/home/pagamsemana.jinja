@@ -111,8 +111,9 @@
                             <br>
                                 Referente: {{ aluno.proximaDataPagamento }}
                             {% else %}
-                            <span class="badge badge-success">Pago</span>
-                                Referente: {{ aluno.proximaDataPagamento }}
+                            <span class="badge badge-success">
+                                Prox. Pagamento: </span>{{ aluno.proximaDataPagamento }}
+                          
                             {% endif %}
                         </td>
                         <td>
