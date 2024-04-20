@@ -153,7 +153,7 @@
     // Função para calcular o tempo total de treino na semana
     function calcularTempoSemana() {
         let totalSegundos = 0;
-        let dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+        let dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
         dias.forEach(dia => {
             let tempo = localStorage.getItem(`${dia}Tempo`);
             if (tempo) {

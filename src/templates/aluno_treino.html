@@ -53,26 +53,27 @@
     <link href="{{ url_for('static', filename='assets/css/style.css')}}" type="text/css" rel="stylesheet" media="screen" id="main-style" />
   <!-- CORE CSS TEMPLATE - END -->
 
-  <style>
-    .desafio-container {
-     
-      display: flex; /* Habilita o Flexbox */
-      flex-direction: column; /* Organiza os elementos em uma coluna */
-      align-items: center; /* Centraliza os elementos horizontalmente */
-      justify-content: center; /* Centraliza os elementos verticalmente */
-      gap: 10px; /* Adiciona um espaço entre os elementos */
-      padding: 20px; /* Espaçamento interno */
+<style>
+  .desafio-container {
+        display: flex; /* Habilita o Flexbox */
+        flex-direction: column; /* Organiza os elementos em uma coluna */
+        align-items: center; /* Centraliza os elementos horizontalmente */
+        justify-content: center; /* Centraliza os elementos verticalmente */
+        gap: 5px; /* Adiciona um espaço entre os elementos */
+        padding: 10px; /* Espaçamento interno */
     }
+
+    
     
     h5 {
      
       text-align: left; /* Alinha o texto para a esquerda */
     }
     
-    .botoes {
-      display: flex;
-      justify-content: space-between;
-  }
+      .botoes {
+        display: flex;
+        justify-content: space-between;
+    }
   
     .botoes button {
         padding: 10px;
@@ -104,20 +105,37 @@
   
     .cronometro-estiloso {
       text-align: center;
-  }
-    .treino {
-      padding: 10px;
-        border: none;
-        border-radius: 15px; /* Bordas mais arredondadas */
-        cursor: pointer;
-        transition: background-color 0.3s;
-        margin-right: 10px; 
     }
-  #tempo-cronometro {
-      font-size: 2em;
-      
+      .treino {
+        padding: 10px;
+          border: none;
+          border-radius: 15px; /* Bordas mais arredondadas */
+          cursor: pointer;
+          transition: background-color 0.3s;
+          margin-right: 10px; 
+      }
+    #tempo-cronometro {
+        font-size: 2em;
+        
+    }
+    
+    .container .table {
+      width: 100%; /* Garante que a tabela ocupe a largura total do seu contêiner */
+      border-collapse: collapse; /* Combina as bordas das células para uma aparência mais limpa */
   }
-  </style>
+
+  .container .table th, .container .table td {
+      padding: 8px; /* Espaçamento interno das células */
+      text-align: center; /* Centraliza o texto das células */
+  }
+
+  /* Regras de mídia para ajustar a tabela em dispositivos móveis */
+  @media screen and (max-width: 600px) {
+      .container .table {
+          font-size: 0.8em; /* Reduz o tamanho da fonte para dispositivos móveis */
+      }
+  }
+</style>
 
 </head>
 <!-- END HEAD -->
@@ -374,6 +392,7 @@
                                 <th scope="col">Qua</th>
                                 <th scope="col">Qui</th>
                                 <th scope="col">Sex</th>
+                                <th scope="col">Sab</th>
                             </tr>
                         </thead>
                         <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
@@ -383,6 +402,7 @@
                                 <td id="quarta"></td>
                                 <td id="quinta"></td>
                                 <td id="sexta"></td>
+                                <td id="sabado"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -436,7 +456,7 @@
                   {% set dias_exercicios = {
                       'segunda&sexta': 'Segunda e Sexta',
                       'terca&quinta': 'Terca e Quinta',
-                      'quarta': 'Quarta',
+                      'quarta': 'Quarta e Sabado',
                   } %}
                   {% for dia, nome_amigavel_dia in dias_exercicios.items() %}
                       {% set exercicios_por_dia = [] %}
