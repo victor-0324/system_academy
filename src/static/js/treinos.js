@@ -4,7 +4,7 @@
     let horas = 0;
     let horaInicio;
     let cronometroIniciado;
-
+    let mensagemAlerta = "Treino concluído automaticamente.";
     // Função para formatar o tempo
     function formatarTempo(tempo) {
         return tempo < 10 ? `0${tempo}` : tempo.toString();
@@ -29,6 +29,7 @@
         minutos = Math.floor((tempoDecorrido % 3600000) / 60000);
         segundos = Math.floor((tempoDecorrido % 60000) / 1000);
         
+
         // Atualiza o display do tempo
         atualizarTempoDisplay();
 
@@ -124,7 +125,7 @@
 
             let elementoResultadoDia = document.getElementById('resultadoDia');
             if (elementoResultadoDia) {
-                elementoResultadoDia.textContent = `Treinou hoje: ${tempoTotal}`;
+                elementoResultadoDia.textContent = `Hoje: ${tempoTotal}`;
             }
 
             calcularTempoSemana();
@@ -221,8 +222,6 @@
         }
     }
 
-    
-
     // Função para iniciar o cronômetro se estiver ativo
     function iniciarCronometroSeAtivo() {
         let estadoArmazenado = localStorage.getItem('tempoEstado');
@@ -275,7 +274,38 @@
         }
     }
     
+    function calcularTempoDecorrido() {
+        // Obtém a hora de início do treino do localStorage
+        let horaInicio = parseInt(localStorage.getItem('horaInicio')) || new Date().getTime();
+    
+        // Calcula o tempo decorrido desde o início do treino
+        let tempoDecorrido = new Date().getTime() - horaInicio;
+    
+        return tempoDecorrido;
+    }
+
     function carregarProgresso() {
+        // Verifica se o cronômetro está ativo no localStorage
+        let cronometroAtivo = localStorage.getItem('cronometroIniciado') === 'true';
+
+        // Se o cronômetro estiver ativo, desabilite o botão de iniciar treino
+        if (cronometroAtivo) {
+            document.getElementById('btnIniciarTreino').disabled = true;
+            
+            // Verifica se o tempo decorrido excedeu o tempo específico (por exemplo, 30 minutos)
+            let tempoDecorrido = calcularTempoDecorrido();
+            if (tempoDecorrido >= 1 * 60 * 1000) { // 30 minutos em milissegundos
+                // Se o tempo decorrido exceder o tempo específico, chama a função para concluir o treino
+                concluirTreino();
+                
+                // Exibe a mensagem de alerta armazenada na variável mensagemAlerta
+                document.getElementById('mensagemAlerta').textContent = mensagemAlerta;
+
+            }
+        }
+
+    
+
         let dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
 
         dias.forEach(dia => {
