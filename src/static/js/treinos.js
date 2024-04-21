@@ -294,7 +294,7 @@
             
             // Verifica se o tempo decorrido excedeu o tempo específico (por exemplo, 30 minutos)
             let tempoDecorrido = calcularTempoDecorrido();
-            if (tempoDecorrido >= 1 * 60 * 1000) { // 30 minutos em milissegundos
+            if (tempoDecorrido >= 150 * 60 * 1000) { // 30 minutos em milissegundos
                 // Se o tempo decorrido exceder o tempo específico, chama a função para concluir o treino
                 concluirTreino();
                 
