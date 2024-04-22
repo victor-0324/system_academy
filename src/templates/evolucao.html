@@ -109,6 +109,7 @@
         <a href=""><span class="name"> {{aluno.nome}}</span></a>
         <a href="">
           <span class="date">Inicio: {{aluno.data_entrada.strftime('%d/%m/%Y')}} </span>
+         
         </a>
       </div>
     </div>
@@ -298,7 +299,7 @@
                         <!-- Cabeçalho da tabela -->
                         <thead>
                             <tr>
-                                <th scope="col">Medida</th>
+                                <th scope="col">Medidas</th>
                                 <th scope="col">Antes</th>
                                 <th scope="col">Depois</th>
                             </tr>
@@ -307,7 +308,7 @@
                         <tbody>
                             <!-- Linha para Data Atualização -->
                             <tr>
-                                <th scope="row">Atualização</th>
+                                <th scope="row">Atualizações</th>
                                 <!-- Exibir data atualização antes -->
                                 <td>{{ formatar_data(historico_medidas_peso[-1]['data_atualizacao']) }}</td>
                                 <!-- Exibir data atualização depois -->
@@ -548,16 +549,16 @@
    </div>
   </footer>
 
-  <div class="backtotop">
+  <!--<div class="backtotop">
     <a class="btn-floating btn primary-bg">
       <i class="mdi mdi-chevron-up"></i>
     </a>
-  </div>
+  </div>-->
 </div>
-<!--.content-area-->
+<!--.content-area
 <div class="footer-menu circular">
  
-</div>
+</div>-->
 
 <script src="{{ url_for('static', filename='assets/js/pwa.js') }}"></script>
 

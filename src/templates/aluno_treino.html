@@ -355,166 +355,166 @@
 </div>
 
 <div class="content-area">
+  <div class="pagehead-bg   primary-bg" >
+  </div> 
 
-<div class="pagehead-bg   primary-bg" >
-</div> 
+  <div class="container has-pagehead is-pagetitle">
+    <div class="section">
+      <h5 class="pagetitle">{{ aluno.nome }}</h5>
 
-<div class="container has-pagehead is-pagetitle">
-  <div class="section">
-    <h5 class="pagetitle">{{ aluno.nome }}</h5>
-
+    </div>
   </div>
-</div>
 
-<div class="container full subpage ">
-  <div class="section">
-    <!-- <div class="container">
-    <div class="section"> -->
-      <ul class="subpages collection z-depth-1">
-        <li class="collection-img">
-            <a class="img-wrap" href="#!">
-              <div class="desafio-container">
-                <h3>Progresso Semanal</h3>
-                <div class="container">
-                    <table class="table" aria-labelledby="tabelaProgressoLabel">
-                        <thead>
-                            <tr>
-                                <th scope="col">Seg</th>
-                                <th scope="col">Ter</th>
-                                <th scope="col">Qua</th>
-                                <th scope="col">Qui</th>
-                                <th scope="col">Sex</th>
-                                <th scope="col">Sab</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
-                            <tr id="rowProgresso">
-                                <td id="segunda"></td>
-                                <td id="terca"></td>
-                                <td id="quarta"></td>
-                                <td id="quinta"></td>
-                                <td id="sexta"></td>
-                                <td id="sabado"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h5 id="resultadoDia" aria-label="Resultado do dia"></h5>
-                    <div id="mensagemAlerta"></div>
-                    <div class="cronometro-estiloso">
-                        <div id="tempo-cronometro" aria-label="Tempo do cronômetro">00:00:00</div>
-                    </div>
-                    <h5 id="resultadoSemana" aria-label="Resultado da semana"></h5>
-                </div>
-            </div>
-            </a>
-            <div class="botoes">
-              <button class="btn waves-effect waves-light bg-primary" id="btnIniciarTreino" onclick="iniciarTreino()" type="submit" name="action">Iniciar
-                <i class="mdi mdi-timer"></i>
-              </button>
-              <button class="btn waves-effect waves-light bg-primary" onclick="concluirTreino()" type="submit" name="action">Parar
-                <i class="mdi mdi-timer-off"></i>
-              </button>
-                <!-- <button id="btnIniciarTreino" onclick="iniciarTreino()" aria-label="Iniciar treino">INICIAR</button> -->
-                <!-- <button onclick="concluirTreino()" aria-label="Finalizar treino">FINALIZAR</button> -->
-        </div>
-        </li>
-        
-      </ul>
-      
-      <!-- </div>
-    </div> -->
-  </div>
-</div>
-
-  {% if faltam_tres_dias is not none %}
-      <div id="modal1577950785" class="modal modal-mediabox default-open open" tabindex="0" style="z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);">
-        <div class="modal-content profile-card">
-          <div class="ui-profile">
-            <div class="primg">
-              <img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user">
-            </div>
-            <div class="prinfo card-panel">
-              <div class="prname">
-                <h4 class="name"></h4>
-                <div class="pos">
-                </div>
-                  <p>{{ faltam_tres_dias }}</p>              
+  <div class="container full subpage ">
+    <div class="section">
+      <!-- <div class="container">
+      <div class="section"> -->
+        <ul class="subpages collection z-depth-1">
+          <li class="collection-img">
+              <a class="img-wrap" href="#!">
+                <div class="desafio-container">
+                  <h3>Progresso Semanal</h3>
+                  <div class="container">
+                      <table class="table" aria-labelledby="tabelaProgressoLabel">
+                          <thead>
+                              <tr>
+                                  <th scope="col">Seg</th>
+                                  <th scope="col">Ter</th>
+                                  <th scope="col">Qua</th>
+                                  <th scope="col">Qui</th>
+                                  <th scope="col">Sex</th>
+                                  <th scope="col">Sab</th>
+                              </tr>
+                          </thead>
+                          <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
+                              <tr id="rowProgresso">
+                                  <td id="segunda"></td>
+                                  <td id="terca"></td>
+                                  <td id="quarta"></td>
+                                  <td id="quinta"></td>
+                                  <td id="sexta"></td>
+                                  <td id="sabado"></td>
+                              </tr>
+                          </tbody>
+                      </table>
+                      <h5 id="resultadoDia" aria-label="Resultado do dia"></h5>
+                      <div id="mensagemAlerta"></div>
+                      <div class="cronometro-estiloso">
+                          <div id="tempo-cronometro" aria-label="Tempo do cronômetro">00:00:00</div>
+                      </div>
+                      <h5 id="resultadoSemana" aria-label="Resultado da semana"></h5>
+                  </div>
               </div>
-            </div>
-          </div>  
-        </div>
-      </div>
-  {% endif %}
+              </a>
+              <div class="botoes">
+                <button class="btn waves-effect waves-light bg-primary" id="btnIniciarTreino" onclick="iniciarTreino()" type="submit" name="action">Iniciar
+                  <i class="mdi mdi-timer"></i>
+                </button>
+                <button class="btn waves-effect waves-light bg-primary" onclick="concluirTreino()" type="submit" name="action">Parar
+                  <i class="mdi mdi-timer-off"></i>
+                </button>
+                  <!-- <button id="btnIniciarTreino" onclick="iniciarTreino()" aria-label="Iniciar treino">INICIAR</button> -->
+                  <!-- <button onclick="concluirTreino()" aria-label="Finalizar treino">FINALIZAR</button> -->
+          </div>
+          </li>
+          
+        </ul>
+        
+        <!-- </div>
+      </div> -->
+    </div>
+  </div>
 
-<div class="container over transparent pr0 pl0">
-    <div class="section pt0 pb0">
-        <div class="row">
-          <div class="col s12 pad-0">
-            <h5 class="bot-20 sec-tit">Exercicios</h5>
-            <ul class="collapsible">
-                {% set dias_exercicios = {
-                    'segunda&sexta': 'Segunda e Sexta',
-                    'terca&quinta': 'Terca e Quinta',
-                    'quarta': 'Quarta e Sabado',
-                } %}
-                {% for dia, nome_amigavel_dia in dias_exercicios.items() %}
-                    {% set exercicios_por_dia = [] %}
-                    {% for exercicio in exercicios %}
-                        {% if exercicio.tipoTreino == dia %}
-                            {% set _ = exercicios_por_dia.append(exercicio) %}
-                        {% endif %}
-                    {% endfor %}
-                    <li>
-                        <div class="collapsible-header" tabindex="0">
-                          <i class="mdi mdi-calendar"></i>
-                          {{ nome_amigavel_dia }}
-                        </div>
-                        <div class="collapsible-body">
-                            <table class="table text-left">
-                                <thead>
-                                    <tr>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody class="exercicios exercicios-{{ nome_amigavel_dia|replace('&', 'and')|lower }}">
-                                    {% for exercicio in exercicios_por_dia %}
-                                        <tr>
-                                            <td><strong>Exercício:</strong></td>
-                                            <td>{{ exercicio.exercicio|capitalize }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Série:</strong></td>
-                                            <td>{{ exercicio.serie }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Repetição:</strong></td>
-                                            <td>{{ exercicio.repeticao }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Descanso:</strong></td>
-                                            <td>{{ exercicio.descanso }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Carga:</strong></td>
-                                            <td>{{ exercicio.carga }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <br>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+    {% if faltam_tres_dias is not none %}
+        <div id="modal1577950785" class="modal modal-mediabox default-open open" tabindex="0" style="z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);">
+          <div class="modal-content profile-card">
+            <div class="ui-profile">
+              <div class="primg">
+                <img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user">
+              </div>
+              <div class="prinfo card-panel">
+                <div class="prname">
+                  <h4 class="name"></h4>
+                  <div class="pos">
+                  </div>
+                    <p>{{ faltam_tres_dias }}</p>              
+                </div>
+              </div>
+            </div>  
           </div>
         </div>
-    </div>
-</div>
+    {% endif %}
 
+  <div class="container over transparent pr0 pl0">
+      <div class="section pt0 pb0">
+          <div class="row">
+            <div class="col s12 pad-0">
+              <h5 class="bot-20 sec-tit">Exercicios</h5>
+              <ul class="collapsible">
+                  {% set dias_exercicios = {
+                      'segunda&sexta': 'Segunda e Sexta',
+                      'terca&quinta': 'Terca e Quinta',
+                      'quarta': 'Quarta e Sabado',
+                  } %}
+                  {% for dia, nome_amigavel_dia in dias_exercicios.items() %}
+                      {% set exercicios_por_dia = [] %}
+                      {% for exercicio in exercicios %}
+                          {% if exercicio.tipoTreino == dia %}
+                              {% set _ = exercicios_por_dia.append(exercicio) %}
+                          {% endif %}
+                      {% endfor %}
+                      <li>
+                          <div class="collapsible-header" tabindex="0">
+                            <i class="mdi mdi-calendar"></i>
+                            {{ nome_amigavel_dia }}
+                          </div>
+                          <div class="collapsible-body">
+                              <table class="table text-left">
+                                  <thead>
+                                      <tr>
+                                          
+                                      </tr>
+                                  </thead>
+                                  <tbody class="exercicios exercicios-{{ nome_amigavel_dia|replace('&', 'and')|lower }}">
+                                      {% for exercicio in exercicios_por_dia %}
+                                          <tr>
+                                              <td><strong>Exercício:</strong></td>
+                                              <td>{{ exercicio.exercicio|capitalize }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Série:</strong></td>
+                                              <td>{{ exercicio.serie }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Repetição:</strong></td>
+                                              <td>{{ exercicio.repeticao }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Descanso:</strong></td>
+                                              <td>{{ exercicio.descanso }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td><strong>Carga:</strong></td>
+                                              <td>{{ exercicio.carga }}</td>
+                                          </tr>
+                                          <tr>
+                                              <td colspan="2">
+                                                  <br>
+                                              </td>
+                                          </tr>
+                                      {% endfor %}
+                                  </tbody>
+                              </table>
+                          </div>
+                      </li>
+                  {% endfor %}
+              </ul>
+            </div>
+          </div>
+      </div>
+  </div>
+
+ 
 
 
 <footer class="page-footer center social-colored ">
