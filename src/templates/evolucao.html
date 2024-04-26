@@ -343,37 +343,45 @@
                                     {% set value_antes = historico_medidas_peso[-1][key] %}
                                     <!-- Linha para a medida atual -->
                                     <tr>
-                                        <!-- Exibir nome da medida -->
-                                        <th scope="row">{{ medida_nomes[key]|default(key.capitalize()) }}</th>
-                                        <!-- Exibir valor antes -->
-                                        <td>{{ value_antes }}</td>
-                                        <td>
-                                            <!-- Verificar se há dados disponíveis depois -->
-                                            {% if historico_depois[0][key] is defined and value_antes is defined %}
-                                                <!-- Exibir valor depois -->
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        {{ historico_depois[0][key] }}
-                                                    </div>
-                                                    <!-- Calcular e exibir ganho ou perda -->
-                                                    <div class="col-md-6">
-                                                        {% set ganho = historico_depois[0][key]|float - value_antes|float %}
-                                                        {% set perda = value_antes|float - historico_depois[0][key]|float %}
-                                                        {% if ganho > 0 %}
-                                                            <span class="badge_ "> + {{ ganho|round(2) }}</span>
-                                                        {% elif perda > 0 %}
-                                                            <span class="badge__ "> - {{ perda|round(2) }}</span>
-                                                        {% else %}
-                                                            <span class="badge___ "> 0.0 </span>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                            {% else %}
-                                                <!-- Indicar falta de dados -->
-                                                <span class="badge bg-warning">Sem dados disponíveis</span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
+                                      <!-- Exibir nome da medida -->
+                                      <th scope="row">{{ medida_nomes[key]|default(key.capitalize()) }}</th>
+                                      <!-- Exibir valor antes -->
+                                      <td>{{ value_antes }}</td>
+                                      <!-- Exibir valor depois -->
+                                      <td>
+                                          <!-- Verificar se há dados disponíveis depois -->
+                                          {% if historico_depois[0][key] is defined and value_antes is defined %}
+                                              <!-- Exibir valor depois -->
+                                              {{ historico_depois[0][key] }}
+                                          {% else %}
+                                              <!-- Indicar falta de dados -->
+                                              <span class="badge bg-warning">Sem dados disponíveis</span>
+                                          {% endif %}
+                                      </td>
+                                  </tr>
+                                  <!-- Calcular e exibir ganho ou perda -->
+                                  <tr>
+                                      <td></td>
+                                      <td></td>
+                                      <td>
+                                          <!-- Verificar se há dados disponíveis depois -->
+                                          {% if historico_depois[0][key] is defined and value_antes is defined %}
+                                              <div class="row">
+                                                  <div class="col-md-6">
+                                                      {% set ganho = historico_depois[0][key]|float - value_antes|float %}
+                                                      {% set perda = value_antes|float - historico_depois[0][key]|float %}
+                                                      {% if ganho > 0 %}
+                                                          <span class="badge_ "> + {{ ganho|round(2) }}</span>
+                                                      {% elif perda > 0 %}
+                                                          <span class="badge__ "> - {{ perda|round(2) }}</span>
+                                                      {% else %}
+                                                          <span class="badge___ "> 0.0 </span>
+                                                      {% endif %}
+                                                  </div>
+                                              </div>
+                                          {% endif %}
+                                      </td>
+                                  </tr>
                                 {% endfor %}
                             <!-- Caso não haja histórico de medidas -->
                             {% else %}
@@ -514,7 +522,6 @@
                 legendaCores.innerHTML = coresExplicacao;
         </script>
         
-  
     </div>
   </div>
   
@@ -549,11 +556,11 @@
    </div>
   </footer>
 
-  <!--<div class="backtotop">
+  <!-- <div class="backtotop">
     <a class="btn-floating btn primary-bg">
       <i class="mdi mdi-chevron-up"></i>
     </a>
-  </div>-->
+  </div> -->
 </div>
 <!--.content-area
 <div class="footer-menu circular">
