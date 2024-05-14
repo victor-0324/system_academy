@@ -77,6 +77,7 @@ def cadastrar():
     return render_template("cadastro.html",manifest=manifest)
 
 
+
 @cadastro_app.route("/busca_pornome", methods=["POST"])
 @admin_required
 def busca_pornome():
