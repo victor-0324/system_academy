@@ -541,7 +541,7 @@
 
   <div class="footer-copyright">
     <div class="container">
-      &copy; Krypta <a class="" href="#">Innovare</a>. Todos os direitos reservados.
+      &copy; <a class="" href="https://krypta.cloud/"><strong>Krypta</strong></a>  Innovare. Todos os direitos reservados.
     </div>
   </div>
 </footer>
@@ -567,36 +567,7 @@
 <script src="{{ url_for('static', filename='modules/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
 <script src="{{ url_for('static', filename='assets/js/variables.js') }}"></script>
 <!-- CORE JS FRAMEWORK - END -->
-<script>
-  $(document).ready(function(){
-    $("#enviarFeedback").on("click", function(){
-      var alunoId = {{aluno.id}};
-      var feedback = $("#textarea-prefix").val();
 
-      // Realize a requisição AJAX para a rota de feedback
-      $.ajax({
-        type: "POST",
-        url: "feedback/" + alunoId + "/" + feedback,
-        success: function(data){
-          // Manipule a resposta do servidor, se necessário
-          console.log("Feedback enviado com sucesso!");
-
-          // Exiba o tost (notificação)
-          M.toast({html: 'Feedback enviado com sucesso!', classes: 'rounded'});
-
-          // Atualize a página
-          location.reload();
-        },
-        error: function(error){
-          console.error("Erro ao enviar feedback:", error);
-
-          // Exiba o tost (notificação) de erro
-          M.toast({html: 'Erro ao enviar feedback. Por favor, tente novamente.', classes: 'rounded red'});
-        }
-      });
-    });
-  });
-</script>
 
 <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
 <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
