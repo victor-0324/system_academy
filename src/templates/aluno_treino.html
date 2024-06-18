@@ -182,7 +182,7 @@
             <div class="col s9 infoarea">
         <a href=""><span class="name">{{aluno.nome}}</span></a>
         <a href="">
-          <span class="date">Aluno Desde: {{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</span>
+          <span class="date">Data De Inicio: {{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</span>
           <span class="date">Prox. Pagamento: {{ proxima_data_pagamento }}</span>
         </a>
       </div>

@@ -330,7 +330,7 @@ def editar_exercicio(exercicio_id):
             if exercicio:
                 return render_template("formulario_edicao_exercicio.html", exercicio=exercicio)
             else:
-                flash('Exercício não encontrado', 'danger')
+               
                 return redirect(url_for("clientes_app.mostrar"))
 
     except Exception as e:
