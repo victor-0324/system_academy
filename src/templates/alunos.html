@@ -55,15 +55,7 @@
         <div class="main-container">
             <h5>Feedbacks dos Alunos</h5>
 
-            {% if feedbacks %}
-            <ul>
-                {% for feedback in feedbacks %}
-                <li>{{ feedback|safe }}</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>Nenhum feedback disponível.</p>
-        {% endif %}
+          
             <h1 class="titulo-pagina">Lista dos Alunos</h1>
             <div class="pesquisa-alunos">
                 <label for="pesquisa">Pesquisar:</label>

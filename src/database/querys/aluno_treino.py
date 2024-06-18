@@ -163,11 +163,12 @@ class Querys():
             ombro=ombro,torax=torax, braco_d=braco_d, braco_e=braco_e, ant_d=ant_d, ant_e=ant_e,cintura=cintura,
             abdome=abdome, quadril=quadril, coxa_d=coxa_d, coxa_e=coxa_e, pant_d=pant_d, pant_e=pant_e,
             observacao=observacao, telefone=telefone, login=login, senha=senha,
-            data_entrada=data_entrada,
+            data_entrada=datetime.now(),
             data_pagamento=data_pagamento,
             data_atualizacao = datetime.now(),
             jatreino=jatreino, permissao=permissao
         )
+        print(data_entrada)
      # Adiciona o aluno ao histórico antes de fazer o commit
         historico_antes = aluno.medidas_historico()
         aluno.historico_medidas_peso = self._converter_datas_para_string(historico_antes)
@@ -351,7 +352,6 @@ class Querys():
 
                 # Commit apenas a atualização do aluno
                 self.session.commit()
-                print(aluno)
                 return jsonify({'success': True}), 200
             
             else:

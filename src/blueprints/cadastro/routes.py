@@ -50,7 +50,7 @@ def cadastrar():
             telefone = request.form.get('telefone')
             login = request.form.get('login')
             senha = request.form.get('senha')
-            data_entrada = request.form.get('data_entrada')
+            data_entrada = ''
             data_pagamento = request.form.get('data_pagamento')
             jatreino = request.form.get('jatreino')
             permissao = request.form.get('permissao')

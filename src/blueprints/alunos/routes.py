@@ -187,13 +187,11 @@ def atualizar(aluno_id):
             aluno = querys_instance.mostrar_detalhes(aluno_id)
 
             # Use a função atualizar_dados para atualizar as informações do aluno
-           
             aluno = querys_instance.atualizardados(
                 aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao
             )
             
             return jsonify({'success': True}), 200
- 
         else:
             aluno = querys_instance.mostrar_detalhes(aluno_id)
             return render_template("modificar.html", aluno=[aluno])
