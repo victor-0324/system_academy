@@ -17,7 +17,9 @@
 {% endblock %}
 
 {% block content %}
-
+<div class="container">
+    <div id="clock"></div>
+ </div>
 <div class="row">
     <div class="col-12 col-sm-6 col-md-3">
       <div class="info-box">
@@ -99,6 +101,7 @@
     <ul id="listaPesquisa"></ul>
 </div>
 <br>
+
 <div class="card">
     <div class="card-header border-transparent">
       <h3 class="card-title">Todos os Aluno</h3>
@@ -112,6 +115,7 @@
         </div>
     </div>
     <!-- /.card-header -->
+     
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table m-0">
@@ -244,6 +248,29 @@
 <!-- Inclua o JS do Date Range Picker -->
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js">
 </script>
+<script>
+    function updateClock() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+  
+        // Adicionar zero à esquerda se necessário
+        if (hours < 10) hours = '0' + hours;
+        if (minutes < 10) minutes = '0' + minutes;
+        if (seconds < 10) seconds = '0' + seconds;
+  
+        var timeString = hours + ':' + minutes + ':' + seconds;
+  
+        document.getElementById('clock').textContent = timeString;
+    }
+  
+    // Atualizar o relógio a cada segundo
+    setInterval(updateClock, 1000);
+  
+    // Inicializar o relógio
+    updateClock();
+  </script>
 {% include 'pages/alunos/detalhes/script.html'%}
 
 {% endblock %}

@@ -44,6 +44,7 @@
   <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
+      
       <div class="row">
         <!-- left column -->
         <div class="col-md-6">
@@ -56,6 +57,8 @@
             <!-- form start -->
             <form id="formAtualizar">
               <div class="card-body">
+                  <h6>  Iniciou Na Academia: {{ data_formatada }}</h6>     
+                  <br> 
                   <div class="form-group">
                       <label for="nome">Nome:</label>
                       <input type="text" name="nome" class="form-control" id="nome" value="{{ aluno.nome }}">
@@ -74,10 +77,10 @@
                       <label for="data_pagamento">Proximo Pagamento:</label>
                       <p class="form-control">{{ proxima_data_pagamento }}</p>
                   </div>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                       <label for="data_entrada">Atualizar Exercicios</label>
-                      <input type="date" name="data_entrada" class="form-control" id="data_entrada" value="{{ aluno.data_entrada.strftime('%Y-%m-%d') if aluno.data_entrada else ''  }}">
-                  </div>
+                    
+                  </div> -->
                 
                   <div class="form-group">
                      <label for="idade">Data Nascimento:</label>

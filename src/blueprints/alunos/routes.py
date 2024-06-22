@@ -103,7 +103,14 @@ def mostrar_detalhes(aluno_id):
             
         # Verificar se o aluno é inadimplente
         inadimplente = aluno.inadimplente
-    return render_template("pages/alunos/detalhes/index.jinja", aluno=[aluno], inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual, manifest=manifest)
+
+
+        if aluno.data_entrada:
+            data_formatada = aluno.data_entrada.strftime('%d/%m/%Y')
+        else:
+            data_formatada = ''
+
+    return render_template("pages/alunos/detalhes/index.jinja", aluno=[aluno],data_formatada=data_formatada, inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual, manifest=manifest)
 
 @clientes_app.route("/atualizar_ex/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
@@ -165,7 +172,7 @@ def atualizar_medidas(aluno_id):
             return render_template("modificar.html", aluno=[aluno])
 
     except Exception as e:
-        print(f'Erro no servidor: {str(e)}')
+        
         return jsonify({'error': 'Erro no servidor'}), 500
 
 @clientes_app.route("/atualizar/<int:aluno_id>", methods=["GET", "POST"])
@@ -197,7 +204,7 @@ def atualizar(aluno_id):
             return render_template("modificar.html", aluno=[aluno])
 
     except Exception as e:
-        print(f'Erro no servidor: {str(e)}')
+    
         return jsonify({'error': 'Erro no servidor'}), 500
 
 @clientes_app.route("/busca_pornome", methods=["POST"])
