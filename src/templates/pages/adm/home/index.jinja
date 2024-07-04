@@ -164,33 +164,84 @@
 {% block scripts %}
 <!-- Inclua o JS do Moment.js, que é uma dependência do Date Range Picker -->
 <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-
-<!-- Inclua o JS do Date Range Picker -->
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js">
-</script>
 <script>
-    function updateClock() {
-        var now = new Date();
-        var hours = now.getHours();
-        var minutes = now.getMinutes();
-        var seconds = now.getSeconds();
-  
-        // Adicionar zero à esquerda se necessário
-        if (hours < 10) hours = '0' + hours;
-        if (minutes < 10) minutes = '0' + minutes;
-        if (seconds < 10) seconds = '0' + seconds;
-  
-        var timeString = hours + ':' + minutes + ':' + seconds;
-  
-        document.getElementById('clock').textContent = timeString;
+    var alunos = [
+        {% for aluno in alunos %}
+            {
+                "id": "{{ aluno.id }}",
+                "nome": "{{ aluno.nome }}",
+                "inadimplente": {{ aluno.inadimplente|lower }},
+            },
+        {% endfor %}
+    ];
+    var pesquisaInput = document.getElementById('pesquisa');
+    var listaPesquisa = document.getElementById('listaPesquisa');
+    var tabelaAlunosBody = document.getElementById('tabelaAlunosBody');
+    pesquisaInput.addEventListener('input', function () {
+        var termoPesquisa = pesquisaInput.value.trim().toLowerCase();
+    
+        if (termoPesquisa === '') {
+            listaPesquisa.innerHTML = '';
+            atualizarTabela(alunos);
+            return;
+        }
+    
+        var resultados = alunos.filter(function (aluno) {
+            return aluno.nome.toLowerCase().includes(termoPesquisa);
+        });
+    
+       
+    
+        // Atualiza a tabela de alunos
+        atualizarTabela(resultados);
+    });
+
+    function atualizarTabela(resultados) {
+        tabelaAlunosBody.innerHTML = '';
+    
+        resultados.forEach(function (resultado) {
+            var newRow = tabelaAlunosBody.insertRow(tabelaAlunosBody.rows.length);
+            var cellNome = newRow.insertCell(0);
+            var cellStatus = newRow.insertCell(1);
+            var cellAcoes = newRow.insertCell(2);
+    
+            cellNome.innerHTML = resultado.nome;
+    
+            cellStatus.innerHTML = resultado.inadimplente
+                ? '<span class="text-danger">Inadimplente</span><br>'
+                : '<span class="text-success">Pago</span>';
+    
+            var detalhesButton = document.createElement('button');
+            detalhesButton.textContent = 'Detalhes';
+            detalhesButton.className = 'btn btn-primary btn-sm';
+            detalhesButton.onclick = function () {
+                window.open('alunos/detalhes/' + resultado.id);
+            };
+    
+            cellAcoes.appendChild(detalhesButton);
+    
+            var deletarButton = document.createElement('button');
+            deletarButton.textContent = 'Deletar';
+            deletarButton.className = 'btn btn-danger btn-sm';
+            deletarButton.onclick = function () {
+                var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+                if (confirmacao) {
+                    window.location.href = "/alunos/deletar/" + resultado.id;
+                }
+            };
+    
+            cellAcoes.appendChild(deletarButton);
+        });
     }
-  
-    // Atualizar o relógio a cada segundo
-    setInterval(updateClock, 1000);
-  
-    // Inicializar o relógio
-    updateClock();
-  </script>
+    function confirmarExclusao(alunoId) {
+        var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+        if (confirmacao) {
+            window.location.href = "/alunos/deletar/" + alunoId;
+        }
+    }
+</script>
+
+
 {% include 'pages/alunos/detalhes/script.html'%}
 
 {% endblock %}
