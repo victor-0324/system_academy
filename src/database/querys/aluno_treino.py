@@ -154,6 +154,7 @@ class Querys():
         data_entrada = datetime.strptime(data_entrada, '%Y-%m-%d') if data_entrada else None
         data_pagamento = datetime.strptime(data_pagamento, '%Y-%m-%d') if data_pagamento else None
 
+
         # Configurando a data de pagamento para a data de entrada
         if data_pagamento is None:
             data_pagamento = data_entrada
@@ -168,7 +169,7 @@ class Querys():
             data_atualizacao = datetime.now(),
             jatreino=jatreino, permissao=permissao
         )
-        print(data_entrada)
+        
      # Adiciona o aluno ao histórico antes de fazer o commit
         historico_antes = aluno.medidas_historico()
         aluno.historico_medidas_peso = self._converter_datas_para_string(historico_antes)

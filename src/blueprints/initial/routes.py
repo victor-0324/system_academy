@@ -17,9 +17,9 @@ def serve_manifest():
     return send_file('static/manifest.json', mimetype='application/manifest+json')
 
 
-@initial_app.route('/offline')
-def offline():
-    return jsonify({"response": 0})
+# @initial_app.route('/offline')
+# def offline():
+#     return jsonify({"response": 0})
 
 @initial_app.route('/app')
 def index1():
@@ -38,6 +38,7 @@ def admin_required(func):
             return redirect(url_for('login_app.login'))
     return wrapper
 
+
 def calcular_proxima_data_pagamento(data_pagamento_atual):
     if data_pagamento_atual:
         # Converter a string da data de pagamento atual para um objeto datetime
@@ -55,6 +56,7 @@ def calcular_proxima_data_pagamento(data_pagamento_atual):
         return proxima_data_pagamento_str
 
     return None
+
 
 def calcular_proxima_atualizacao(data_pagamento_atual):
     if data_pagamento_atual:
@@ -286,6 +288,7 @@ def pagamsemana():
                 })
         quantidade_alunos = len(alunos)
     return render_template("pages/adm/home/pagamsemana.jinja",total_alunos_ativos=total_alunos_ativos, alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
+
 
 @initial_app.route("/atualizarmedidas", methods=["GET", "POST"])
 @admin_required
