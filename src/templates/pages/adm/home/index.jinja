@@ -217,7 +217,7 @@
             detalhesButton.textContent = 'Detalhes';
             detalhesButton.className = 'btn btn-primary btn-sm';
             detalhesButton.onclick = function () {
-                window.open('alunos/detalhes/' + resultado.id);
+                window.location.href = 'alunos/detalhes/' + resultado.id;
             };
     
             cellAcoes.appendChild(detalhesButton);
