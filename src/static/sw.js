@@ -1,5 +1,3 @@
-// This is the "Offline copy of pages" service worker
-
 const CACHE = "pwabuilder-offline";
 
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
@@ -10,9 +8,8 @@ self.addEventListener("message", (event) => {
   }
 });
 
+// Use NetworkOnly for all routes
 workbox.routing.registerRoute(
-  new RegExp('/*'),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: CACHE
-  })
+  new RegExp('/.*'),
+  new workbox.strategies.NetworkOnly()
 );
