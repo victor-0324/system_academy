@@ -10,7 +10,7 @@ self.addEventListener("message", (event) => {
 
 // Use NetworkFirst for login and logout routes
 workbox.routing.registerRoute(
-  new RegExp('/(login|logout|profile|dashboard)'),
+  new RegExp('/(login|logout|treino|alunos)'),
   new workbox.strategies.NetworkFirst({
     cacheName: CACHE,
     plugins: [
