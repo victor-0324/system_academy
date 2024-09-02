@@ -1,0 +1,113 @@
+<div class="modal fade" id="CadastrarCategoria">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Nova Categoria</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="modal-body">
+            <label>Categoria:</label>
+            <input type="text" class="form-control" id="categoria" name="categoria">
+            <label>Dias da semana:</label>
+            <select class="form-control" id="diasSemana" name="tipoTreino" required>
+                <option value="segunda&sexta">Segunda & Sexta</option>
+                <option value="terca&quinta">Terça & Quinta</option>
+                <option value="quarta">Quarta</option>
+            </select>
+
+            <!-- Campos para adicionar exercícios -->
+            <div id="exercicios-container">
+                <label>Exercício:</label>
+                <input type="text" class="form-control" id="exercicio" name="exercicio" value='exercicio'>
+                <label>Série:</label>
+                <input type="text" class="form-control" id="serie" name="serie" value='serie'>
+                <label>Repetição:</label>
+                <input type="text" class="form-control" id="repeticao" name="repeticao" value='rep'>
+                <label>Descanso:</label>
+                <input type="text" class="form-control" id="descanso" name="descanso" value='des'>
+                <label>Carga:</label>
+                <input type="text" class="form-control" id="carga" name="carga" value='carg'>
+            </div>
+            
+            <!-- Botão para adicionar mais exercícios -->
+            <button type="button" class="btn btn-secondary mt-3" id="adicionarExercicio">Adicionar Exercício</button>
+            
+            <!-- Lista de exercícios adicionados -->
+            <ul class="list-group mt-3" id="listaExercicios">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+        <div class="button-group">
+          <button type="button" class="btn btn-primary" id="finalizarCategoria">Finalizar Categoria</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para adicionar exercícios a categoria -->
+{% for categoria in categorias %}
+<div class="modal fade" id="adicionarExercicioModal_{{ categoria.id }}" tabindex="-1" role="dialog" aria-labelledby="adicionarExercicioModalLabel_{{ categoria.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="adicionarExercicioModalLabel_{{ categoria.id }}">Adicionar Exercício à Categoria: {{ categoria.name }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="categoriaId_{{ categoria.id }}" value="{{ categoria.id }}">
+                <label>Categoria:</label>
+                <input type="text" class="form-control" id="categoriaName_{{ categoria.id }}" name="categoriaName" value="{{ categoria.name }}">
+                
+                <label>Dias da semana:</label>
+                <select class="form-control" id="diasSemana_{{ categoria.id }}" name="diasSemana" required>
+                    <option value="segunda&sexta">Segunda & Sexta</option>
+                    <option value="terca&quinta">Terça & Quinta</option>
+                    <option value="quarta">Quarta</option>
+                </select>
+
+                <!-- Campos para adicionar exercícios -->
+                <div id="exercicios-container_{{ categoria.id }}">
+                    <label>Exercício:</label>
+                    <input type="text" class="form-control" id="exercicio_{{ categoria.id }}" name="exercicio" placeholder="Nome do exercício">
+                    <label>Série:</label>
+                    <input type="text" class="form-control" id="serie_{{ categoria.id }}" name="serie" placeholder="Série">
+                    <label>Repetição:</label>
+                    <input type="text" class="form-control" id="repeticao_{{ categoria.id }}" name="repeticao" placeholder="Repetições">
+                    <label>Descanso:</label>
+                    <input type="text" class="form-control" id="descanso_{{ categoria.id }}" name="descanso" placeholder="Descanso">
+                    <label>Carga:</label>
+                    <input type="text" class="form-control" id="carga_{{ categoria.id }}" name="carga" placeholder="Carga">
+                </div>
+
+                <!-- Botão para adicionar mais exercícios -->
+                <button type="button" class="btn btn-secondary mt-3" data-categoria-id="{{ categoria.id }}" id="adicionarExercicioButton">
+                    Adicionar Exercício
+                </button>
+
+                <!-- Lista de exercícios adicionados -->
+                <ul class="list-group mt-3" id="listaExercicios_{{ categoria.id }}">
+                </ul>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <div class="button-group">
+                    <button type="button" class="btn btn-primary" data-categoria-id="{{ categoria.id }}" id="finalizarCategoriaButton">
+                        Finalizar Categoria
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+

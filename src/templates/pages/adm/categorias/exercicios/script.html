@@ -1,0 +1,120 @@
+<script>
+        // excluir exercicio da categoria
+        $(document).on('click', '.excluirExercicioBtn', function() {
+            var exercicioCardId = $(this).data('exercicio-id'); // ID do exercício
+            console.log('Excluindo exercício com ID:', exercicioCardId);
+        
+            $.ajax({
+                url: '/categoria/exercicio/deletar/' + exercicioCardId,
+                type: 'DELETE',
+                success: function(response) {
+                    console.log('Resposta do servidor:', response);
+        
+                    toastr.success('Exercício excluído com sucesso!', 'Sucesso');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 900);
+                },
+                error: function(error) {
+                    console.log('Erro ao excluir:', error);
+                    toastr.error('Houve um erro ao excluir o exercício.', error);
+                }
+            });
+        });
+
+        // editar exercicio da categoria
+        $(document).ready(function() {
+            $(document).on('click', '.salvarExercicioBtn', function() {
+                var exercicioId = $(this).data('exercicio-id');
+                var tipoTreino = $('#tipoTreino' + exercicioId).val();
+                var exercicioNome = $('#exercicioNome' + exercicioId).val();
+                var serie = $('#serie' + exercicioId).val();
+                var repeticao = $('#repeticao' + exercicioId).val();
+                var descanso = $('#descanso' + exercicioId).val();
+                var carga = $('#carga' + exercicioId).val();
+        
+                // Enviar os dados para o backend via AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: '/categoria/exercicio/editar/' + exercicioId,
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        tipoTreino: tipoTreino,
+                        exercicio: exercicioNome,
+                        serie: serie,
+                        repeticao: repeticao,
+                        descanso: descanso,
+                        carga: carga
+                    }),
+                    success: function(response) {
+                        toastr.success('Exercício Editado Com Sucesso!', 'Sucesso');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 900);
+                    },
+                    error: function(xhr) {
+                        toastr.error('Erro ao atualizar o exercício: ' + xhr.responseJSON.mensagem);
+                    }
+                });
+            });
+        });
+        
+        // filtrar os exercicios 
+        document.addEventListener('DOMContentLoaded', function() {
+          document.querySelectorAll('.filtro-status').forEach(function(item) {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                var statusSelecionado = this.getAttribute('data-status');
+                var cartoes = document.querySelectorAll('.card-exercicio');
+                
+                cartoes.forEach(function(cartao) {
+                    var tipoTreino = cartao.getAttribute('data-status');
+                    if (tipoTreino === statusSelecionado || statusSelecionado === 'todos') {
+                        cartao.style.display = ''; // Mostra o cartão
+                    } else {
+                        cartao.style.display = 'none'; // Esconde o cartão
+                        }
+                    });
+                });
+            });
+        });
+        
+        // Busca exercicio de um aluno 
+        $(document).ready(function() {
+            $('#searchForm').on('submit', function(event) {
+                event.preventDefault(); // Evita o envio padrão do formulário
+                var alunoName = $('#alunoName').val();
+                var searchOptions = $('#searchOptions').val();
+                var categoriaId = $('#categoriaId').val();
+
+                $.ajax({
+                    url: '/busca_exercicios',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        alunoName: alunoName,
+                        searchOptions: searchOptions,
+                        categoriaId: categoriaId
+                    }),
+                    success: function(response) {
+                        // Sucesso - Exibir toast
+                        toastr.success('Dados recuperados com sucesso!');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 900);
+                    },
+                    error: function(error) {
+                        // Erro - Exibir toast
+                        toastr.error('Erro ao recuperar dados.', error);
+                     
+                    }
+                });
+            });
+        });
+   
+        
+        
+
+        
+</script>

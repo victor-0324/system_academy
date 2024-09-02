@@ -13,67 +13,103 @@
     font-weight: bold; /* Deixa o texto em negrito */
 
 }
+
+.dropdown-menu {
+    padding: 1rem;
+}
+.dropdown-item.active, .dropdown-item:active {
+    background-color: #007bff;
+    color: white;
+}
+.form-control {
+    margin-bottom: 1rem;
+}
+/* Centraliza o dropdown-menu */
+.dropdown-menu {
+    min-width: 200px;
+}
+.card-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
 </style>
 {% endblock %}
 {% block content %}
-
-
-<div class="card">
-  <div class="card-header d-flex p-0">
-    <h3 class="card-title p-3">{{aluno.nome}}</h3>
-    <ul class="nav nav-pills ml-auto p-2">
-      <li class="nav-item dropdown mr-2">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-          Filtrar<span class="caret"></span>
-        </a>
-        
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item filtro-status" data-status="todos">Todos</a>
-            <a class="dropdown-item filtro-status" data-status="segunda&sexta">Segunda e Sexta</a>
-            <a class="dropdown-item filtro-status" data-status="terca&quinta">Terça e Quinta</a>
-            <a class="dropdown-item filtro-status" data-status="quarta">Quarta</a>
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+    
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
           
-        </div>
-    </ul>
-        <!-- SEARCH FORM -->
-    <ul class="navbar-nav ml-auto">
-      <!-- Navbar Search -->
-      <li class="nav-item">
-          <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-              Busca<i class="fas fa-search"></i>
+          <h4 class="breadcrumb-item active">{{aluno.nome}}</h4>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+  <div class="card">
+    <div class="card-header d-flex p-0">
+      <ul class="nav nav-pills ml-auto p-2">
+        <li class="nav-item dropdown mr-2">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+            Filtrar<span class="caret"></span>
           </a>
-          <div class="navbar-search-block">
-            <form class="form-inline" id="searchForm">
-              <div class="input-group input-group-sm">
-                  <input class="form-control form-control-navbar" type="search" id="searchInput" name="alunoIdInput{{aluno.id}}" placeholder="Busca Exercicios" aria-label="Search">
-                  <input type="hidden" id="alunoIdInput" name="alunoIdInput" value="{{ aluno.id }}">
-                  <div class="input-group-append">
-                      <button class="btn btn-navbar" type="submit">
-                         <i class="fas fa-search"></i>
-                      </button>
-                      <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                          <i class="fas fa-times"></i>
-                      </button>
-                  </div>
-              </div>
-          </form>
           
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item filtro-status" data-status="todos">Todos</a>
+              <a class="dropdown-item filtro-status" data-status="segunda&sexta">Segunda e Sexta</a>
+              <a class="dropdown-item filtro-status" data-status="terca&quinta">Terça e Quinta</a>
+              <a class="dropdown-item filtro-status" data-status="quarta">Quarta</a>
+            
           </div>
-      </li>
+      </ul>
+      <ul class="nav nav-pills ml-auto p-2">
+        <li class="nav-item dropdown mr-2">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                Buscar<span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <!-- Formulário de Busca e Filtragem -->
+                <form id="searchForm">
+                    <input type="hidden" id="alunoId" name="alunoId" value="{{ aluno.id }}">
+                     <div class="form-group">
+                        <label for="categoriaId">Categorias:</label>
+                        <select class="form-control" id="categoriaId" name="categoriaId">
+                            {% for categoria in categorias %}
+                            <option value="{{ categoria.id }}">{{ categoria.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchOptions">Filtrar:</label>
+                        <select class="form-control" id="searchOptions" name="searchOptions">
+                            <option value="todos" selected>Todos</option>
+                            <option value="segunda&sexta">Segunda e Sexta</option>
+                            <option value="terca&quinta">Terça e Quinta</option>
+                            <option value="quarta">Quarta</option>
+                        </select>
+                    </div>
+                   
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
+            </div>
+        </li>
     </ul>
-    <ul class="nav nav-pills ml-auto p-2">
-      <li class="nav-item">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastrarProjeto">
-          Adicionar
-        </button>
-      </li>
-    </ul>
-    </li>
-   
+    
+
+        <ul class="nav nav-pills ml-auto p-2">
+          <li class="nav-item">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cadastrarProjeto"> 
+              Adicionar
+            </button>
+          </li>
+        </ul>
+    </div>
   </div>
-</div>
-
-
 <div class="row">
 {% for exercicio in exercicios %}
 {% include 'pages/alunos/exercicios/exercicio.jinja' with context %}

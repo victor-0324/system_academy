@@ -174,12 +174,10 @@
   <ul id="slide-nav" class="sidenav sidemenu">
   <li class="user-wrap">
     <div class="user-view row">
-     
-            <div class="col s3 imgarea">
-        <a href="#user" class="status available"><img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user"></a>
-
+      <div class="col s3 imgarea">
+          <a href="#user" class="status available"><img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user"></a>
       </div>
-            <div class="col s9 infoarea">
+      <div class="col s9 infoarea">
         <a href=""><span class="name">{{aluno.nome}}</span></a>
         <a href="">
           <span class="date">Data De Inicio: {{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</span>
@@ -187,7 +185,7 @@
         </a>
       </div>
     </div>
-  </li>-
+  </li>
   <li class="menulinks">
     <ul class="collapsible">
       <!-- Menu Data Start-->
@@ -375,28 +373,29 @@
                 <div class="desafio-container">
                   <h3>Progresso Semanal</h3>
                   <div class="container">
-                      <table class="table" aria-labelledby="tabelaProgressoLabel">
-                          <thead>
-                              <tr>
-                                  <th scope="col">Seg</th>
-                                  <th scope="col">Ter</th>
-                                  <th scope="col">Qua</th>
-                                  <th scope="col">Qui</th>
-                                  <th scope="col">Sex</th>
-                                  <th scope="col">Sab</th>
-                              </tr>
-                          </thead>
-                          <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
-                              <tr id="rowProgresso">
-                                  <td id="segunda"></td>
-                                  <td id="terca"></td>
-                                  <td id="quarta"></td>
-                                  <td id="quinta"></td>
-                                  <td id="sexta"></td>
-                                  <td id="sabado"></td>
-                              </tr>
-                          </tbody>
-                      </table>
+                    <table class="table" aria-labelledby="tabelaProgressoLabel">
+                      <thead>
+                          <tr>
+                              <th scope="col">Seg</th>
+                              <th scope="col">Ter</th>
+                              <th scope="col">Qua</th>
+                              <th scope="col">Qui</th>
+                              <th scope="col">Sex</th>
+                              <th scope="col">Sab</th>
+                          </tr>
+                      </thead>
+                      <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
+                          <tr id="rowProgresso">
+                              <td id="segunda"></td>
+                              <td id="terca"></td>
+                              <td id="quarta"></td>
+                              <td id="quinta"></td>
+                              <td id="sexta"></td>
+                              <td id="sabado"></td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  
                       <h5 id="resultadoDia" aria-label="Resultado do dia"></h5>
                       <div id="mensagemAlerta"></div>
                       <div class="cronometro-estiloso">
@@ -406,16 +405,14 @@
                   </div>
               </div>
               </a>
-              <div class="botoes">
+              <div class="botoes" data-aluno-id="{{ aluno.id }}">
                 <button class="btn waves-effect waves-light bg-primary" id="btnIniciarTreino" onclick="iniciarTreino()" type="submit" name="action">Iniciar
                   <i class="mdi mdi-timer"></i>
                 </button>
                 <button class="btn waves-effect waves-light bg-primary" onclick="concluirTreino()" type="submit" name="action">Parar
                   <i class="mdi mdi-timer-off"></i>
                 </button>
-                  <!-- <button id="btnIniciarTreino" onclick="iniciarTreino()" aria-label="Iniciar treino">INICIAR</button> -->
-                  <!-- <button onclick="concluirTreino()" aria-label="Finalizar treino">FINALIZAR</button> -->
-          </div>
+            </div>
           </li>
           
         </ul>
@@ -513,9 +510,6 @@
           </div>
       </div>
   </div>
-
- 
-
 
 <footer class="page-footer center social-colored ">
   <div class="container footer-content">

@@ -17,216 +17,208 @@
 {% endblock %}
 {% block content %}
 
-{% for aluno in aluno %}
 <div class="card">
-  <div class="card-header d-flex p-0">
-    <h3 class="card-title p-3">{{ aluno.nome }}</h3>
-    <ul class="nav nav-pills ml-auto p-2">
-      <li class="nav-item dropdown mr-2">
-       {% if inadimplente %}
-            <p class="text-danger">INADIMPLENTE</p>
-        {% else %}
-            <p class="text-success">PAGO</p>
-        {% endif %}
-    </ul>
-     <ul class="nav nav-pills ml-auto p-2">
-      <li class="nav-item">
-           <a href="/alunos/atualizar_ex/{{aluno.id}}"> <button type="button" class="btn btn-primary">EXERCICIOS</button></a>
-      </li>
-    </ul>
-    </li>
-   
-  </div>
+    <div class="card-header d-flex p-0">
+        <h3 class="card-title p-3">{{ aluno.nome }}</h3>
+        <ul class="nav nav-pills ml-auto p-2">
+            <li class="nav-item dropdown mr-2">
+                {% if inadimplente %}
+                    <p class="text-danger">INADIMPLENTE</p>
+                {% else %}
+                    <p class="text-success">PAGO</p>
+                {% endif %}
+            </li>
+        </ul>
+        <ul class="nav nav-pills ml-auto p-2">
+            <li class="nav-item">
+                <a href="/alunos/atualizar_ex/{{ aluno.id }}">
+                    <button type="button" class="btn btn-primary">EXERCÍCIOS</button>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-  <!-- Main content -->
-  <section class="content">
-    <div class="container-fluid">
-      
-      <div class="row">
-        <!-- left column -->
-        <div class="col-md-6">
-          <!-- general form elements -->
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">Dados do Aluno</h3>
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-6">
+                    <!-- general form elements -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                             <h3 class="card-title">Dados Do Aluno</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form id="formAtualizar">
+                            <div class="card-body">
+                                <h6>Iniciou Na Academia: {{ data_formatada }}</h6>
+                                <br>
+                                <div class="form-group">
+                                    <label for="nome">Nome:</label>
+                                    <input type="text" name="nome" class="form-control" id="nome" value="{{ aluno.nome }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Último Pagamento:</label>
+                                    <input type="text" name="data_pagamento" class="form-control" id="dia" value="{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}">
+                                    <br>
+                                    <ul class="nav nav-pills">
+                                        <li class="nav-item">
+                                            <button type="button" class="btn btn-primary" onclick="atualizarData()">Receber</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <label for="data_pagamento">Próximo Pagamento:</label>
+                                    <p class="form-control">{{ proxima_data_pagamento }}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="idade">Data Nascimento:</label>
+                                    <input type="date" name="idade" class="form-control" id="idade" value="{{ aluno.idade.strftime('%Y-%m-%d') if aluno.idade else '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="observacao">Observação:</label>
+                                    <input type="text" class="form-control" name="observacao" id="observacao" value="{{ aluno.observacao }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefone">Telefone:</label>
+                                    <input type="text" class="form-control" name="telefone" id="telefone" value="{{ aluno.telefone }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="login">Login:</label>
+                                    <input type="text" class="form-control" name="login" id="login" value="{{ aluno.login }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="senha">Senha:</label>
+                                    <input type="text" class="form-control" name="senha" id="senha" value="{{ aluno.senha }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="permissao">Selecione a permissão:</label>
+                                    <select class="form-control" id="permissao" name="permissao" required>
+                                        <option value="treino" {% if aluno.permissao == 'treino' %}selected{% endif %}>ALUNO</option>
+                                        <option value="admin" {% if aluno.permissao == 'admin' %}selected{% endif %}>ADMINISTRADOR</option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer d-flex justify-content-between">
+                                <button class="btn btn-primary" type="submit">ATUALIZAR</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--/.col (left) -->
+
+                <!-- right column -->
+                <div class="col-md-6">
+                    <!-- /.card-header -->
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Medidas Do Aluno</h3>
+                        </div>
+
+                        <!-- form start -->
+                        <form id="formMedidas">
+                            <div class="card-body">
+                                {% for medida in medidas %}
+                                <h6>Última Atualização:
+                                    {% if medidas and medidas[0].data_atualizacao %}
+                                        {% set data_atualizacao = medidas[0].data_atualizacao %}
+                                        {% set data_atual = data_atual %}
+                                        
+                                        {% if data_atualizacao > data_atual %}
+                                            <span style="color: #FFA500;">{{ data_atualizacao }}</span>
+                                        {% else %}
+                                            {{ data_atualizacao }}
+                                        {% endif %}
+                                    {% else %}
+                                        <span style="color: #FF0000;">Precisa atualizar</span>
+                                    {% endif %}
+                                </h6>
+                                <br>
+                                    <div class="form-group">
+                                        <label for="peso">Peso (kg):</label>
+                                        <input type="text" class="form-control" name="peso" id="peso" value="{{ medida.peso }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ombro">Ombro:</label>
+                                        <input type="text" name="ombro" class="form-control" id="ombro" value="{{ medida.ombro }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="torax">Tórax:</label>
+                                        <input type="text" class="form-control" name="torax" id="torax" value="{{ medida.torax }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="braco_d">Braço Direito:</label>
+                                        <input type="text" class="form-control" name="braco_d" id="braco_d" value="{{ medida.braco_d }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="braco_e">Braço Esquerdo:</label>
+                                        <input type="text" class="form-control" name="braco_e" id="braco_e" value="{{ medida.braco_e }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ant_d">Antebraço Direito:</label>
+                                        <input type="text" class="form-control" name="ant_d" id="ant_d" value="{{ medida.ant_d }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ant_e">Antebraço Esquerdo:</label>
+                                        <input type="text" class="form-control" name="ant_e" id="ant_e" value="{{ medida.ant_e }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cintura">Cintura:</label>
+                                        <input type="text" class="form-control" name="cintura" id="cintura" value="{{ medida.cintura }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="abdome">Abdome:</label>
+                                        <input type="text" class="form-control" name="abdome" id="abdome" value="{{ medida.abdome }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="quadril">Quadril:</label>
+                                        <input type="text" class="form-control" name="quadril" id="quadril" value="{{ medida.quadril }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="coxa_d">Coxa Direita:</label>
+                                        <input type="text" class="form-control" name="coxa_d" id="coxa_d" value="{{ medida.coxa_d }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="coxa_e">Coxa Esquerda:</label>
+                                        <input type="text" class="form-control" name="coxa_e" id="coxa_e" value="{{ medida.coxa_e }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pant_d">Panturrilha Direita:</label>
+                                        <input type="text" class="form-control" name="pant_d" id="pant_d" value="{{ medida.pant_d }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pant_e">Panturrilha Esquerda:</label>
+                                        <input type="text" class="form-control" name="pant_e" id="pant_e" value="{{ medida.pant_e }}">
+                                    </div>
+                                  
+                                  
+                                    {% endfor %}
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer d-flex justify-content-between">
+                                <button class="btn btn-primary" type="submit">ATUALIZAR</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--/.col (right) -->
             </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-            <form id="formAtualizar">
-              <div class="card-body">
-                  <h6>  Iniciou Na Academia: {{ data_formatada }}</h6>     
-                  <br> 
-                  <div class="form-group">
-                      <label for="nome">Nome:</label>
-                      <input type="text" name="nome" class="form-control" id="nome" value="{{ aluno.nome }}">
-                  </div>
-                  <div class="form-group">
-                      <label for="exampleInputEmail1">Ultimo Pagamento</label>
-                      <input type="text" name="data_pagamento" class="form-control" id="dia" value="{{ aluno.data_pagamento.strftime('%d/%m/%Y') if aluno.data_pagamento else '' }}">
-                      <br>
-                      <ul class="nav nav-pills">
-                          <li class="nav-item">
-                              <button type="button" class="btn btn-primary" onclick="atualizarData()">Receber</button>
-                          </li>
-                      </ul>
-                  </div>
-                  <div class="form-group">
-                      <label for="data_pagamento">Proximo Pagamento:</label>
-                      <p class="form-control">{{ proxima_data_pagamento }}</p>
-                  </div>
-                  <!-- <div class="form-group">
-                      <label for="data_entrada">Atualizar Exercicios</label>
-                    
-                  </div> -->
-                
-                  <div class="form-group">
-                     <label for="idade">Data Nascimento:</label>
-                      <input type="date" name="idade" class="form-control" id="idade" value="{{ aluno.idade.strftime('%Y-%m-%d') if aluno.idade else '' }}">
-                  </div>
-                  
-                  <div class="form-group">
-                      <label for="observacao">Observação:</label>
-                      <input type="text"  class="form-control" name="observacao" id="observacao" value="{{ aluno.observacao }}">
-                  </div>
-                  <div class="form-group">
-                      <label for="telefone">Telefone:</label>
-                      <input type="text" class="form-control" name="telefone" id="telefone" value="{{ aluno.telefone }}">
-                  </div>
-                  <div class="form-group">
-                      <label for="login">Login:</label>
-                      <input type="text" class="form-control" name="login" id="login" value="{{ aluno.login }}">
-                  </div>
-                  <div class="form-group">
-                      <label for="senha">Senha:</label>
-                      <input type="text" class="form-control" name="senha" id="senha" value="{{ aluno.senha }}">
-                  </div>
-                  <div class="form-group">
-                      <label for="permissao">Selecione a permissão:</label>
-                      <select class="form-control" id="permissao" name="permissao" required>
-                          <option value="treino" {% if aluno.permissao == 'treino' %}selected{% endif %}>ALUNO</option>
-                          <option value="admin" {% if aluno.permissao == 'admin' %}selected{% endif %}>ADMINISTRADOR</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="atualizacaoMedidas">Ultima Atualização das Medidas:</label>
-                      {% if aluno.data_atualizacao %}
-                          <input type="text" class="form-control" id="atualizacaoMedidas" name="atualizacaoMedidas" value="{{ aluno.data_atualizacao.strftime('%d/%m/%Y') }}" readonly>
-                      {% else %}
-                          <input type="text" class="form-control" id="atualizacaoMedidas" name="atualizacaoMedidas" value="Precisa atualizar" readonly>
-                      {% endif %}
-                  </div>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer d-flex justify-content-between">
-                  <button class="btn btn-primary" type="submit">ATUALIZAR</button>
-               
-              </div>
-            </form>
-          </div>
-        </div>
-        <!--/.col (left) -->
-        <!-- right column -->
-        <div class="col-md-6">
-          <!-- Form Element sizes -->
-         <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">Medidas Do Aluno</h3>
-            </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-              <form id="formMedidas">
-                  <div class="card-body">
-                      <div class="form-group">
-                          <label for="peso">Peso (kg):</label>
-                          <input type="text" class="form-control" name="peso" id="peso" value="{{ aluno.peso }}">
-                      </div>
-                      <div class="form-group">
-                          <label for="ombro">Ombro:</label>
-                      <input type="text" name="ombro" class="form-control" name="data_entrada" id="ombro" value="{{ aluno.ombro }}">
-                      </div>
-                      <div class="form-group">
-                        <label for="torax">Tórax:</label>
-                      <input type="text"  class="form-control" name="torax" id="torax" value="{{ aluno.torax }}">
-
-                      </div>
-                      <div class="form-group">
-                          <label for="braco_d">Braço Direito:</label>
-                          <input type="text" class="form-control" name="braco_d" id="braco_d" value="{{ aluno.braco_d }}">
-                      </div>
-                      <div class="form-group">
-                       <label for="braco_e">Braço Esquerdo:</label>
-                      <input type="text" class="form-control" name="braco_e" id="braco_e" value="{{ aluno.braco_e }}">
-                      </div>
-                      <div class="form-group">
-                          <label for="ant_d">Antebraço Direito:</label>
-                      <input type="text" class="form-control" name="ant_d" id="ant_d" value="{{ aluno.ant_d }}">
-                      </div>
-                      <div class="form-group">
-                           <label for="ant_e">Antebraço Esquerdo:</label>
-                      <input type="text" class="form-control" name="ant_e" id="ant_e" value="{{ aluno.ant_e }}">
-                      </div>
-                      <div class="form-group">
-                           <label for="cintura">Cintura:</label>
-                      <input type="text" class="form-control" name="cintura" id="cintura" value="{{ aluno.cintura }}">
-                      </div>
-                      <div class="form-group">
-                          <label for="abdome">Abdome:</label>
-                      <input type="text" class="form-control" name="abdome" id="abdome" value="{{ aluno.abdome }}">
-                      </div>
-                      <div class="form-group">
-                          <label for="quadril">Quadril:</label>
-                          <input type="text" class="form-control" name="quadril" id="quadril" value="{{ aluno.quadril }}">
-                      </div>
-                        <div class="form-group">
-                      <label for="coxa_d">Coxa Direita:</label>
-                      <input type="text" class="form-control" name="coxa_d" id="coxa_d" value="{{ aluno.coxa_d }}">
-                  </div>
-                  <div class="form-group">
-                      <label for="coxa_e">Coxa Esquerda:</label>
-                      <input type="text" class="form-control" name="coxa_e" id="coxa_e" value="{{ aluno.coxa_e }}">
-                  </div>
-                  <div class="form-group">
-                      <label for="pant_d">Panturrilha Direita:</label>
-                      <input type="text" class="form-control" name="pant_d" id="pant_d" value="{{ aluno.pant_d }}">
-                  </div>
-                  <div class="form-group">
-                      <label for="pant_e">Panturrilha Esquerda:</label>
-                      <input type="text" class="form-control" name="pant_e" id="pant_e" value="{{ aluno.pant_e }}">
-                  </div>
-                  
-                  </div>
-                  <!-- /.card-body -->
-                  <div class="card-footer d-flex justify-content-between">
-                      <button class="btn btn-primary" type="submit">ATUALIZAR</button>
-                  </div>
-              </form>
-          </div>
-          <!-- /.card -->
-
-        
-          <!-- /.card -->
-
-          <!-- general form elements disabled -->
-          
-          <!-- /.card -->
-          <!-- general form elements disabled -->
-        
-          <!-- /.card -->
-        </div>
-        <!--/.col (right) -->
-      </div>
-      <!-- /.row -->
-    </div><!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 </div>
-<div class="row">
-{% include 'pages/alunos/detalhes/detalhes.jinja' with context %}
-{% endfor %}
+
 {% endblock %}
+
 
 
 {% block scripts %}

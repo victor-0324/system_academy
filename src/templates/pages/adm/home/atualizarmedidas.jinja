@@ -17,64 +17,79 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="row">
-    <div class="col-12 col-sm-6 col-md-3">
-      <div class="info-box">
-          <a href="/" class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></a>
-
-            <div class="info-box-content">
-              <span class="info-box-text">Todos os Alunos</span>
-              <span class="info-box-number">
-                  {{ quantidade_alunos }}
-                  <small>Ativos {{ total_alunos_ativos }}</small>
-              </span>
-          </div>
+    <div class="col-lg-3 col-6">
+      <!-- small card -->
+      <div class="small-box bg-info">
+        <a href="/" class="small-box">
+        <div class="inner">
+            <h3>{{ quantidade_alunos }}</h3>
+            <h5>Alunos</h5>
+        </div>
+        <div class="icon">
+            <i class="fas fa-users"></i>
+        </div>
+            <a href="/" class="small-box-footer">
+                <small>Alunos Ativos {{ total_alunos_ativos }}</small> <i class="fas fa-arrow-circle-right"></i>
+            </a>
+        </a>
       </div>
     </div>
-   <div class="col-12 col-sm-6 col-md-3">
-      <div class="info-box">
-          <a href="/inadimplentes" class="info-box-icon bg-danger elevation-1"><i class="fas fa-user-times"></i></a>
-
-          <div class="info-box-content">
-              <span class="info-box-text">Inadimplentes</span>
-              <span class="info-box-number">
-                  {{ inadimplentes|length }}
-                  <small>total</small>
-              </span>
-          </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small card -->
+      <div class="small-box bg-success">
+        <a href="/pagamsemana" class="small-box">
+            <div class="inner">
+                <h3>{{alunosPagamSemana|length}}</h3>
+                <h5>Pagamentos</h5>
+            </div>
+            <div class="icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+                <a href="/pagamsemana" class="small-box-footer">
+                    <small>Essa Semana</small> <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </a>
       </div>
     </div>
-
-    <!-- fix for small devices only -->
-    <div class="clearfix hidden-md-up"></div>
-
-    <div class="col-12 col-sm-6 col-md-3">
-        <div class="info-box mb-3">
-            <a href="/pagamsemana" class="info-box-icon bg-success elevation-1"><i class="fas fa-wallet"></i></a>
-
-            <div class="info-box-content">
-                <span class="info-box-text">Pagantes da Semana</span>
-                <span class="info-box-number">{{alunosPagamSemana|length}}</span>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small card -->
+      <div class="small-box bg-warning">
+        <a href="/atualizarmedidas" class="small-box">
+            <div class="inner">
+                <h3>{{ alunos_atualizar_medidas|length }}</h3>
+                <h5>Atualizar</h5>
             </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-    <div class="col-12 col-sm-6 col-md-3">
-        <div class="info-box mb-3">
-            <a href="/atualizarmedidas" class="info-box-icon bg-warning elevation-1"><i class="fas fa-sync-alt"></i></a>
-
-            <div class="info-box-content">
-                <span class="info-box-text">Atualizar Medidas</span>
-                <span class="info-box-number">{{ alunos_atualizar_medidas|length }}</span>
+            <div class="icon">
+                <i class="fas fa-sync-alt"></i>
             </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
+                <a href="/atualizarmedidas" class="small-box-footer">
+                    <small>Medidas</small> <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </a>
+      </div>
     </div>
-    <!-- /.col -->
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small card -->
+      <div class="small-box bg-danger">
+        <a href="/inadimplentes" class="small-box">
+            <div class="inner">
+                <h3>{{ inadimplentes|length }}</h3>
+                <h5>Inadimplentes</h5>
+            </div>
+            <div class="icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+                <a href="/inadimplentes" class="small-box-footer">
+                    <small>Inadimplentes</small> <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </a>
+      </div>
+    </div>
+    <!-- ./col -->
 </div>
 
 <br>
@@ -98,7 +113,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>Status</th>
-                        <th>Ações</th>
+                        <th>Navegar</th>
                     </tr>
                 </thead>
                <tbody id="tabelaAlunosBody">
@@ -113,12 +128,17 @@
                             {% endif %}
                         </td>
                         <td>
-                            <div class="botoes-acoes">
-                                <a href="alunos/detalhes/{{ aluno.id }}" class="btn btn-primary btn-sm">Detalhes</a>                                
-                            </div>
-                            <br>
-                            <div class="botoes-acoes">
-                                <button class="btn btn-danger btn-sm" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info">Ações</button>
+                                <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu" role="menu">
+                                    <a class="dropdown-item" href="alunos/detalhes/{{ aluno.id }}">Detalhes</a>
+                                    <a class="dropdown-item" href="/alunos/atualizar_ex/{{ aluno.id }}">Exercícios</a>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item text-danger" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
+                                </div>
                             </div>
                         </td>
                     </tr>

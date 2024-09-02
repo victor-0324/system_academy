@@ -1,196 +1,115 @@
 
-
-<script>
-    
-    $(function() {
-        
-        $('#cadastrarProjeto').modal({
-            backdrop: 'static',
-            keyboard: false,
-            show: false
-        });
-        
-        $('#botaoAbrirModal').on('click', function() {
-            $('#cadastrarProjeto').modal('show');
-        });
-
-       
-    });
-</script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.filtro-status').forEach(function(item) {
-            item.addEventListener('click', function(event) {
+        
+        $(document).ready(function () {
+            
+            // Intercepta o evento de envio do formulário
+            $('#formMedidas').submit(function (event) {
+                // Impede o envio padrão do formulário
                 event.preventDefault();
-    
-                var statusSelecionado = this.getAttribute('data-status');
-                var cartoes = document.querySelectorAll('.card-aluno');
-    
-                cartoes.forEach(function(cartao) {
-                    if (cartao.getAttribute('data-status') === statusSelecionado || statusSelecionado === 'todos') {
-                        cartao.style.display = ''; // Mostra o cartão
-                    } else {
-                        cartao.style.display = 'none'; // Esconde o cartão
+        
+                // Obtém os dados do formulário
+                var formData = $(this).serialize();
+        
+                // Obtém o ID do aluno da URL
+                var alunoId = window.location.pathname.split('/').pop();
+        
+                // Envia a requisição AJAX
+                $.ajax({
+                    url: '/alunos/atualizar_medidas/' + alunoId,
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        toastr.success('Medidas Atualizadas com sucesso!', 'Sucesso');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 900);
+                    },
+                    error: function (error) {
+                        toastr.error('Houve um erro ao Atualizar as medidas.', 'Erro');
                     }
                 });
             });
         });
-    }); 
-</script>
-<script>
+
+        $(document).ready(function () {
+            
+            // Intercepta o evento de envio do formulário
+            $('#formAtualizar').submit(function (event) {
+                // Impede o envio padrão do formulário
+                event.preventDefault();
+        
+                // Obtém os dados do formulário
+                var formData = $(this).serialize();
+        
+                // Obtém o ID do aluno da URL
+                var alunoId = window.location.pathname.split('/').pop();
+        
+                // Envia a requisição AJAX
+                $.ajax({
+                    url: '/alunos/atualizar/' + alunoId,
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        toastr.success('Dados Atualizados com sucesso!', 'Sucesso');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 900);
+                    },
+                    error: function (error) {
+                        toastr.error('Houve um erro ao Atualizar os Dados.', 'Erro');
+                    }
+                });
+            });
+        });
+
+    });    
+    document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.filtro-status').forEach(function(item) {
+                item.addEventListener('click', function(event) {
+                    event.preventDefault();
+        
+                    var statusSelecionado = this.getAttribute('data-status');
+                    var cartoes = document.querySelectorAll('.card-aluno');
+        
+                    cartoes.forEach(function(cartao) {
+                        if (cartao.getAttribute('data-status') === statusSelecionado || statusSelecionado === 'todos') {
+                            cartao.style.display = ''; // Mostra o cartão
+                        } else {
+                            cartao.style.display = 'none'; // Esconde o cartão
+                        }
+                    });
+                });
+            });
+        }); 
     function confirmarExclusao(alunoId) {
-        var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
-        if (confirmacao) {
-            window.location.href = "/alunos/deletar/" + alunoId;
+            var confirmacao = confirm("Tem certeza de que deseja excluir este aluno?");
+            if (confirmacao) {
+                toastr.success('Aluno Excluido com sucesso!', 'Sucesso');
+                setTimeout(function() {
+                    window.location.href = "/alunos/deletar/" + alunoId;
+                }, 900);
+            
+            }
         }
-    }
+
+
+        
     $(document).ready(function() {
         $(".ver-exercicios").on("click", function() {
             $(".exercicios-container").toggleClass("hidden");
         });
     });
 
-     // Detalhes
-     function atualizarData() {
-        // Obter a data atual no formato desejado (dia/mês/ano)
-        var dataAtual = new Date().toLocaleDateString('pt-BR');
-        
-        // Atualizar o valor da input com a data atual
-        document.getElementById('dia').value = dataAtual;
-    }
-
-
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-
-    $('.abrirModalEncerramento').on('click', function() {
-        var projetoId = $(this).data('projeto-id');
-        $('#confirmarEncerramento').data('projeto-id-encerrar', projetoId);
-    });
-
-    $('#confirmarEncerramento').on('click', function() {
-        var projetoId = $(this).data('projeto-id-encerrar');
-        console.log('Projeto a encerrar:', projetoId);
-        // Adicione aqui a lógica para encerrar o projeto
-    });
-
-    $('#encerrarProjeto').click(function() {
-        var projetoId = this.getAttribute('data-projeto-id-encerrar');
-        console.log(projetoId);
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-
-        $.ajax({
-            url: '/projetos/rest',
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                id: projetoId,
-                status: 'encerrado'
-            }),
-            success: function(response) {
-                // Tratar a resposta do servidor
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Projeto Excluido com sucesso!'
-                });
-            },
-            error: function(error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Houve algum problema em encerrar o projeto'
-                });
-            }
-        });
-    });
-    
-
-    var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 5000
-    });
-    
-    $(document).ready(function () {
-        
-        // Intercepta o evento de envio do formulário
-        $('#formAtualizar').submit(function (event) {
-            // Impede o envio padrão do formulário
-            event.preventDefault();
-    
-            // Obtém os dados do formulário
-            var formData = $(this).serialize();
-    
-            // Obtém o ID do aluno da URL
-            var alunoId = window.location.pathname.split('/').pop();
-    
-            // Envia a requisição AJAX
-            $.ajax({
-                url: '/alunos/atualizar/' + alunoId,
-                type: 'POST',
-                data: formData,
-                success: function (data) {
-                    // Utiliza o plugin Toast do SweetAlert
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Atualizado!'
-                    });
-                    window.location.reload();
-                },
-                error: function (error) {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Houve algum problema em excluir o projeto' + error.data
-                    });
-                }
-            });
-        });
-    });
-    
-    $(document).ready(function () {
-        
-        // Intercepta o evento de envio do formulário
-        $('#formMedidas').submit(function (event) {
-            // Impede o envio padrão do formulário
-            event.preventDefault();
-    
-            // Obtém os dados do formulário
-            var formData = $(this).serialize();
-    
-            // Obtém o ID do aluno da URL
-            var alunoId = window.location.pathname.split('/').pop();
-    
-            // Envia a requisição AJAX
-            $.ajax({
-                url: '/alunos/atualizar_medidas/' + alunoId,
-                type: 'POST',
-                data: formData,
-                success: function (data) {
-                    // Utiliza o plugin Toast do SweetAlert
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Atualizado!'
-                    });
-                    window.location.reload();
-                },
-                error: function (error) {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Houve algum problema em excluir o projeto' + error.data
-                    });
-                }
-            });
-        });
-    });
-
-});    
+        // Detalhes
+    function atualizarData() {
+            // Obter a data atual no formato desejado (dia/mês/ano)
+            var dataAtual = new Date().toLocaleDateString('pt-BR');
+            
+            // Atualizar o valor da input com a data atual
+            document.getElementById('dia').value = dataAtual;
+        }
 
 </script>
     

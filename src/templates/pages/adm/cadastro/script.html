@@ -1,3 +1,23 @@
+<script>
+    $(document).ready(function () {
+        // Inicialização do Inputmask
+        Inputmask().mask(document.querySelectorAll('input[data-inputmask-alias="datetime"]'));
+  
+        // Inicialização do Tempus Dominus
+        $('#reservationdate').datetimepicker({
+            format: 'DD/MM/YYYY' // Formato da data
+        });
+  
+        $(document).ready(function () {
+          // Inicialização do Inputmask
+          Inputmask().mask(document.querySelectorAll('input[data-inputmask]'));
+      });
+    });
+    
+    
+
+
+
     var exercicios = [];
 
 
@@ -33,6 +53,7 @@
         limparCamposTreino();
     }
 
+    
     function utilizarExerciciosExistentes() {
         // Obtenha o nome do aluno a ser pesquisado (você pode modificar isso conforme necessário)
         var nomeAluno = prompt("Digite o nome do aluno:");
@@ -50,7 +71,10 @@
             // Verifique se a busca foi bem-sucedida
             if (data && data.aluno.exercicios) {
                 // Adicione os exercícios à lista
+                toastr.success('Dados recuperados com sucesso!');
                 adicionarExercicios(Object.values(data.aluno.exercicios));
+
+
             } else {
                 alert('Aluno não encontrado ou sem exercícios');
             }
@@ -61,6 +85,8 @@
         });
     }
  
+
+
     // Função para adicionar exercícios à lista
     function adicionarExercicios(novosExercicios) {
         // Adiciona cada novo exercício à lista global
@@ -86,7 +112,7 @@
         exerciciosAdicionados.innerHTML = '';
     
         // Itera sobre os exercícios e adiciona campos de edição à lista
-        exercicios.forEach(exercicio => {
+        exercicios.forEach((exercicio, index) => {
             const divExercicio = document.createElement('div');
             divExercicio.className = 'exercicio-editavel';
             
@@ -102,11 +128,25 @@
                 input.setAttribute('data-campo', campo);
                 divExercicio.appendChild(input);
             });
-    
-            exerciciosAdicionados.appendChild(divExercicio);
+                // Adiciona botão de remoção
+                const removerBtn = document.createElement('button');
+                removerBtn.textContent = 'Remover';
+                removerBtn.className = 'btn btn-danger btn-sm float-right';
+                removerBtn.onclick = () => removerExercicio(index);
+                divExercicio.appendChild(removerBtn);
+
+                exerciciosAdicionados.appendChild(divExercicio);
         });
+        
     }
     
+    function removerExercicio(index) {
+        // Remove o exercício da lista global
+        exercicios.splice(index, 1);
+        // Atualiza a exibição dos exercícios
+        adicionarExercicios(exercicios);
+    }
+
     function limparCamposTreino() {
             document.getElementById('exercicio').value = '0';
             document.getElementById('serie').value = '0';
@@ -167,12 +207,16 @@
             .then(data => {
                 // Limpa os exercícios após o envio
                 exercicios = [];
-                // Redireciona para a outra página após o cadastro
-                window.location.href = '/';
+                toastr.success('Cadastro Feito com sucesso!', 'Sucesso');
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 900);
+               
             })
             .catch(error => {
                 // Lida com erros
-                console.error(error);
+                toastr.success('Erro ao cadastrar!', error);
+                
             });
         });
     });
@@ -190,3 +234,5 @@
             }
         });
     });
+
+  </script>

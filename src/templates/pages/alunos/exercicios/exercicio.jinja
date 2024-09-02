@@ -37,6 +37,7 @@
                 </div>
             </div>
         </div>
+     
         <!-- /.card-header -->
         <div class="card-body">
             <ul>
@@ -51,7 +52,9 @@
             <div class="card-footer p-0">
             </div>
         </div>
+      
     </div>
+
 </div>
 
 <div class="modal fade" id="exercicio{{ exercicio.id }}">
@@ -66,7 +69,7 @@
       <div class="modal-body">
         <!-- Adicione os campos do exercício aqui -->
         <label>Dias Da Semana:</label>
-        <select class="form-control" id="tipoTreino{{ exercicio.id }}" required>
+        <select class="form-control"  id="tipoTreino{{ exercicio.tipoTreino }}" required>
             <option value="" disabled selected>{{ exercicio.tipoTreino }}</option>
             <option value="segunda&sexta">Segunda & Sexta</option>
             <option value="terca&quinta">Terça & Quinta</option>
@@ -92,3 +95,4 @@
     </div>
   </div>
 </div>
+

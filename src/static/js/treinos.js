@@ -5,6 +5,8 @@
     let horaInicio;
     let cronometroIniciado;
     let mensagemAlerta = "Treino concluído automaticamente.";
+
+
     // Função para formatar o tempo
     function formatarTempo(tempo) {
         return tempo < 10 ? `0${tempo}` : tempo.toString();
@@ -112,6 +114,7 @@
             let totalHoras = parseInt(partesAnteriores[0]) + horas;
 
             if (totalSegundos >= 60) {
+                
                 totalSegundos -= 60;
                 totalMinutos++;
             }
@@ -345,3 +348,77 @@
         carregarProgresso();
         reiniciarProgresso();
     };
+
+
+    // let startTime;
+
+    // function iniciarTreino() {
+    //     const alunoId = document.querySelector('.botoes').getAttribute('data-aluno-id');
+        
+    //     fetch('/treino/cronometro/iniciar', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ aluno_id: alunoId })
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.message) {
+    //             startTime = Date.now();  // Registrar o tempo de início
+    //             document.getElementById("btnIniciarTreino").disabled = true;
+    //             iniciarCronometro();  // Iniciar a exibição do cronômetro
+    //         } else {
+    //             alert("Erro ao iniciar o cronômetro.");
+    //         }
+    //     });
+    // }
+    
+    // function iniciarCronometro() {
+    //     const cronometroDisplay = document.getElementById("tempo-cronometro");
+    
+    //     intervalo = setInterval(function () {
+    //         const now = Date.now();
+    //         const tempoDecorrido = now - startTime;
+    
+    //         let segundos = Math.floor((tempoDecorrido / 1000) % 60);
+    //         let minutos = Math.floor((tempoDecorrido / (1000 * 60)) % 60);
+    //         let horas = Math.floor((tempoDecorrido / (1000 * 60 * 60)) % 24);
+    
+    //         cronometroDisplay.innerText = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+    //     }, 1000);
+    
+    //     document.getElementById("btnPararTreino").addEventListener("click", function() {
+    //         clearInterval(intervalo);
+    //         concluirTreino();
+    //     });
+    // }
+    
+    // function concluirTreino() {
+    //     const alunoId = document.querySelector('.botoes').getAttribute('data-aluno-id');
+        
+    //     fetch('/treino/cronometro/concluir', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ aluno_id: alunoId })
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.error) {
+    //             alert(data.error);
+    //         } else {
+    //             clearInterval(intervalo);
+    //             document.getElementById('tempo-cronometro').innerText = data.tempo_treino;
+    //             document.getElementById('resultadoDia').innerText = `Tempo de treino hoje: ${data.tempo_treino}`;
+    //             document.getElementById('resultadoSemana').innerText = `Tempo total da semana: ${data.tempo_total_semana}`;
+    //             document.getElementById("btnIniciarTreino").disabled = false;
+    //         }
+    //     })
+    //     .catch(error => console.error('Erro:', error));
+    // }
+    
+
+    
+    

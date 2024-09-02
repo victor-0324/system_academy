@@ -1,0 +1,400 @@
+{% extends 'base.jinja' %}
+
+{% block head %}
+
+<style>
+  .text-small-top {
+    font-size: 12px; /* Tamanho de fonte menor */
+    position: absolute; /* Posição absoluta para sobrepor o conteúdo */
+    top: 10px; /* Posição superior de 10px */
+    left: 10px; /* Posição esquerda de 10px */
+    margin: 0; /* Margem zero para evitar espaçamento extra */
+    padding: 0; /* Preenchimento zero para evitar espaçamento extra */
+    font-weight: bold; /* Deixa o texto em negrito */
+    .btn-app {
+        width: 100%;
+        text-align: center;
+        border-radius: 0.25rem;
+        padding: 10px;
+        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-app .badge {
+        margin-right: 5px;
+    }
+    .botoes-acoes {
+        margin-bottom: 20px;
+    }
+    .enviar {
+        margin-top: 20px;
+    }
+}
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="content">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Dados Do Aluno</h1>
+        </div>
+        <div class="col-sm-6">
+         
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <div class="container-fluid">
+      <div class="card card-default">
+          <div class="card-header">
+         
+              <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                      <i class="fas fa-times"></i>
+                  </button>
+              </div>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+              <form >
+                  <div class="row">
+                      <div class="col-md-6">
+                      
+                        <div class="form-group">
+                            <label for="nome">Nome:</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">@</span>
+                                </div>
+                                <input type="text" class="form-control" name="nome" id="nome" required placeholder="Nome Completo" value="Admin">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dataNascimento">Data Nascimento:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                <input type="text" name="idade" id="idade" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" inputmode="numeric" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sexo">Sexo:</label>
+                            <div class="input-group mb-3"><span class="input-group-text"><i class="fas fa-genderless"></i></span>
+                                <select name="sexo" id="sexo" class="form-control" required>
+                                    <option value="" disabled selected>Selecione...</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="feminino">Feminino</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="peso">Peso:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="peso" id="peso" value="0" step="0.1" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="ombro">Ombro:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="ombro" id="ombro" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="torax">Tórax:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="torax" id="torax" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="braco_d">Braço D:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="braco_d" id="braco_d" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="braco_e">Braço E:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="braco_e" id="braco_e" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="ant_d">Ante Braço D:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="ant_d" id="ant_d" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="ant_e">Ante Braço E:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="ant_e" id="ant_e" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                          <label for="cintura">Cintura:</label>
+                          <div class="input-group mb-3">
+                              <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                              <input type="number" class="form-control" name="cintura" id="cintura" value="0" required>
+                          </div>
+                        </div>
+                
+                        <div class="form-group">
+                          <label for="abdome">Abdome:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="abdome" id="abdome" value="0" required>
+                            </div>
+                        </div>
+                        
+                
+                        <div class="form-group">
+                            <label for="quadril">Quadril:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="quadril" id="quadril" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="coxa_d">Coxa D:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="coxa_d" id="coxa_d" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="coxa_e">Coxa E:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="coxa_e" id="coxa_e" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="pant_d">Panturrilha D:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="pant_d" id="pant_d" value="0" required>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="pant_e">Panturrilha E:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                <input type="number" class="form-control" name="pant_e" id="pant_e" value="0" required>
+                            </div>
+                        </div>
+                      </div>
+                
+                      <!-- /.col-md-6 -->
+                      <div class="col-md-6">
+                          <!-- Continue com a segunda coluna aqui -->
+                          <div class="form-group">
+                              <label for="observacao">Observação:</label>
+                              <div class="input-group mb-3"><span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
+                                  <input type="text" class="form-control" name="observacao" id="observacao" value="!" required>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="telefone">Telefone:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                </div>
+                                <input type="text" id="telefone" name="telefone" class="form-control" data-inputmask="'mask': '(99) 99999-9999'" inputmode="text" required>
+                            </div>
+                          </div>
+
+                      
+                          <div class="form-group">
+                              <label for="login">Login:</label>
+                              <div class="input-group mb-3"><span class="input-group-text"><i class="fas fa-user"></i></span>
+                                  <input type="text" class="form-control" name="login" id="login" required>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                              <label for="senha">Senha:</label>
+                              <div class="input-group mb-3"><span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                  <input type="password" class="form-control" name="senha" id="senha" required>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label>Data Do Pagamento:</label>
+                              <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                 <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                  </div>
+                                  <input type="text" name="data_pagamento" class="form-control datetimepicker-input" data-target="#reservationdate" required>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label for="jatreino">Já Treinou:</label>
+                              <div class="input-group mb-3"><span class="input-group-text"><i class="fas fa-dumbbell"></i></span>
+                                  <select id="jatreino" name="jatreino" class="form-control" required>
+                                      <option value="" disabled selected>Selecione...</option>
+                                      <option value="Sim">Sim</option>
+                                      <option value="Não">Não</option>
+                                  </select>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                              <label for="permissao">Adicionar Permissão:</label>
+                              <div class="input-group mb-3"><span class="input-group-text"><i class="fas fa-exclamation-circle"></i></span>
+                                  <select id="permissao" name="permissao" class="form-control" required>
+                                      <option value="treino">ALUNO</option>
+                                      <option value="admin">ADMINISTRADOR</option>
+                                  </select>
+                              </div>
+                          </div>
+
+                          <div id="aviso-admin" class="alert alert-warning">
+                              Você está prestes a adicionar um admin. Tem certeza?
+                          </div>
+                          <br>
+                          <div class="secao-formulario cadastro-treino" id="cadastroTreinoForm">
+                            <h3 class="titulo-secao">Cadastra o Treino</h3>
+                            <div class="form-group">
+                                <label for="tipoTreino">Dias da semana:</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-calendar-week"></i></span>
+                                    <select class="form-control" id="tipoTreino" required>
+                                        <option value="segunda&sexta">Segunda & Sexta</option>
+                                        <option value="terca&quinta">Terça & Quinta</option>
+                                        <option value="quarta">Quarta</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="exercicio">Adicionar Exercício:</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-dumbbell"></i></span>
+                                    <input type="text" class="form-control" id="exercicio" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="serie">Adicionar Série:</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-list-ul"></i></span>
+                                    <input type="number" class="form-control" id="serie" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="repeticao">Adicionar Repetição:</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-recycle"></i></span>
+                                    <input type="text" class="form-control" id="repeticao" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="descanso">Adicionar Descanso:</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-bed"></i></span>
+                                    <input type="text" class="form-control" id="descanso" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="carga">Adicionar Carga:</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-weight-hanging"></i></span>
+                                    <input type="text" class="form-control" id="carga" value="Constante">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <a class="btn btn-app bg-success" onclick="adicionarExercicioManualmente()">
+                                            <i class="fas fa-plus"></i> Adicionar Treino
+                                        </a>
+                                    </div>
+                                    
+                                   
+                                    
+                                    
+                                        <button class="btn btn-app bg-success" type="submit">
+                                             <i class="fas fa-users"></i> Cadastrar
+                                        </button>
+                          
+                                </div>
+                            </div>
+                            <h5 class="titulo-secao">Exercícios Adicionados:</h5>
+                            <div class="input-wrapper">
+                                <ul class="titulo-secao" id="exerciciosAdicionados">
+                                    <!-- Aqui serão exibidos os exercícios adicionados -->
+                                </ul>
+                            </div>
+                        </div>
+                        
+                      <!-- /.col-md-6 -->
+                  </div>
+                  <!-- /.row -->
+              </form>
+          </div>
+          <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+<!-- Inclua o JS do Moment.js, que é uma dependência do Date Range Picker -->
+<!-- jQuery -->
+<script src="{{ url_for('static', filename='plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{ url_for('static', filename='plugins/inputmask/jquery.inputmask.min.js')}}"></script>
+
+
+<!-- Moment.js -->
+<script src="{{ url_for('static', filename='plugins/moment/moment.min.js')}}"></script>
+
+<!-- Script do Tempus Dominus -->
+<script src="{{ url_for('static', filename='plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+
+
+
+
+{% include 'pages/adm/cadastro/script.html'%}
+
+{% endblock %}

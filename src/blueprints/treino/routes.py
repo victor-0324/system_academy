@@ -3,7 +3,8 @@ from flask_login import current_user, login_required
 from src.database.querys import Querys
 from functools import wraps
 from src.database.config import DBConnectionHandler, db
-from src.database.models import Aluno
+from src.database.models import Aluno,  ProgressoCronometro
+import locale
 from datetime import datetime, timedelta
 
 treino_app = Blueprint("treino_app", __name__, url_prefix="/treino", template_folder='templates', static_folder='static')
@@ -69,20 +70,178 @@ def mostrar():
 @treino_app.route("/evolucao/<int:aluno_id>", methods=["GET"])
 @treino_required
 def evolucao(aluno_id):
+    with current_app.app_context():
+        with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
+
     session = current_app.db.session
     querys_instance = Querys(session)
-
     aluno = querys_instance.session.query(Aluno).filter_by(id=aluno_id).first()
-    with open('src/static/manifest.json', 'r') as file:
-        manifest = json.load(file)
-
-
+    
     if aluno:
-        historico = aluno.medidas_historico()
-        historico_medidas_peso = aluno.historico_medidas_peso
-        historico_depois = [historico[-1]]  
-        return render_template('evolucao.html',aluno=aluno, historico_medidas_peso=historico_medidas_peso, historico_depois=historico_depois,formatar_data=formatar_data, manifest=manifest)
-    else:
-        # Retorna uma página de erro 404
-        abort(404) 
+        medidas = querys_instance.get_medidas_por_aluno(aluno_id)
+        
+        # Verificar se as medidas foram carregadas
+        if not medidas:
+            return render_template('evolucao.html', aluno=aluno, manifest=manifest, medidas=[])
 
+        # Garantir que todos os valores de data_atualizacao são do tipo datetime
+        for medida in medidas:
+            if medida['data_atualizacao'] is not None:
+                if isinstance(medida['data_atualizacao'], str):
+                    medida['data_atualizacao'] = datetime.strptime(medida['data_atualizacao'], "%Y-%m-%d %H:%M:%S")
+                elif not isinstance(medida['data_atualizacao'], datetime):
+                    medida['data_atualizacao'] = datetime.fromtimestamp(medida['data_atualizacao'])
+
+        # Filtrar medidas onde data_atualizacao não é None
+        medidas = [m for m in medidas if m['data_atualizacao'] is not None]
+       
+        # Ordenar por data
+        medidas.sort(key=lambda x: x['data_atualizacao'], reverse=True)  # Ordenar do mais recente para o mais antigo
+
+        return render_template(
+            'evolucao.html',
+            aluno=aluno,
+            medidas=medidas,
+            manifest=manifest
+        )
+    else:
+        abort(404)
+
+        # asdfas
+
+
+@treino_app.route("/cronometro/iniciar", methods=["POST"])
+def iniciar_cronometro():
+    aluno_id = request.json.get("aluno_id")
+    
+    dias_da_semana = {
+        "Monday": "Segunda",
+        "Tuesday": "Terça",
+        "Wednesday": "Quarta",
+        "Thursday": "Quinta",
+        "Friday": "Sexta",
+        "Saturday": "Sábado",
+        "Sunday": "Domingo"
+    }
+
+    dia_semana = dias_da_semana.get(datetime.utcnow().strftime("%A"), "")
+
+    session = current_app.db.session
+    aluno = session.query(Aluno).filter_by(id=aluno_id).first()
+
+    if not aluno:
+        return jsonify({"error": "Aluno não encontrado"}), 404
+    
+    progresso = session.query(ProgressoCronometro).filter_by(aluno_id=aluno_id, diaSemana=dia_semana).first()
+    
+    if not progresso:
+        progresso = ProgressoCronometro(
+            diaSemana=dia_semana,
+            tempoTreino=0.0,
+            estadoCronometro="ativo",
+            tempoTotalSemana=0.0,
+            dataInicio=datetime.utcnow(),
+            aluno_id=aluno_id,
+            dataAtualizacao=datetime.utcnow()
+        )
+        session.add(progresso)
+    else:
+        progresso.estadoCronometro = "ativo"
+        progresso.dataInicio = datetime.utcnow()
+        progresso.dataAtualizacao = datetime.utcnow()
+    
+    session.commit()
+    return jsonify({"message": "Cronômetro iniciado"}), 200
+
+
+@treino_app.route("/cronometro/concluir", methods=["POST"])
+def concluir_cronometro():
+    aluno_id = request.json.get("aluno_id")
+    dias_da_semana = {
+        "Monday": "Segunda",
+        "Tuesday": "Terça",
+        "Wednesday": "Quarta",
+        "Thursday": "Quinta",
+        "Friday": "Sexta",
+        "Saturday": "Sábado",
+        "Sunday": "Domingo"
+    }
+
+    dia_semana = dias_da_semana.get(datetime.utcnow().strftime("%A"), "")
+    session = current_app.db.session
+
+    progresso = session.query(ProgressoCronometro).filter_by(aluno_id=aluno_id, diaSemana=dia_semana).first()
+
+    if not progresso or progresso.estadoCronometro != "ativo":
+        return jsonify({"error": "Cronômetro não está ativo ou progresso não encontrado"}), 400
+    
+    tempo_decorrido = (datetime.utcnow() - progresso.dataInicio).total_seconds()
+    
+    progresso.tempoTreino += tempo_decorrido
+    progresso.tempoTotalSemana += tempo_decorrido
+    progresso.estadoCronometro = "inativo"
+    progresso.dataAtualizacao = datetime.utcnow()
+    
+    session.commit()
+
+    horas = int(tempo_decorrido // 3600)
+    minutos = int((tempo_decorrido % 3600) // 60)
+    segundos = int(tempo_decorrido % 60)
+
+    tempo_dia_formatado = f"{horas:02}:{minutos:02}:{segundos:02}"
+
+    horas_semana = int(progresso.tempoTotalSemana // 3600)
+    minutos_semana = int((progresso.tempoTotalSemana % 3600) // 60)
+    segundos_semana = int(progresso.tempoTotalSemana % 60)
+
+    tempo_semana_formatado = f"{horas_semana:02}:{minutos_semana:02}:{segundos_semana:02}"
+
+    return jsonify({
+        "message": "Cronômetro concluído",
+        "tempo_treino": tempo_dia_formatado,
+        "tempo_total_semana": tempo_semana_formatado
+    }), 200
+
+@treino_app.route("/cronometro/atualizar", methods=["POST"])
+def atualizar_cronometro():
+    aluno_id = request.json.get('aluno_id')
+    progresso = db.session.query(ProgressoCronometro).filter_by(aluno_id=aluno_id, estadoCronometro="ativo").first()
+    
+    if not progresso:
+        return jsonify({"error": "Cronômetro não está ativo ou progresso não encontrado"}), 400
+    
+    # Calculando o tempo decorrido
+    tempo_decorrido = (datetime.utcnow() - progresso.dataAtualizacao).total_seconds()
+    tempo_atualizado = progresso.tempoTreino + tempo_decorrido
+    tempo_total_semana_atualizado = progresso.tempoTotalSemana + tempo_decorrido
+    
+    # Atualizar o progresso no banco de dados
+    progresso.tempoTreino = tempo_atualizado
+    progresso.tempoTotalSemana = tempo_total_semana_atualizado
+    progresso.dataAtualizacao = datetime.utcnow()
+    db.session.commit()
+    
+    # Retornar o tempo atualizado
+    return jsonify({
+        "tempo_treino": tempo_atualizado,
+        "tempo_total_semana": tempo_total_semana_atualizado,
+        "dia_semana": progresso.diaSemana
+    }), 200
+
+
+
+@treino_app.route("/cronometro/resetar", methods=["POST"])
+def resetar_cronometro():
+    aluno_id = request.json.get("aluno_id")
+    
+    session = current_app.db.session
+    progresso_semana = session.query(ProgressoCronometro).filter_by(aluno_id=aluno_id).all()
+
+    for progresso in progresso_semana:
+        progresso.tempoTotalSemana = 0.0
+        progresso.tempoTreino = 0.0
+        progresso.dataAtualizacao = datetime.utcnow()
+
+    session.commit()
+    return jsonify({"message": "Progresso semanal resetado"}), 200

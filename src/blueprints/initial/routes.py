@@ -1,5 +1,6 @@
 from flask import Blueprint, request, render_template, url_for, redirect, current_app, send_file, jsonify, json
 from src.database.querys import Querys
+from src.database.models import Category
 from functools import wraps
 from flask_login import current_user
 from datetime import datetime, timedelta
@@ -75,6 +76,7 @@ def calcular_proxima_atualizacao(data_pagamento_atual):
         return proxima_atualizacao_str
 
     return None
+
 # Tela Iniciarl do app
 @initial_app.route("/", methods=["GET", "POST"])
 @admin_required
@@ -86,14 +88,15 @@ def mostrar():
         session = current_app.db.session
         querys_instance = Querys(session)
         alunos = querys_instance.mostrar(session)
-
+        
         alunos_pagam_semana = []
         inadimplentes = []
         proxima_data_pagamento_list = []
         alunos_atualizar_medidas = []
         total_alunos_ativos = 0
-        # Iterar sobre cada aluno na lista
+        
         for aluno in alunos:
+            # Calcular a próxima data de pagamento
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
             proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
             inadimplente = aluno.inadimplente
@@ -105,7 +108,6 @@ def mostrar():
                 total_alunos_ativos += 1
 
             if proxima_data_pagamento:
-                # Converta proxima_data_pagamento para datetime para comparação
                 proxima_data_pagamento_dt = datetime.strptime(proxima_data_pagamento, '%d/%m/%Y')
                 data_limite = datetime.now() + timedelta(days=6)
                 if proxima_data_pagamento_dt <= data_limite and not inadimplente:
@@ -122,31 +124,39 @@ def mostrar():
                     'nome': aluno.nome,
                     'dataPagamento': data_pagamento_atual_str
                 })
-            
-            if aluno.data_atualizacao:
-                # Calcular a data limite para a próxima atualização de medidas (60 dias após a última atualização)
-                data_limite_atualizacao = aluno.data_atualizacao + timedelta(days=60)
-                
-                # Calcular a data atual mais 6 dias
-                data_limite_seis_dias = datetime.now() + timedelta(days=6)
+       
+            if aluno.medidas:  # Verifique se medidas existe
+                ultima_atualizacao = aluno.medidas[0].data_atualizacao if aluno.medidas else None  # Ajuste conforme a estrutura
+                if ultima_atualizacao:
+                    data_limite_atualizacao = ultima_atualizacao + timedelta(days=60)
+                    data_limite_seis_dias = datetime.now() + timedelta(days=6)
 
-                # Verificar se a data limite está dentro dos próximos 6 dias
-                if datetime.now() <= data_limite_atualizacao <= data_limite_seis_dias and not inadimplente:
+                    if datetime.now() <= data_limite_atualizacao <= data_limite_seis_dias and not inadimplente:
+                        alunos_atualizar_medidas.append({
+                            'id': aluno.id,
+                            'nome': aluno.nome,
+                            'ultimaAtualizacaoMedidas': ultima_atualizacao.strftime('%d/%m/%Y'),
+                            'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
+                        })
+                else:
                     alunos_atualizar_medidas.append({
                         'id': aluno.id,
                         'nome': aluno.nome,
-                        'ultimaAtualizacaoMedidas': aluno.data_atualizacao.strftime('%d/%m/%Y'),
-                        'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
+                        'mensagem': 'Atualizar medidas'
                     })
-            else:
-                # Se a data de atualização estiver faltando, adicione o aluno à lista com a indicação para atualizar
-                alunos_atualizar_medidas.append({
-                    'id': aluno.id,
-                    'nome': aluno.nome,
-                    'mensagem': 'Atualizar medidas'
-                })
+                    
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/index.jinja",total_alunos_ativos=total_alunos_ativos, alunos=alunos, alunos_atualizar_medidas=alunos_atualizar_medidas, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, quantidade_alunos=quantidade_alunos, manifest=manifest)
+
+    return render_template(
+        "pages/adm/home/index.jinja",
+        total_alunos_ativos=total_alunos_ativos,
+        alunos=alunos,
+        alunos_atualizar_medidas=alunos_atualizar_medidas,
+        alunosPagamSemana=alunos_pagam_semana,
+        inadimplentes=inadimplentes,
+        quantidade_alunos=quantidade_alunos,
+        manifest=manifest
+    )
 
 
 # Tela inadimpletes do app
@@ -300,7 +310,6 @@ def atualizarmedidas():
         session = current_app.db.session
         querys_instance = Querys(session)
         alunos = querys_instance.mostrar(session)
-
         alunos_atualizar_medidas = []
         alunos_pagam_semana = []
         inadimplentes = []
@@ -333,7 +342,8 @@ def atualizarmedidas():
                         'nome': aluno.nome,
                         'proximaDataPagamento': proxima_data_pagamento
                     })
-
+        
+        
             if aluno.data_atualizacao:
                 # Calcular a data limite para a próxima atualização de medidas (60 dias após a última atualização)
                 data_limite_atualizacao = aluno.data_atualizacao + timedelta(days=60)
@@ -357,4 +367,185 @@ def atualizarmedidas():
                     'mensagem': 'Atualizar medidas'
                 })
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/atualizarmedidas.jinja",total_alunos_ativos=total_alunos_ativos, alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, alunos_atualizar_medidas=alunos_atualizar_medidas, quantidade_alunos=quantidade_alunos, manifest=manifest)
+    return render_template("pages/adm/home/atualizarmedidas.jinja",total_alunos_ativos=total_alunos_ativos, alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, alunos_atualizar_medidas=alunos_atualizar_medidas, quantidade_alunos=quantidade_alunos, manifest=manifest) 
+
+# cadastrar categoria
+@initial_app.route("/categorias", methods=["GET", "POST"])
+@admin_required
+def categorias():
+    if request.method == "POST":
+        data = request.get_json()  # Recebe os dados JSON
+        categoria_nome = data['categoria']
+      
+        # Iniciar sessão do banco de dados
+        session = current_app.db.session
+        querys_instance = Querys(session)
+      
+        # Chamar a função para adicionar a categoria e os exercícios
+        querys_instance.adicionar_categoria_e_exercicios(categoria_nome, data['exercicios'])
+
+        # Redirecionar ou retornar uma resposta adequada
+        return redirect(url_for('initial_app.categorias'))
+    
+    session = current_app.db.session
+    querys_instance = Querys(session)
+    
+    categorias = querys_instance.obter_categorias()
+    with current_app.app_context():
+        with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
+      
+    return render_template("pages/adm/categorias/index.jinja",categorias=categorias, manifest=manifest)
+
+
+@initial_app.route("/categorias/exercicios/<int:categoria_id>", methods=["GET", "POST"])
+@admin_required
+def categorias_exercicio(categoria_id):
+    session = current_app.db.session
+    querys_instance = Querys(session)
+    
+    if request.method == "POST":
+        # Recebe o JSON com o ID da categoria
+        data = request.get_json()
+        categoria_id = data.get('categoria')
+        
+        # Verifica se o ID foi fornecido
+        if not categoria_id:
+            return jsonify({"error": "ID da categoria não fornecido"}), 400
+        
+        # Busca exercícios da categoria
+        exercicios = querys_instance.obter_exercicios_por_categoria(categoria_id)
+        
+        # Retorna os exercícios no formato JSON
+        return jsonify(exercicios=[exercicio.to_dict() for exercicio in exercicios])
+
+    # Para o GET, busca a categoria e os exercícios associados
+    categoria = querys_instance.obter_categoria_por_id(categoria_id)
+    exercicios = querys_instance.obter_exercicios_por_categoria(categoria_id)    # Verifica se a categoria foi encontrada
+    if not categoria:
+        return "Categoria não encontrada", 404
+
+    # Carrega o manifest (opcional)
+    with open('src/static/manifest.json', 'r') as file:
+        manifest = json.load(file)
+      
+    return render_template("pages/adm/categorias/exercicios/exercicios.jinja",categoria_id=categoria_id, categoria=categoria, exercicios=exercicios, manifest=manifest)
+
+
+@initial_app.route("/categoria/deletar/<int:categoria_id>",methods=["POST"])
+@admin_required
+def deletar_categoria(categoria_id):
+    try:
+        session = current_app.db.session
+        # Crie uma instância da classe Querys
+        querys_instance = Querys(session)
+
+        # Chame o método deletar_categoria na instância
+        categoria_excluida = querys_instance.deletar_categoria(categoria_id)
+
+        if categoria_excluida:
+            return jsonify({'success': True}), 200
+        else:
+            return jsonify({'error': 'Categoria não encontrada'}), 404
+
+    except Exception as e:
+        print(f'Erro ao excluir categoria: {str(e)}')
+        return jsonify({'error': 'Erro no servidor'}), 500
+
+@initial_app.route('/categoria/exercicio/editar/<int:exercicio_id>', methods=['POST'])
+@admin_required
+def editar_exercicio(exercicio_id):
+    session = current_app.db.session
+        # Crie uma instância da classe Querys
+    querys_instance = Querys(session)
+    dados = request.get_json()  # Obtém os dados enviados via AJAX
+
+    sucesso, mensagem = querys_instance.editar_exercicio_cat(exercicio_id, dados)
+
+    if sucesso:
+        return jsonify({'message': mensagem}), 200
+    else:
+        return jsonify({'message': mensagem}), 404
+    
+
+@initial_app.route("/categoria/exercicio/deletar/<int:exercicio_id>",  methods=['DELETE'])
+@admin_required
+def deletar_exercicio(exercicio_id):
+    try:
+        session = current_app.db.session
+        # Crie uma instância da classe Querys
+        querys_instance = Querys(session)
+
+        # Chame o método deletar_exercicio na instância
+        exercicio_excluida = querys_instance.deletar_exercicio_cat(exercicio_id)
+
+        if exercicio_excluida:
+            return jsonify({'success': True}), 200
+        else:
+            return jsonify({'error': 'exercicio não encontrada'}), 404
+
+    except Exception as e:
+        print(f'Erro ao excluir exercicio: {str(e)}')
+        return jsonify({'error': 'Erro no servidor'}), 500
+
+
+@initial_app.route('/categoria/adicionar/exercicio', methods=['POST'])
+@admin_required
+def adicionar_exercicio():
+    try:
+        session = current_app.db.session
+        querys_instance = Querys(session)
+        dados = request.get_json()  # Obtém os dados enviados via AJAX
+
+        categoria_id = dados.get('categoria')
+        novo_nome_categoria = dados.get('categoriaName')
+        
+        # Obtém o nome atual da categoria
+        categoria_atual = querys_instance.obter_categoria_por_id(categoria_id)
+
+        if categoria_atual:
+            # Verifica se o nome atual é diferente do novo nome
+            if categoria_atual != novo_nome_categoria:
+                # Atualiza o nome da categoria
+                categoria = session.query(Category).filter_by(id=categoria_id).one_or_none()
+                if categoria:
+                    categoria.name = novo_nome_categoria
+                    session.commit()
+        
+        # Adicionar os exercícios
+        sucesso, mensagem = querys_instance.adicionar_exercicio(dados)
+        
+        if sucesso:
+            return jsonify({'message': mensagem}), 201
+        else:
+            return jsonify({'message': mensagem}), 400
+
+    except Exception as e:
+        print(f'Erro ao adicionar exercício: {str(e)}')
+        return jsonify({'message': 'Erro no servidor'}), 500
+    
+
+@initial_app.route("/busca_exercicios", methods=["GET", "POST"])
+@admin_required
+def busca_exercicios():
+    if request.method == "POST":
+        data = request.get_json()  # Recebe os dados JSON
+        
+        # Iniciar sessão do banco de dados
+        session = current_app.db.session
+        querys_instance = Querys(session)
+        # Extrair o nome do aluno e o filtro de dias
+        nome_aluno = data.get('alunoName')
+        filtro_dias = data.get('searchOptions')
+        categoriaId = data.get('categoriaId')
+      
+        # Chamar a função para busca os exercicios de um aluno
+        exercicio_aluno = querys_instance.atualizar_exercicios_cat( nome_aluno, filtro_dias, categoriaId )
+
+        
+        if exercicio_aluno:
+            return jsonify({'success': True}), 200
+        else:
+            return jsonify({'error': 'exercicio não encontrada'}), 404
+    
+

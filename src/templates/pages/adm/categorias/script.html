@@ -1,0 +1,272 @@
+
+
+<script>
+    
+    $(function() {
+        
+        $('#CadastrarCategoria').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false
+        });
+        
+        $('#botaoAbrirModal').on('click', function() {
+            $('#CadastrarCategoria').modal('show');
+        });
+
+
+        // Funçao para criar categoria 
+        $(document).ready(function() {
+            // Função para adicionar exercício à lista
+            $('#adicionarExercicio').click(function() {
+                var diasSemana = $('#diasSemana').val();
+                var exercicio = $('#exercicio').val();
+                var serie = $('#serie').val();
+                var repeticao = $('#repeticao').val();
+                var descanso = $('#descanso').val();
+                var carga = $('#carga').val();
+              
+                if (diasSemana && serie && repeticao && descanso && carga && exercicio) {
+                    var exercicioItem = `
+                        <li class="list-group-item">
+                            <span>Exercício: ${exercicio}, Dias: ${diasSemana}, Série: ${serie}, Repetição: ${repeticao}, Descanso: ${descanso}, Carga: ${carga} kg</span>
+                            <button type="button" class="btn btn-danger btn-sm float-right removerExercicio">Remover</button>
+                        </li>`;
+                    $('#listaExercicios').append(exercicioItem);
+                    
+                    // Limpar campos após adicionar
+                    $('#exercicio').val('');
+                    $('#serie').val('');
+                    $('#repeticao').val('');
+                    $('#descanso').val('');
+                    $('#carga').val('');
+                } else {
+                    toastr.warning('Por favor, preencha todos os campos antes de adicionar um exercício.');
+                }
+            });
+        
+            // Função para remover exercício da lista
+            $(document).on('click', '.removerExercicio', function() {
+                $(this).closest('li').remove();
+            });
+        
+            // Função para finalizar a categoria e enviar dados para o backend
+            $('#finalizarCategoria').click(function() {
+                var categoria = $('#categoria').val();
+                var exercicios = [];
+        
+                $('#listaExercicios li').each(function() {
+                    var texto = $(this).find('span').text();
+                
+                    // Dividir o texto em partes, usando as vírgulas
+                    var partes = texto.split(', ');
+        
+                    if (partes.length === 6) {
+                        var exercicio = partes[0].split(': ')[1];
+                        var diasSemana = partes[1].split(': ')[1];
+                        var serie = partes[2].split(': ')[1];
+                        var repeticao = partes[3].split(': ')[1];
+                        var descanso = partes[4].split(': ')[1];
+                        var carga = partes[5].split(': ')[1].split(' kg')[0];
+        
+                        exercicios.push({
+                            exercicio: exercicio,
+                            diasSemana: diasSemana,
+                            serie: serie,
+                            repeticao: repeticao,
+                            descanso: descanso,
+                            carga: carga
+                        });
+                    } else {
+                        toastr.error('Erro ao processar o exercício: ' + texto);
+                    }
+                });
+                
+                // Enviar dados para o backend
+                $.ajax({
+                    type: 'POST',
+                    url: '/categorias',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        categoria: categoria,
+                        exercicios: exercicios
+                    }),
+                    success: function(response) {
+                        toastr.success('Categoria cadastrada com sucesso!');
+                        setTimeout(function() {
+                            window.location.href = '/categorias' 
+                        }, 900);
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Erro ao cadastrar a categoria: ' + error);
+                    }
+                });
+            });
+        });
+        
+
+        // Função para adicionar ou modificar categoria
+        $(document).ready(function() {
+            // Evento para adicionar exercício à lista
+            $(document).on('click', '#adicionarExercicioButton', function() {
+                var categoriaId = $(this).data('categoria-id');
+                var nomeExercicio = $('#exercicio_' + categoriaId).val();
+                var serie = $('#serie_' + categoriaId).val();
+                var repeticao = $('#repeticao_' + categoriaId).val();
+                var descanso = $('#descanso_' + categoriaId).val();
+                var carga = $('#carga_' + categoriaId).val();
+        
+                // Cria um item de lista para exibir o exercício adicionado
+                var exercicioHtml = '<li class="list-group-item" data-exercicio-nome="' + nomeExercicio + '" data-serie="' + serie + '" data-repeticao="' + repeticao + '" data-descanso="' + descanso + '" data-carga="' + carga + '">' +
+                    'Exercício: ' + nomeExercicio + ', Série: ' + serie + ', Repetição: ' + repeticao + ', Descanso: ' + descanso + ', Carga: ' + carga +
+                    ' <button class="btn btn-sm btn-danger float-right remover-exercicio">Remover</button></li>';
+                $('#listaExercicios_' + categoriaId).append(exercicioHtml);
+        
+                // Limpa os campos de entrada após adicionar
+                $('#exercicio_' + categoriaId).val('');
+                $('#serie_' + categoriaId).val('');
+                $('#repeticao_' + categoriaId).val('');
+                $('#descanso_' + categoriaId).val('');
+                $('#carga_' + categoriaId).val('');
+            });
+        
+            // Evento para remover exercício da lista
+            $(document).on('click', '.remover-exercicio', function() {
+                $(this).closest('li').remove();
+            });
+        
+            // Evento para finalizar e enviar os exercícios via AJAX
+            $(document).on('click', '#finalizarCategoriaButton', function() {
+                var categoriaId = $(this).data('categoria-id');
+                const categoriaName = $(`#categoriaName_${categoriaId}`).val();
+                var diasSemana = $('#diasSemana_' + categoriaId).val();
+                var listaExercicios = [];
+        
+                // Percorre a lista de exercícios e coleta os dados
+                $('#listaExercicios_' + categoriaId + ' li').each(function() {
+                    var exercicio = {
+                        nome: $(this).data('exercicio-nome'),
+                        serie: $(this).data('serie'),
+                        repeticao: $(this).data('repeticao'),
+                        descanso: $(this).data('descanso'),
+                        carga: $(this).data('carga'),
+                    };
+                    listaExercicios.push(exercicio);
+                });
+        
+                // Dados para enviar via AJAX
+                var dados = {
+                    categoria: categoriaId,
+                    categoriaName: categoriaName,
+                    diasSemana: diasSemana,
+                    exercicios: listaExercicios,
+                };
+        
+                // Envia os dados via AJAX
+                $.ajax({
+                    url: '/categoria/adicionar/exercicio',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(dados),
+                    success: function(response) {
+                        toastr.success('Exercicios cadastrados com sucesso!');
+                        setTimeout(function() {
+                            window.location.href = '/categorias' 
+                        }, 900);
+                    },
+                    error: function(xhr) {
+                        alert('Erro: ' + xhr.responseJSON.message);
+                    }
+                });
+            });
+        });
+        
+        // Função para confirmar e excluir a categoria
+        $(document).ready(function() {
+            window.confirmarExclusao = function(categoriaId) {
+                // Confirmar exclusão com o usuário
+                if (confirm('Tem certeza de que deseja excluir esta categoria?')) {
+                    $.ajax({
+                        url: '/categoria/deletar/' + categoriaId,
+                        type: 'POST',
+                        success: function(response) {
+                            // Lidar com a resposta do backend
+                            toastr.success('Categoria excluída com sucesso!, e esse mesmo');
+                            setTimeout(function() {
+                                window.location.href = '/categorias' 
+                            }, 900);
+                        },
+                        error: function(xhr, status, error) {
+                            // Lidar com erros
+                            toastr.error('Erro ao excluir a categoria: ' + error);
+                        }
+                    });
+                }
+            };
+        });
+
+        // Ver exercicios da Categoria
+        $(document).on('click', '.ver-exercicios', function() {
+            var categoriaId = $(this).data('categoria-id'); 
+            
+            $.ajax({
+                url: '/categorias/exercicios/' + categoriaId,
+                type: 'POST',
+                contentType: 'application/json', 
+                data: JSON.stringify({ categoria: categoriaId }), 
+                success: function(response) {
+                   
+                    setTimeout(function() {
+                        window.location.href = '/categorias/exercicios/' + categoriaId;
+                    }, 900);
+                },
+                error: function(error) {
+                    toastr.error('Houve um erro ao carregar os exercícios.', error);
+                }
+            });
+        });
+        
+        // Editar exercicio categoria
+        $(document).ready(function() {
+            $('[id^="editarExercicio"]').on('click', function() {
+                var exercicioId = $(this).data('exercicio-id');
+        
+                $.ajax({
+                    url: `/alunos/editar/exercicio/${exercicioId}`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        tipoTreino: $("#tipoTreino" + exercicioId).val(),
+                        exercicio: $("#exercicioo" + exercicioId).val(),
+                        serie: $("#serie" + exercicioId).val(),
+                        repeticao: $("#repeticao" + exercicioId).val(),
+                        descanso: $("#descanso" + exercicioId).val(),
+                        carga: $("#carga" + exercicioId).val(),
+                    }),
+                    success: function(response) {
+                        toastr.success('Exercício editado com sucesso!')
+                        setTimeout(function() {
+                            window.location.reload();
+                          }, 900);
+                    },
+                    error: function(error) {
+                        toastr.error('Houve algum problema em editar o exercício: ' + error.responseJSON.mensagem)
+
+                    }
+                });
+            });
+        });
+
+        //Date range picker
+        $('#reservation').daterangepicker({
+            locale: {
+              format: 'DD/MM/YYYY'
+            },
+        });
+
+      
+        
+    });
+
+    
+</script>

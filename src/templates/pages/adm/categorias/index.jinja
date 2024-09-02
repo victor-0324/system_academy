@@ -1,0 +1,130 @@
+{% extends 'base.jinja' %}
+
+{% block head %}
+
+<style>
+  .text-small-top {
+    font-size: 12px; /* Tamanho de fonte menor */
+    position: absolute; /* Posição absoluta para sobrepor o conteúdo */
+    top: 10px; /* Posição superior de 10px */
+    left: 10px; /* Posição esquerda de 10px */
+    margin: 0; /* Margem zero para evitar espaçamento extra */
+    padding: 0; /* Preenchimento zero para evitar espaçamento extra */
+    font-weight: bold; /* Deixa o texto em negrito */
+
+    }
+    .dropdown-menu {
+        padding: 1rem;
+    }
+    .dropdown-item.active, .dropdown-item:active {
+        background-color: #007bff;
+        color: white;
+    }
+    .form-control {
+        margin-bottom: 1rem;
+    }
+    /* Centraliza o dropdown-menu */
+    .dropdown-menu {
+        min-width: 200px;
+    }
+    .card-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+ 
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container mt-6">
+    <!-- Card para Categorias -->
+    <div class="card">
+        <div class="card-header d-flex p-0">
+            <h3 class="card-title p-3">Exercicios Categorizado</h3>
+           
+            <ul class="nav nav-pills ml-auto p-2">
+                <li class="nav-item">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CadastrarCategoria">
+                        Criar Categoria
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Lista de Categorias e Exercícios -->
+    <div class="row">
+        {% for categoria in categorias %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"> Categoria: <span style="color: #FFA500;">{{ categoria.name }}</span></h5>
+                    <p class="card-text">Exercicios: <span style="color: #FFA500;">{{ categoria.exercises | length  }}</span></p>
+                    
+                    <!-- Grupo de botões com dropdown -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info">Ações</button>
+                        <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu" role="menu">
+                           
+                            <!-- Botão para mostrar exercícios -->
+                            <a class="dropdown-item ver-exercicios" href="#" data-categoria-id="{{ categoria.id }}">
+                                Ver Exercícios
+                            </a>
+
+                            
+                            <!-- Botão para adicionar exercício -->
+                            <a class="dropdown-item"  data-toggle="modal" data-target="#adicionarExercicioModal_{{ categoria.id }}">
+                                Adicionar ou Editar
+                            </a>
+                            
+                            <!-- Divisor -->
+                            <div class="dropdown-divider"></div>
+                            
+                            <!-- Botão para excluir a categoria -->
+                            <button class="dropdown-item text-danger" type="button" onclick="confirmarExclusao('{{ categoria.id }}')">
+                                Deletar
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% include 'pages/adm/categorias/modal.jinja' with context%}
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<!-- Inclua o JS do Moment.js, que é uma dependência do Date Range Picker -->
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<script src="{{ url_for('static', filename='plugins/select2/js/select2.full.min.js')}}"></script>
+<script>
+$(function () {
+  $('.select2').select2();
+});
+ </script>
+
+<!-- Inclua o JS do Date Range Picker -->
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js">
+</script>
+{% include 'pages/adm/categorias/script.html'%}
+
+{% endblock %}

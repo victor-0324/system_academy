@@ -1,0 +1,69 @@
+   <!-- Modal de Exclusão do Exercício -->
+<div class="modal fade" id="excluirExercicioModal{{ exercicio.id }}">            
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmar exclusão:</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Certeza que deseja excluir o exercício {{ exercicio.nome }}?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger excluirExercicioBtn" data-exercicio-id="{{ exercicio.id }}">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>  
+
+
+
+<!-- Modal de Edição do Exercício -->
+<div class="modal fade" id="exercicio{{ exercicio.id }}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ exercicio.exercicio }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulário para edição dos dados do exercício -->
+                <form id="editarExercicioForm{{ exercicio.id }}">
+                    <label>Dias da Semana:</label>
+                    <select class="form-control" id="tipoTreino{{ exercicio.id }}" required>
+                        <option value="{{ exercicio.tipoTreino }}" selected>{{ exercicio.tipoTreino }}</option>
+                        <option value="segunda&sexta">Segunda & Sexta</option>
+                        <option value="terca&quinta">Terça & Quinta</option>
+                        <option value="quarta">Quarta</option>
+                    </select>
+                    <label>Exercício:</label>
+                    <input type="text" class="form-control" id="exercicioNome{{ exercicio.id }}" value="{{ exercicio.exercicio }}" >
+                    <label>Série:</label>
+                    <input type="text" class="form-control" id="serie{{ exercicio.id }}" value="{{ exercicio.serie }}" >
+                    <label>Repetição:</label>
+                    <input type="text" class="form-control" id="repeticao{{ exercicio.id }}" value="{{ exercicio.repeticao }}" >
+                    <label>Descanso:</label>
+                    <input type="text" class="form-control" id="descanso{{ exercicio.id }}" value="{{ exercicio.descanso }}" >
+                    <label>Carga:</label>
+                    <input type="text" class="form-control" id="carga{{ exercicio.id }}" value="{{ exercicio.carga }}" >
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary salvarExercicioBtn" data-exercicio-id="{{ exercicio.id }}">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal para Adicionar Exercícios -->
+
+
+

@@ -35,5 +35,5 @@ def init_app():
     
     with app.app_context():
         Base.metadata.create_all(db_handler.get_connection().engine)
-
+    
     return app, login_manager

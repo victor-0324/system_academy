@@ -1,0 +1,146 @@
+{% extends 'base.jinja' %}
+
+{% block head %}
+<style>
+  .text-small-top {
+    font-size: 12px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    padding: 1rem;
+}
+.dropdown-item.active, .dropdown-item:active {
+    background-color: #007bff;
+    color: white;
+}
+.form-control {
+    margin-bottom: 1rem;
+}
+.dropdown-menu {
+    min-width: 200px;
+}
+.card-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-6">
+    <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+          
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                
+                <h4 class="breadcrumb-item active">Categoria: {{ categoria }}</h4>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+      <div class="card">
+        <div class="card-header d-flex justify-content-between p-0">
+            <!-- Filtro -->
+            <ul class="nav nav-pills p-1">
+                <li class="nav-item dropdown mr-2">
+                  
+                </li>
+            </ul>
+            <ul class="nav nav-pills p-1">
+                <li class="nav-item dropdown mr-2">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                        Filtrar<span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item filtro-status" data-status="todos">Todos</a>
+                        <a class="dropdown-item filtro-status" data-status="segunda&sexta">Segunda e Sexta</a>
+                        <a class="dropdown-item filtro-status" data-status="terca&quinta">Terça e Quinta</a>
+                        <a class="dropdown-item filtro-status" data-status="quarta">Quarta</a>
+                    </div>
+                </li>
+            </ul>
+    
+            <!-- Busca -->
+            <ul class="nav nav-pills justify-content-center p-1">
+                <li class="nav-item dropdown mr-2">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                        Buscar<span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                        <!-- Formulário de Busca e Filtragem -->
+                        <form id="searchForm">
+                            <input type="hidden" id="categoriaId" name="categoriaId" value="{{categoria_id}}">
+                            <div class="form-group">
+                                <label for="alunoName">Aluno:</label>
+                                <input type="text" class="form-control" id="alunoName" name="alunoName" placeholder="Nome do Aluno">
+                            </div>
+                            <div class="form-group">
+                                <label for="searchOptions">Filtrar:</label>
+                                <select class="form-control" id="searchOptions" name="searchOptions">
+                                    <option value="todos" selected>Todos</option>
+                                    <option value="segunda&sexta">Segunda e Sexta</option>
+                                    <option value="terca&quinta">Terça e Quinta</option>
+                                    <option value="quarta">Quarta</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+    
+            <!-- Espaço em branco à direita para centralizar a busca -->
+            <div class="p-1"></div>
+        </div>
+    </div>
+    
+
+    <div class="row">
+        {% for exercicio in exercicios %}
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-3 card-exercicio" id="exercicioCard-{{ exercicio.id }}" data-status="{{ exercicio.tipoTreino }}">
+            <div class="card">
+                <div class="card-header bg-secondary">
+                    <h3 class="card-title">{{ exercicio.exercicio }}</h3>
+                    <div class="card-tools">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                                <i class="fas fa-wrench"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#excluirExercicioModal{{ exercicio.id }}">Excluir exercício</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="small-box-footer d-flex align-items-center justify-content-center">
+                        <a href="" data-toggle="modal" data-target="#exercicio{{ exercicio.id }}">{{ exercicio.tipoTreino }} <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+<!-- Inclusão dos modais para cada exercício -->
+{% for exercicio in exercicios %}
+    {% include 'pages/adm/categorias/exercicios/modal.jinja' with context %}
+{% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+    {% include 'pages/adm/categorias/exercicios/script.html' with context %}
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+{% endblock %}

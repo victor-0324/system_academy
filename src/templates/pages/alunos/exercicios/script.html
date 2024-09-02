@@ -15,12 +15,7 @@
         });
 
         $('#cadastrar_ex').on('click', function() {
-            var Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
+           
 
             var alunoId = $(this).data('aluno-id');
             $.ajax({
@@ -38,94 +33,73 @@
                 }),
                 success: function(response) {
                     // Tratar a resposta do servidor
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Exercicio Criado Com Sucesso!'
-                    });
-                    window.location.reload();
+                    toastr.success('Exercício cadastrado com sucesso!', 'Sucesso');
+                    setTimeout(function() {
+                       window.location.reload();
+                    }, 900);
+                  
 
                 },
                 error: function(error) {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Houve algum problema em excluir o projeto' + error.data
-                    });
+                    toastr.error('Aluno Não encontrado', 'Erro');
                 }
          });
         });
 
         $(document).on('click', '#excluirExercicio', function() {
             var exercicioCardId = $(this).data('exercicio-card-id'); 
-       
-            var Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        
             $.ajax({
-                url: '/alunos/exercicios/rest/'+ exercicioCardId,
+                url: '/alunos/exercicios/rest/' + exercicioCardId,
                 type: 'DELETE',
                 success: function(response) {
-                    console.log('Resposta do servidor:', response);  // Adicione este log para verificar a resposta no console
-       
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Exercício Excluído com sucesso!'
-                    });
-                    location.reload();
+                    // Adicione este log para verificar a resposta no console
+        
+                    toastr.success('Exercício excluído com sucesso!', 'Sucesso');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 900); // Aguarde o tempo do toast antes de recarregar a página
                 },
                 error: function(error) {
-                    console.error('Erro na requisição:', error);  // Adicione este log para verificar o erro no console
-       
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Houve algum problema em excluir o exercício'
-                    });
+                    // Adicione este log para verificar o erro no console
+        
+                    toastr.error('Houve um erro ao excluir o exercício.', error);
                 }
             });
         });
+    
+        // Busca Por categoria 
+        $(document).ready(function() {
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault(); // Impede o envio normal do formulário
         
+                var alunoId = $('#alunoId').val();
+                var searchOptions = $('#searchOptions').val();
+                var categoriaId = $('#categoriaId').val();
+        
+                $.ajax({
+                    url: '/alunos/atualizar_ex/'+ alunoId, // URL da sua rota
+                    type: 'POST',
+                    data: {
+                        alunoId: alunoId,
+                        searchOptions: searchOptions,
+                        categoriaId: categoriaId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                        
+                            toastr.success('Exercícios atualizados com sucesso!', 'Sucesso');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 900); 
 
-        $(document).ready(function () {
-            // Captura o evento de envio do formulário de pesquisa
-            $('#searchForm').submit(function (e) {
-                // Impede o envio padrão do formulário
-                e.preventDefault();
-        
-                // Obtém o valor de pesquisa do campo de entrada
-                var nomeAluno = $('#searchInput').val();
-        
-                // Obtém o valor do campo oculto para o ID do aluno
-                var alunoId = $('#alunoIdInput').val();
-        
-                // Pergunta ao usuário se ele tem certeza que deseja buscar exercícios
-                var confirmacao = confirm('Tem certeza que deseja buscar os exercícios? Os exercícios existentes serão substituídos.');
-        
-                if (confirmacao) {
-                    // Faça uma solicitação ao servidor para buscar os exercícios do aluno pelo nome e id
-                    $.ajax({
-                        url: '/alunos/busca_adicionar/' + alunoId + '/' + nomeAluno,
-                        type: 'POST',
-                        contentType: 'application/json',
-                        success: function (data) {
-                            
-                            // Verifique se a busca foi bem-sucedida
-                            if (data && data.success) {
-                                console.log('Dados recebidos:', data);
-                                // Redireciona para a nova rota
-                                window.location.href = '/alunos/atualizar_ex/' + alunoId;
-                            } else {
-                                alert('Aluno não encontrado ou sem exercícios');
-                            }
-                        },
-                        error: function (error) {
-                            console.error(error);
-                            alert('Erro ao buscar aluno');
+                        } else {
+                            toastr.error('Erro: ' + response.error);
                         }
-                    });
-                }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Falha ao atualizar exercícios');
+                    }
+                });
             });
         });
         
@@ -140,13 +114,6 @@
             $('[id^="editarExercicio"]').on('click', function() {
                 var exercicioId = $(this).data('exercicio-id');
         
-                var Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-        
                 $.ajax({
                     url: `/alunos/editar/exercicio/${exercicioId}`,
                     type: 'POST',
@@ -160,17 +127,14 @@
                         carga: $("#carga" + exercicioId).val(),
                     }),
                     success: function(response) {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Exercício editado com sucesso!'
-                        });
-                        window.location.reload();
+                        toastr.success('Exercício editado com sucesso!', 'success')
+                        setTimeout(function() {
+                           window.location.reload();
+                        }, 900); 
+                        
                     },
                     error: function(error) {
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Houve algum problema em editar o exercício: ' + error.responseJSON.mensagem
-                        });
+                        toastr.error('Houve algum problema em editar o exercício: ' + error.responseJSON.mensagem)
                     }
                 });
             });
@@ -187,7 +151,7 @@
     
                 var statusSelecionado = this.getAttribute('data-status');
                 var cartoes = document.querySelectorAll('.card-aluno');
-    
+                console.log(cartoes)
                 cartoes.forEach(function(cartao) {
                     if (cartao.getAttribute('data-status') === statusSelecionado || statusSelecionado === 'todos') {
                         cartao.style.display = ''; // Mostra o cartão
@@ -200,54 +164,5 @@
     }); 
 </script>
   
-<script>
-document.addEventListener('DOMContentLoaded', function() {
 
-    $('.abrirModalEncerramento').on('click', function() {
-        var projetoId = $(this).data('projeto-id');
-        $('#confirmarEncerramento').data('projeto-id-encerrar', projetoId);
-    });
-
-    $('#confirmarEncerramento').on('click', function() {
-        var projetoId = $(this).data('projeto-id-encerrar');
-        console.log('Projeto a encerrar:', projetoId);
-        // Adicione aqui a lógica para encerrar o projeto
-    });
-
-    $('#encerrarProjeto').click(function() {
-        var projetoId = this.getAttribute('data-projeto-id-encerrar');
-        console.log(projetoId);
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-
-        $.ajax({
-            url: '/projetos/rest',
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                id: projetoId,
-                status: 'encerrado'
-            }),
-            success: function(response) {
-                // Tratar a resposta do servidor
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Projeto Excluido com sucesso!'
-                });
-            },
-            error: function(error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Houve algum problema em encerrar o projeto'
-                });
-            }
-        });
-    });
-});    
-
-</script>
     

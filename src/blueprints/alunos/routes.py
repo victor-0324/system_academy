@@ -5,6 +5,7 @@ from src.database.config import db, db_connector, DBConnectionHandler
 from flask_login import current_user, login_required
 from functools import wraps
 from datetime import datetime, timedelta
+from src.database.models import Aluno, ExerciciosAluno, Category, Exercise
 from dateutil.relativedelta import relativedelta 
 import json
 from copy import deepcopy 
@@ -41,16 +42,60 @@ def calcular_proxima_data_pagamento(data_pagamento_atual):
     return None
 
 
+
 @clientes_app.route("/detalhes/<int:aluno_id>", methods=["GET"])
 @admin_required
 def mostrar_detalhes(aluno_id):
     with open('src/static/manifest.json', 'r') as file:
-            manifest = json.load(file)
+        manifest = json.load(file)
+
     with current_app.app_context():
         session = current_app.db.session
         querys_instance = Querys(session)
         aluno = querys_instance.mostrar_detalhes(aluno_id) 
         
+        if aluno.data_entrada:
+            data_formatada = aluno.data_entrada.strftime('%d/%m/%Y')
+        else:
+            data_formatada = ''
+
+        # Obter apenas a medida mais recente
+        medida = querys_instance.get_ultima_medida(aluno_id)
+        medidas = []
+        
+        
+        if medida and medida.data_atualizacao:
+            if isinstance(medida.data_atualizacao, datetime):
+                # Adicionar 60 dias à data de atualização
+                data_atualizacao = medida.data_atualizacao + timedelta(days=60)
+                data_atualizacao_formatada = data_atualizacao.strftime('%d/%m/%Y')
+            else:
+                data_atualizacao_formatada = medida.data_atualizacao
+        else:
+            data_atualizacao_formatada = "Sem data de atualização"
+
+        # Formatar data atual para o formato desejado
+        data_atual = datetime.now().strftime('%d/%m/%Y')
+
+        # Adicionar a medida formatada à lista de medidas
+        if medida:
+            medidas.append({
+                'peso': medida.peso,
+                'ombro': medida.ombro,
+                'torax': medida.torax,
+                'braco_d': medida.braco_d,
+                'braco_e': medida.braco_e,
+                'ant_d': medida.ant_d,
+                'ant_e': medida.ant_e,
+                'cintura': medida.cintura,
+                'abdome': medida.abdome,
+                'quadril': medida.quadril,
+                'coxa_d': medida.coxa_d,
+                'coxa_e': medida.coxa_e,
+                'pant_d': medida.pant_d,
+                'pant_e': medida.pant_e,
+                'data_atualizacao': medida.data_atualizacao.strftime('%d/%m/%Y') if isinstance(medida.data_atualizacao, datetime) else medida.data_atualizacao
+            })
         # Obter apenas a data de pagamento do aluno
         data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
         # Calcular a próxima data de pagamento
@@ -59,36 +104,59 @@ def mostrar_detalhes(aluno_id):
         # Verificar se o aluno é inadimplente
         inadimplente = aluno.inadimplente
 
-
         if aluno.data_entrada:
             data_formatada = aluno.data_entrada.strftime('%d/%m/%Y')
         else:
             data_formatada = ''
 
-    return render_template("pages/alunos/detalhes/index.jinja", aluno=[aluno],data_formatada=data_formatada, inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual, manifest=manifest)
+    return render_template("pages/alunos/detalhes/index.jinja", data_atual=data_atual, aluno=aluno,data_atualizacao_formatada=data_atualizacao_formatada, data_formatada=data_formatada, inadimplente=inadimplente, proxima_data_pagamento=proxima_data_pagamento, data_pagamento_atual=data_pagamento_atual, manifest=manifest, medidas=medidas)
 
 @clientes_app.route("/atualizar_ex/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
 def atualizar_ex(aluno_id):
-    with open('src/static/manifest.json', 'r') as file:
-            manifest = json.load(file)
     session = current_app.db.session
     querys_instance = Querys(session)
-    if request.method == "POST":
-        data = request.form.get('exercicios')
-        exercicios = json.loads(data) if data else []
-        # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
-        resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
 
-        if resultado_atualizacao:  # Adapte conforme necessário
-            return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
-        else:
+    if request.method == "POST":
+        try:
+            aluno_id = request.form.get('alunoId')
+            filtro_dias = request.form.get('searchOptions')
+            categoria_id = request.form.get('categoriaId')
+
+            aluno = session.query(Aluno).filter_by(id=aluno_id).first()
+            if not aluno:
+                return jsonify({'error': 'Aluno não encontrado'}), 404
+
+            nome_aluno = aluno.nome
+            sucesso = querys_instance.atualizar_exercicios_aluno(nome_aluno, filtro_dias, categoria_id)
+
+            if sucesso:
+                return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
+            else:
+                return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
+
+        except Exception as e:
+            print('Erro na atualização:', str(e))
             return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
 
     else:
-        aluno = querys_instance.mostrar_detalhes(aluno_id)
-        exercicios = querys_instance.criar_objeto_exercicio(aluno_id)
-        return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios,aluno=aluno, manifest=manifest)
+        aluno = session.query(Aluno).get(aluno_id)
+        if not aluno:
+            return render_template("pages/alunos/exercicios/index.jinja", aluno=None)
+
+        exercicios = session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id == aluno_id).all()
+        categorias = session.query(Category).all()
+
+        with open('src/static/manifest.json', 'r') as file:
+            manifest = json.load(file)
+
+        return render_template("pages/alunos/exercicios/index.jinja",
+                               manifest=manifest,
+                               exercicios=exercicios,
+                               aluno=aluno,
+                               categorias=categorias)
+    
+
 
 @clientes_app.route("/atualizar_medidas/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
@@ -111,23 +179,27 @@ def atualizar_medidas(aluno_id):
             coxa_e = request.form.get("coxa_e")
             pant_d = request.form.get("pant_d")
             pant_e = request.form.get("pant_e")
-            aluno = querys_instance.mostrar_detalhes(aluno_id)
-
-            # Use a função atualizar_dados para atualizar as informações do aluno
-            aluno_antes = deepcopy(aluno)  # Crie uma cópia profunda do aluno antes da atualização
-            historico_antes, historico_depois = querys_instance.atualizar_medidas(
+          
+            # Obter as medidas antes da atualização
+            historico_antes = querys_instance.get_medidas_por_aluno(aluno_id)
+            
+            # Atualizar as medidas
+            querys_instance.atualizar_medidas(
                 aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura,
                 abdome, quadril, coxa_d, coxa_e, pant_d, pant_e
             )
             
+            # Obter as medidas após a atualização
+            historico_depois = querys_instance.get_medidas_por_aluno(aluno_id)
+            
             return jsonify({'success': True, 'historico_antes': historico_antes, 'historico_depois': historico_depois}), 200
- 
+
         else:
             aluno = querys_instance.mostrar_detalhes(aluno_id)
             return render_template("modificar.html", aluno=[aluno])
 
     except Exception as e:
-        
+        print(f'Erro no servidor: {str(e)}')
         return jsonify({'error': 'Erro no servidor'}), 500
 
 @clientes_app.route("/atualizar/<int:aluno_id>", methods=["GET", "POST"])
@@ -162,43 +234,7 @@ def atualizar(aluno_id):
     
         return jsonify({'error': 'Erro no servidor'}), 500
 
-@clientes_app.route("/busca_pornome", methods=["POST"])
-@admin_required
-def busca_pornome():
-    # Certifique-se de que os dados estão sendo enviados como JSON no corpo do POST
-    data = request.get_json()
-    def serialize_exercicios(exercicio):
-                        return {
-                            'tipoTreino': exercicio.tipoTreino,
-                            'exercicio': exercicio.exercicio,
-                            'serie': exercicio.serie,
-                            'repeticao': exercicio.repeticao,
-                            'descanso': exercicio.descanso,
-                            'carga': exercicio.carga,
-                        }
-    if 'nome_aluno' in data:
-        nome_aluno = data['nome_aluno']
-    
-        with current_app.app_context():
-            session = current_app.db.session
-            querys_instance = Querys(session)
-            aluno = querys_instance.buscar_exercicios_por_nome(nome_aluno)
 
-            if aluno:
-                exercicios = aluno.exercicios
-
-                # Serializa a lista de exercícios
-                exercicios_serializados = [serialize_exercicios(exercicio) for exercicio in exercicios]
-
-               
-                # Retornar os detalhes do aluno em formato JSON
-                return jsonify({'status': 'success', 'aluno': {
-                    'exercicios': exercicios_serializados,
-                }})
-            else:
-                return jsonify({'status': 'error', 'message': 'Aluno não encontrado'})
-    else:
-        return jsonify({'status': 'error', 'message': 'Nome do aluno não fornecido no corpo do POST'})
 
 @clientes_app.route("/deletar/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required
@@ -240,30 +276,47 @@ def cadastrar_ex():
 
 
 
-@clientes_app.route("/busca_adicionar/<int:aluno_id>/<string:nome_aluno>", methods=["GET", "POST"])
+@clientes_app.route("/busca_adicionar", methods=["GET", "POST"])
 @admin_required
-def busca_adicionar(aluno_id, nome_aluno):
+def busca_adicionar():
     session = current_app.db.session
     querys_instance = Querys(session)
-
-    aluno = querys_instance.buscar_exercicios_por_nome(nome_aluno)
-    exercicios = querys_instance.criar_objeto_exercicio(aluno.id)
     
-    # exercicios = json.dumps(exercicios_json)
-   
-    # Suponha que a função 'atualizar_exercicios' retorne uma resposta ou estado desejado
-    resultado_atualizacao = querys_instance.atualizar_exercicios(aluno_id, exercicios)
+    if request.method == "POST":
+        try:
+            # Obtém os dados do corpo da requisição
+            data = request.json
+            aluno_name = data.get('alunoName', '')
+            filtro_dias = data.get('searchOptions', 'todos')
+            aluno_id = data.get('alunoId')
+            
+            
+            # Verifica se todos os dados necessários estão presentes
+            if not aluno_name or aluno_id is None:
+                return jsonify({'error': 'Dados insuficientes'}), 400
 
-    if resultado_atualizacao:  # Adapte conforme necessário
-        return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
-    else:
-        return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
+            # Busca os exercícios conforme o nome e o filtro
+            exercicios = querys_instance.buscar_exercicios_por_nome(aluno_name, filtro_dias)
+            
+            if exercicios is None:
+                return jsonify({'error': 'Erro ao buscar exercícios'}), 500
+            
+            # Atualiza os exercícios filtrados
+            sucesso_atualizacao = querys_instance.atualizar_exercicios_filtry(aluno_id, exercicios)
 
-    # As linhas abaixo não serão executadas se a condição acima for verdadeira
-    aluno = querys_instance.mostrar_detalhes(aluno_id)
-    exercicios = querys_instance.criar_objeto_exercicio(aluno_id)
-    
-    return render_template("pages/alunos/exercicios/index.jinja", exercicios=exercicios, aluno=aluno)
+            if sucesso_atualizacao:
+                return jsonify({'success': True, 'message': 'Exercícios atualizados com sucesso'}), 200
+            else:
+                return jsonify({'error': 'Falha ao atualizar exercícios'}), 500
+        
+        except Exception as e:
+            # Registra o erro no console para depuração
+            print(f"Erro: {str(e)}")
+            return jsonify({'error': 'Erro interno do servidor'}), 500
+
+    # Retorno para requisições GET ou para outros métodos não suportados
+    return jsonify({'message': 'Método não suportado'}), 405
+        
 
 @clientes_app.route("/editar/exercicio/<int:exercicio_id>", methods=["POST"])
 @admin_required
@@ -274,7 +327,7 @@ def editar_exercicio(exercicio_id):
         if request.method == "POST":
             # Obtém os novos dados do corpo da requisição em formato JSON
             novos_dados = request.get_json()
-            
+          
             # Chama o método editar_exercicio da sua classe
             sucesso = querys_instance.editar_exercicio(exercicio_id, novos_dados)
 
@@ -283,7 +336,7 @@ def editar_exercicio(exercicio_id):
             else:
                 return jsonify({'mensagem': 'Erro ao editar exercício'}), 404
 
-        # Se a requisição for GET, você pode renderizar um formulário de edição
+       
         # que permitirá ao usuário fornecer os novos dados.
         else:
             # Recupera o exercício pelo id

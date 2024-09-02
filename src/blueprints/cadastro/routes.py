@@ -4,7 +4,7 @@ import json
 from src.database.config import db_connector, DBConnectionHandler
 from functools import wraps
 from flask_login import current_user
-
+from datetime import datetime
 
 cadastro_app = Blueprint("cadastro_app", __name__, url_prefix="/cadastro", template_folder='templates',static_folder='static')
 
@@ -55,7 +55,13 @@ def cadastrar():
             jatreino = request.form.get('jatreino')
             permissao = request.form.get('permissao')
             
-
+           
+            idade_st = idade
+            idade_formated =  datetime.strptime(idade_st, '%d/%m/%Y').strftime('%Y-%m-%d')
+            idade = idade_formated
+            data_str = data_pagamento
+            data_formatada = datetime.strptime(data_str, '%d/%m/%Y').strftime('%Y-%m-%d')
+            data_pagamento = data_formatada
             session = current_app.db.session
             # Crie uma instância da classe Querys
             querys_instance = Querys(session)
@@ -74,7 +80,7 @@ def cadastrar():
             print(f'Erro no servidor: {str(e)}')
             return jsonify({'error': 'Erro no servidor'}), 500
 
-    return render_template("cadastro.html",manifest=manifest)
+    return render_template("pages/adm/cadastro/index.jinja",manifest=manifest)
 
 
 
@@ -93,6 +99,7 @@ def busca_pornome():
                             'descanso': exercicio.descanso,
                             'carga': exercicio.carga,
                         }
+    
     if 'nome_aluno' in data:
         nome_aluno = data['nome_aluno']
     

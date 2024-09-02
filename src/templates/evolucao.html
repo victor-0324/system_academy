@@ -13,6 +13,8 @@
   <title>Academia | Innovare</title>
   <meta content="Ensign PWA Mobile App" name="description" />
   <meta content="themepassion" name="author" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
   <!-- App Icons -->
@@ -286,282 +288,208 @@
 
     </div>
   </div>
-
   <div class="container transparent pr0 pl0 relative">
     <div class="section pt0 pb0">
-        <div class="row">
-            <div class="col s12 pad-0">
-              
-                <div class="table-responsive">
-                
-                    <br>
-                    <table class="table table-bordered">
-                        <!-- Cabeçalho da tabela -->
-                        <thead>
-                            <tr>
-                                <th scope="col">Medidas</th>
-                                <th scope="col">Antes</th>
-                                <th scope="col">Depois</th>
-                            </tr>
-                        </thead>
-                        <!-- Corpo da tabela -->
-                        <tbody>
-                            <!-- Linha para Data Atualização -->
-                            <tr>
-                                <th scope="row">Atualizações</th>
-                                <!-- Exibir data atualização antes -->
-                                <td>{{ formatar_data(historico_medidas_peso[-1]['data_atualizacao']) }}</td>
-                                <!-- Exibir data atualização depois -->
-                                <td>{{ formatar_data(historico_depois[0]['data_atualizacao']) }}</td>
-                            </tr>
-                            <!-- Verificar se há histórico de medidas de peso -->
-                            {% if historico_medidas_peso %}
-                                <!-- Definir ordem das medidas -->
-                                {% set ordem_medidas = ['peso', 'ombro', 'torax', 'braco_d', 'braco_e', 'ant_d', 'ant_e', 'cintura', 'abdome', 'quadril', 'coxa_d', 'coxa_e', 'pant_d', 'pant_e'] %}
-                                <!-- Iterar sobre as medidas -->
-                                {% for medida_key in ordem_medidas %}
-                                    <!-- Dicionário de nomes das medidas -->
-                                    {% set medida_nomes = {
-                                        'peso': 'Peso',
-                                        'ombro': 'Ombro',
-                                        'torax': 'Tórax',
-                                        'braco_d': 'Braço Direito',
-                                        'braco_e': 'Braço Esquerdo',
-                                        'ant_d': 'Antebraço Direito',
-                                        'ant_e': 'Antebraço Esquerdo',
-                                        'cintura': 'Cintura',
-                                        'abdome': 'abdômen',
-                                        'quadril': 'Quadril',
-                                        'coxa_d': 'Coxa Direita',
-                                        'coxa_e': 'Coxa Esquerda',
-                                        'pant_d': 'Panturrilha Direita',
-                                        'pant_e': 'Panturrilha Esquerda',
-                                    } %}
-                                    <!-- Atribuir chave da medida -->
-                                    {% set key = medida_key %}
-                                    <!-- Obter valor antes da atualização -->
-                                    {% set value_antes = historico_medidas_peso[-1][key] %}
-                                    <!-- Linha para a medida atual -->
-                                    <tr>
-                                      <!-- Exibir nome da medida -->
-                                      <th scope="row">{{ medida_nomes[key]|default(key.capitalize()) }}</th>
-                                      <!-- Exibir valor antes -->
-                                      <td>{{ value_antes }}</td>
-                                      <!-- Exibir valor depois -->
-                                      <td>
-                                          <!-- Verificar se há dados disponíveis depois -->
-                                          {% if historico_depois[0][key] is defined and value_antes is defined %}
-                                              <!-- Exibir valor depois -->
-                                              {{ historico_depois[0][key] }}
-                                          {% else %}
-                                              <!-- Indicar falta de dados -->
-                                              <span class="badge bg-warning">Sem dados disponíveis</span>
-                                          {% endif %}
-                                      </td>
-                                  </tr>
-                                  <!-- Calcular e exibir ganho ou perda -->
-                                  <tr>
-                                      <td></td>
-                                      <td></td>
-                                      <td>
-                                          <!-- Verificar se há dados disponíveis depois -->
-                                          {% if historico_depois[0][key] is defined and value_antes is defined %}
-                                              <div class="row">
-                                                  <div class="col-md-6">
-                                                      {% set ganho = historico_depois[0][key]|float - value_antes|float %}
-                                                      {% set perda = value_antes|float - historico_depois[0][key]|float %}
-                                                      {% if ganho > 0 %}
-                                                          <span class="badge_ "> + {{ ganho|round(2) }}</span>
-                                                      {% elif perda > 0 %}
-                                                          <span class="badge__ "> - {{ perda|round(2) }}</span>
-                                                      {% else %}
-                                                          <span class="badge___ "> 0.0 </span>
-                                                      {% endif %}
-                                                  </div>
-                                              </div>
-                                          {% endif %}
-                                      </td>
-                                  </tr>
-                                {% endfor %}
-                            <!-- Caso não haja histórico de medidas -->
-                            {% else %}
-                                <tr>
-                                    <td colspan="3">Nenhuma medida registrada ainda.</td>
-                                </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
-                    <!-- Adicionar gráfico de peso -->
-                    <canvas id="graficoPeso" width="400" height="300"></canvas>
-                    <!-- Legenda de cores -->
-                    <div id="legendaCores"></div>
-                </div>
-                <div class="card-content">
-                    <p><strong> Esta página mostra sua evolução na academia, exibindo medidas corporais com indicadores visuais intuitivos para identificar ganhos ou perdas entre as últimas atualizações.</strong></p>
-                    </div>
-            </div>
-        </div>
-        
-        <!-- Importar script do Chart.js -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var historico_medidas_peso = {% if historico_medidas_peso %}{{ historico_medidas_peso | tojson | safe }}{% else %}[]{% endif %};
-                var historico_depois = {% if historico_depois %}{{ historico_depois | tojson | safe }}{% else %}[]{% endif %};
-            
-                // Verificar se há dados disponíveis
-                if (historico_medidas_peso.length > 0 && historico_depois.length > 0) {
-                    // Obter a última atualização
-                    var medidasAntes = historico_medidas_peso[historico_medidas_peso.length - 1];
-                    var medidasDepois = historico_depois[0];
-            
-                    var ctxPeso = document.getElementById('graficoPeso').getContext('2d');
-            
-                    var calcularDiferenca = function (antes, depois) {
-                        if (isNaN(antes) || isNaN(depois)) {
-                            return 0;
-                        }
-            
-                        return depois - antes;
-                    };
-            
-                    var labels = ['Peso', 'Ombro', 'Tórax', 'Braço Direito', 'Braço Esquerdo', 'Antebraço Direito', 'Antebraço Esquerdo', 'Cintura', 'abdômen', 'Quadril', 'Coxa Direita', 'Coxa Esquerda', 'Panturrilha Direita', 'Panturrilha Esquerda'];
-                    var dadosAntes = [medidasAntes['peso'], medidasAntes['ombro'], medidasAntes['torax'], medidasAntes['braco_d'], medidasAntes['braco_e'], medidasAntes['ant_d'], medidasAntes['ant_e'], medidasAntes['cintura'], medidasAntes['abdome'], medidasAntes['quadril'], medidasAntes['coxa_d'], medidasAntes['coxa_e'], medidasAntes['pant_d'], medidasAntes['pant_e']];
-                    var dadosDepois = [medidasDepois['peso'], medidasDepois['ombro'], medidasDepois['torax'], medidasDepois['braco_d'], medidasDepois['braco_e'], medidasDepois['ant_d'], medidasDepois['ant_e'], medidasDepois['cintura'], medidasDepois['abdome'], medidasDepois['quadril'], medidasDepois['coxa_d'], medidasDepois['coxa_e'], medidasDepois['pant_d'], medidasDepois['pant_e']];
-            
-                    // Remover as medidas de data
-                    var medidasExcluidas = ['data_atualizacao', 'data_entrada'];
-            
-                    // Filtrar as medidas indesejadas
-                    labels = labels.filter(function (label) {
-                        return !medidasExcluidas.includes(label.toLowerCase());
-                    });
-            
-                    dadosAntes = dadosAntes.filter(function (dado, index) {
-                        return !medidasExcluidas.includes(labels[index].toLowerCase());
-                    });
-            
-                    dadosDepois = dadosDepois.filter(function (dado, index) {
-                        return !medidasExcluidas.includes(labels[index].toLowerCase());
-                    });
-            
-                    var obterCoresFundo = function (antes, depois) {
-                        var cores = {};
-                        antes.forEach(function (valor, index) {
-                            var diferenca = calcularDiferenca(valor, depois[index]);
-                            if (diferenca > 0) {
-                                cores[labels[index] + '_antes'] = '#103778'; // Cinza para ganho
-                                cores[labels[index] + '_depois'] = '#04D939'; // Ganho (verde)
-                            } else if (diferenca < 0) {
-                                cores[labels[index] + '_antes'] = '#103778'; // Cinza para perda
-                                cores[labels[index] + '_depois'] = '#F24405'; // Perda (vermelho)
-                            } else {
-                                cores[labels[index] + '_antes'] = '#103778'; // Cinza para nenhum ganho
-                                cores[labels[index] + '_depois'] = '#F0941F'; // Nenhum ganho (laranja)
-                            }
-                        });
-                        return cores;
-                    };
-            
-                    var data = {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: 'Antes',
-                                backgroundColor: function (context) {
-                                    var cores = obterCoresFundo(dadosAntes, dadosDepois);
-                                    return Object.values(cores).filter(function (_, index) {
-                                        return index % 2 === 0; // Pegar apenas as cores "antes"
-                                    });
-                                },
-                                borderColor: '#151F30',
-                                borderWidth: 1,
-                                data: dadosAntes
-                            },
-                            {
-                                label: 'Depois',
-                                backgroundColor: function (context) {
-                                    var cores = obterCoresFundo(dadosAntes, dadosDepois);
-                                    return Object.values(cores).filter(function (_, index) {
-                                        return index % 2 !== 0; // Pegar apenas as cores "depois"
-                                    });
-                                },
-                                borderColor: '#151F30',
-                                borderWidth: 1,
-                                data: dadosDepois
-                            }
-                        ]
-                    };
-            
-                    var options = {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    };
-            
-                    var graficoPeso = new Chart(ctxPeso, {
-                        type: 'bar',
-                        data: data,
-                        options: options
-                    });
-                } 
-              
-                 else {
-                    // Se não houver dados disponíveis, exiba uma mensagem ou faça o tratamento apropriado
-                    console.log('Sem dados disponíveis para exibir o gráfico.');
-                }
-            });
-                var legendaCores = document.getElementById('legendaCores');
-                var coresExplicacao = '<strong>Legenda de Cores:</strong><br>' +
-                    '<span style="color: #151F30;">▮</span> Antes (Azul)<br>' +
-                    '<span style="color: #04D939;">▮</span> Ganho (verde)<br>' +
-                    '<span style="color: #F24405;">▮</span> Perda (vermelho)<br>' +
-                    '<span style="color: #F0941F;">▮</span> Nenhum ganho (laranja)';
-                legendaCores.innerHTML = coresExplicacao;
-        </script>
-        
-    </div>
-  </div>
-  
-  
-
-  <footer class="page-footer center social-colored ">
-    <div class="container footer-content">
       <div class="row">
-        <div class="">
-          <h5 class="logo">Redes Sociais</h5>
+        <div class="col s12 pad-0">
+            <div class="table-responsive">
+                <br>
+                <table class="table table-bordered">
+                    <!-- Cabeçalho da tabela -->
+                    <thead>
+                        <tr>
+                            <th scope="col">Medidas</th>
+                            <th scope="col">
+                                Antes
+                                <div id="antesData" class="data-date"></div>
+                               <button id="prevDate" class="btn btn-secondary">Anterior</button>
+                            </th>
+                            <th scope="col">
+                                Depois
+                                <div id="depoisData" class="data-date"></div>
+                                <button id="nextDate" class="btn btn-secondary">Próxima</button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <!-- Corpo da tabela -->
+                    <tbody id="medidasTableBody">
+                        <!-- As linhas serão preenchidas dinamicamente com JavaScript -->
+                    </tbody>
+                </table>
+                <!-- Adicionar gráfico de peso -->
+                <canvas id="graficoPeso" width="400" height="300"></canvas>
+                <!-- Legenda de cores -->
+                <div id="legendaCores"></div>
             </div>
-        <div class="link-wrap">
-
-          <ul class="social-wrap">
-            <li class="social">
-              <a class="social-link" href="https://www.instagram.com/academiainnovare/" target="_blank">
-                <i class="mdi mdi-instagram"></i>
-              </a>      
-              <a class="social-link" href="https://wa.me/558481544585" target="_blank">
-                <i class="mdi mdi-whatsapp"></i>
-              </a>        
-            </li>
-          </ul>
+            <div class="card-content">
+                <p><strong>Esta página mostra sua evolução na academia, exibindo medidas corporais com indicadores visuais intuitivos para identificar ganhos ou perdas entre as últimas atualizações.</strong></p>
+            </div>
         </div>
-      </div>
     </div>
-
-   <div class="footer-copyright">
-      <div class="container">
-        &copy; Krypta <a class="" href="#">Innovare</a>. Todos os direitos reservados.
-      </div>
-   </div>
-  </footer>
-
-  <!-- <div class="backtotop">
-    <a class="btn-floating btn primary-bg">
-      <i class="mdi mdi-chevron-up"></i>
-    </a>
-  </div> -->
 </div>
+
+<!-- Importar script do Chart.js -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      var historicoMedidas = {% if medidas %}{{ medidas | tojson | safe }}{% else %}[]{% endif %};
+
+      // Função para formatar data
+      function formatarData(data) {
+          var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+          return new Date(data).toLocaleDateString('pt-BR', options);
+      }
+
+      // Dicionário para nomes das medidas
+      var nomesMedidas = {
+          'peso': 'Peso',
+          'ombro': 'Ombro',
+          'torax': 'Tórax',
+          'braco_d': 'Braço Direito',
+          'braco_e': 'Braço Esquerdo',
+          'ant_d': 'Antebraço Direito',
+          'ant_e': 'Antebraço Esquerdo',
+          'cintura': 'Cintura',
+          'abdome': 'abdômen',
+          'quadril': 'Quadril',
+          'coxa_d': 'Coxa Direita',
+          'coxa_e': 'Coxa Esquerda',
+          'pant_d': 'Panturrilha Direita',
+          'pant_e': 'Panturrilha Esquerda'
+      };
+
+      // Função para calcular a diferença entre dois valores
+      function calcularDiferenca(antes, depois) {
+          return depois - antes;
+      }
+
+      var ctxPeso = document.getElementById('graficoPeso').getContext('2d');
+      var graficoPeso = new Chart(ctxPeso, {
+          type: 'bar',
+          data: {
+              labels: Object.values(nomesMedidas),
+              datasets: [
+                  {
+                      label: 'Antes',
+                      backgroundColor: '#103778',
+                      borderColor: '#151F30',
+                      borderWidth: 1,
+                      data: []
+                  },
+                  {
+                      label: 'Depois',
+                      backgroundColor: [],
+                      borderColor: '#151F30',
+                      borderWidth: 1,
+                      data: []
+                  }
+              ]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      min: 0
+                  }
+              }
+          }
+      });
+
+      function atualizarTabelaEChart(dataIndex) {
+          var depoisData = historicoMedidas[dataIndex];
+          var antesData = historicoMedidas[dataIndex + 1] || {};
+
+          var tabelaBody = document.getElementById('medidasTableBody');
+          var antesDataDiv = document.getElementById('antesData');
+          var depoisDataDiv = document.getElementById('depoisData');
+
+          tabelaBody.innerHTML = '';
+
+          var medidas = Object.keys(nomesMedidas);
+
+          var dadosAntes = [];
+          var dadosDepois = [];
+          var coresGanho = [];
+          var coresGanhoGrafico = [];
+
+          medidas.forEach(function(medida, index) {
+              var depoisValor = depoisData ? depoisData[medida] : 0;
+              var antesValor = antesData ? antesData[medida] : 0;
+
+              dadosAntes.push(antesValor);
+              dadosDepois.push(depoisValor);
+
+              var diferenca = calcularDiferenca(antesValor, depoisValor);
+              var ganho = depoisValor !== 0 && antesValor !== 0 ? (depoisValor - antesValor).toFixed(2) : '0.0';
+
+              if (diferenca > 0) {
+                  coresGanho.push('#04D939'); // Verde para ganho
+                  coresGanhoGrafico.push('#04D939'); // Verde para o gráfico 'Depois'
+              } else if (diferenca < 0) {
+                  coresGanho.push('#F24405'); // Vermelho para perda
+                  coresGanhoGrafico.push('#F24405'); // Vermelho para o gráfico 'Depois'
+              } else {
+                  coresGanho.push('#F0941F'); // Laranja para nenhum ganho
+                  coresGanhoGrafico.push('#F0941F'); // Laranja para o gráfico 'Depois'
+              }
+
+              tabelaBody.innerHTML += `
+                  <tr>
+                      <th scope="row">${nomesMedidas[medida]}</th>
+                      <td>${antesValor}</td>
+                      <td>${depoisValor}</td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td></td>
+                      <td style="color: ${coresGanho[index]};">${ganho > 0 ? '+ ' + ganho : (ganho < 0 ? '- ' + Math.abs(ganho) : '0.0')}</td>
+                  </tr>
+              `;
+          });
+
+          // Atualizar as datas formatadas no topo
+          antesDataDiv.textContent = antesData ? formatarData(antesData['data_atualizacao']) : 'N/A';
+          depoisDataDiv.textContent = depoisData ? formatarData(depoisData['data_atualizacao']) : 'N/A';
+
+          // Atualizar o gráfico
+          graficoPeso.data.datasets[0].data = dadosAntes;
+          graficoPeso.data.datasets[1].data = dadosDepois;
+          graficoPeso.data.datasets[1].backgroundColor = coresGanhoGrafico;
+          graficoPeso.update();
+      }
+
+      var currentDateIndex = 0;
+
+      // Inicializa a tabela e o gráfico
+      atualizarTabelaEChart(currentDateIndex);
+
+      // Configura navegação entre datas
+      document.getElementById('prevDate').addEventListener('click', function() {
+          if (currentDateIndex > 0) {
+              currentDateIndex--;
+              atualizarTabelaEChart(currentDateIndex);
+          }
+      });
+
+      document.getElementById('nextDate').addEventListener('click', function() {
+          if (currentDateIndex < historicoMedidas.length - 1) {
+              currentDateIndex++;
+              atualizarTabelaEChart(currentDateIndex);
+          }
+      });
+
+      // Configuração da legenda de cores
+      var legendaCores = document.getElementById('legendaCores');
+      var coresExplicacao = '<strong>Legenda de Cores:</strong><br>' +
+          '<span style="color: #04D939;">▮</span> Ganho (verde)<br>' +
+          '<span style="color: #F24405;">▮</span> Perda (vermelho)<br>' +
+          '<span style="color: #F0941F;">▮</span> Nenhum ganho (laranja)';
+      legendaCores.innerHTML = coresExplicacao;
+  });
+</script>
+
+
+
+  
 <!--.content-area
 <div class="footer-menu circular">
  

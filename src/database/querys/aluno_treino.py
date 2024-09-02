@@ -1,10 +1,11 @@
 from typing import List
-from src.database.models import Aluno, ExerciciosAluno
+from src.database.models import Aluno, ExerciciosAluno, Medida, Category, Exercise
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.database.config import db_connector, DBConnectionHandler
 from sqlalchemy.orm import joinedload, load_only
 from datetime import datetime, timedelta
 from flask import jsonify
+from sqlalchemy.orm import sessionmaker
 
 class Querys():
    
@@ -28,58 +29,122 @@ class Querys():
         return session.query(Aluno).all()
     
     def mostrar_detalhes(self, aluno_id):
-        return (
+        aluno = (
             self.session.query(Aluno)
-            .options(joinedload(Aluno.exercicios))  # Carregamento da relação exercicios
+            .options(
+                joinedload(Aluno.exercicios),
+                joinedload(Aluno.medidas),
+            )
             .filter_by(id=aluno_id)
             .first()
         )
-    
-    def deletar(self, aluno_id):
-    
-        # Restante do código...
-        aluno = (
-            self.session.query(Aluno)
-            .options(joinedload(Aluno.exercicios))
-            .filter_by(id=aluno_id)
-            .first()
-        )
-
+        
         if aluno:
-            self.session.query(ExerciciosAluno).filter_by(aluno_id=aluno.id).delete()
-            self.session.delete(aluno)
-            self.session.commit()
-
-            return True
-        else:
-            return False
-
-    def buscar_exercicios_por_nome(self, nome_aluno):
-        aluno = (
-            self.session.query(Aluno)
-            .filter(Aluno.nome == nome_aluno)
-            .first()
-        )
-
-        if aluno:
-           
-            return aluno
+           return aluno
         else:
             return None
+        
+    def verificar_credenciais(self, login, senha):
+            aluno = (
+                self.session.query(Aluno)
+                .filter_by(login=login, senha=senha)  
+                .first()
+            )
 
-    def get_exercicios_by_aluno(self, aluno_id):
-        exercicios = (
-        self.session.query(ExerciciosAluno)
-        .filter(ExerciciosAluno.aluno_id == aluno_id)
-        .all()
-        )
-        return exercicios
+            if aluno:
+                return aluno, aluno.permissao
 
+            return None, None
+
+    def _converter_datas_para_string(self, historico):
+            historico_str = []
+            for medida in historico:
+                medida_str = {key: value.strftime('%Y-%m-%d') if isinstance(value, datetime) else value for key, value in medida.items()}
+                historico_str.append(medida_str)
+            return historico_str
+
+    def verificar_falta_tres_dias(self, aluno_id):
+            aluno = (
+                self.session.query(Aluno)
+                .filter_by(id=aluno_id)
+                .first()
+            )
+
+            if aluno and aluno.data_pagamento:
+                # Calcular a data de vencimento do próximo pagamento (30 dias após o último pagamento)
+                data_pagamento_proximo = aluno.data_pagamento + timedelta(days=30)
+
+                # Verificar se o mês da próxima data de pagamento é diferente do mês atual
+                if aluno.data_pagamento.month == data_pagamento_proximo.month:
+                    data_pagamento_proximo += timedelta(days=1)
+
+                # Calcular a diferença de dias entre a data de vencimento e a data atual
+                diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
+
+            
+                if diferenca_dias == -1:
+                    return "Seu pagamento vence hoje! Efetue o pagamento e continue acessando os treinos."
+                else:
+                    return None 
+            return None
+        
+    def criar_objeto_exercicio(self, aluno_id):
+            exercicios = (
+                self.session.query(ExerciciosAluno)
+                .filter(ExerciciosAluno.aluno_id == aluno_id)
+                .all()
+            )
+            aluno = aluno_id
+            exercicios_formatados = []
+            for index, exercicio in enumerate(exercicios):
+                exercicio_dict = {
+                    'id': exercicio.id,  
+                    'tipoTreino': exercicio.tipoTreino,
+                    'exercicio': exercicio.exercicio,
+                    'serie': exercicio.serie,
+                    'repeticao': exercicio.repeticao,
+                    'descanso': exercicio.descanso,
+                    'carga': exercicio.carga
+                }
+                exercicios_formatados.append(exercicio_dict)
+
+            return exercicios_formatados
+    
+  
+# \\\\\\\\ /////////
+
+# Inicio cronometro e marcações
+
+
+# Deletar objetos no sistema
     def deletar_exercicio(self, exercicio_id):
+            try:
+                # Obtém o exercício pelo seu id
+                exercicio = (
+                    self.session.query(ExerciciosAluno)
+                    .filter_by(id=exercicio_id)
+                    .first()
+                )
+
+                if exercicio:
+                    # Exclui o exercício diretamente do banco de dados
+                    self.session.delete(exercicio)
+                    self.session.commit()
+
+                    return True
+
+                else:
+                    return False  # O exercício não foi encontrado
+
+            except Exception as e:
+                print(f'Erro ao excluir exercício: {str(e)}')
+                return False
+
+    def deletar_exercicio_cat(self, exercicio_id):
         try:
             # Obtém o exercício pelo seu id
             exercicio = (
-                self.session.query(ExerciciosAluno)
+                self.session.query(Exercise)
                 .filter_by(id=exercicio_id)
                 .first()
             )
@@ -98,6 +163,84 @@ class Querys():
             print(f'Erro ao excluir exercício: {str(e)}')
             return False
 
+    def deletar(self, aluno_id):
+    
+        # Restante do código...
+        aluno = (
+            self.session.query(Aluno)
+            .options(joinedload(Aluno.exercicios))
+            .options(joinedload(Aluno.medidas))
+            .filter_by(id=aluno_id)
+            .first()
+        )
+
+        if aluno:
+            self.session.query(ExerciciosAluno).filter_by(aluno_id=aluno.id).delete()
+            self.session.query(Medida).filter_by(aluno_id=aluno.id).delete()
+            self.session.delete(aluno)
+            self.session.commit()
+
+            return True
+        else:
+            return False
+
+    def deletar_categoria(self, categoria_id):
+        try:
+            # Obtém a categoria pelo seu id
+            categoria = (
+                self.session.query(Category)
+                .filter_by(id=categoria_id)
+                .first()
+            )
+
+            if categoria:
+                # Exclui a categoria juntamente com todos os exercícios associados
+                self.session.delete(categoria)
+                self.session.commit()
+
+                return True
+
+            else:
+                return False  # A categoria não foi encontrada
+
+        except Exception as e:
+            print(f'Erro ao excluir categoria: {str(e)}')
+            self.session.rollback()  # Reverte a transação em caso de erro
+            return False
+
+
+
+# Editar elementos no sistema 
+    def editar_exercicio_cat(self, exercicio_id, novos_dados):
+        try:
+            # Obtém o exercício pelo seu id
+            exercicio = (
+                self.session.query(Exercise)
+                .filter_by(id=exercicio_id)
+                .first()
+            )
+        
+            if exercicio:
+                # Atualiza os dados do exercício com base nos valores fornecidos
+                exercicio.tipoTreino = novos_dados.get('tipoTreino', exercicio.tipoTreino)
+                exercicio.exercicio = novos_dados.get('exercicio', exercicio.exercicio)
+                exercicio.serie = novos_dados.get('serie', exercicio.serie)
+                exercicio.repeticao = novos_dados.get('repeticao', exercicio.repeticao)
+                exercicio.descanso = novos_dados.get('descanso', exercicio.descanso)
+                exercicio.carga = novos_dados.get('carga', exercicio.carga)
+
+                # Commit para salvar as alterações no banco de dados
+                self.session.commit()
+
+                return {'mensagem': 'Exercício editado com sucesso', 'status_code': 200}
+
+            else:
+                return {'mensagem': 'Exercício não encontrado', 'status_code': 404}
+
+        except Exception as e:
+            print(f'Erro ao editar exercício: {str(e)}')
+            return {'mensagem': 'Erro ao editar exercício. Consulte os logs para mais informações.', 'status_code': 500}
+
     def editar_exercicio(self, exercicio_id, novos_dados):
         try:
             # Obtém o exercício pelo seu id
@@ -106,9 +249,8 @@ class Querys():
                 .filter_by(id=exercicio_id)
                 .first()
             )
-            print(exercicio)
+           
             if exercicio:
-               
                 exercicio.tipoTreino = novos_dados.get('tipoTreino', exercicio.tipoTreino)
                 exercicio.exercicio = novos_dados.get('exercicio', exercicio.exercicio)
                 exercicio.serie = novos_dados.get('serie', exercicio.serie)
@@ -128,18 +270,435 @@ class Querys():
             print(f'Erro ao editar exercício: {str(e)}')
             return {'mensagem': 'Erro ao editar exercício. Consulte os logs para mais informações.', 'status_code': 500}
             
-    def verificar_credenciais(self, login, senha):
-        aluno = (
-            self.session.query(Aluno)
-            .filter_by(login=login, senha=senha)  
-            .first()
+
+
+# Buscas No Sistema
+    def get_exercicios_by_aluno(self, aluno_id):
+        exercicios = (
+        self.session.query(ExerciciosAluno)
+        .filter(ExerciciosAluno.aluno_id == aluno_id)
+        .all()
         )
+        return exercicios
+
+    def get_ultima_medida(self, aluno_id):
+        return self.session.query(Medida).filter_by(aluno_id=aluno_id).order_by(Medida.data_atualizacao.desc()).first()
+
+    def get_medidas_por_aluno(self, aluno_id):
+        medidas = self.session.query(Medida).filter_by(aluno_id=aluno_id).order_by(Medida.data_atualizacao.desc()).all()
+        return [{
+            'peso': m.peso,
+            'ombro': m.ombro,
+            'torax': m.torax,
+            'braco_d': m.braco_d,
+            'braco_e': m.braco_e,
+            'ant_d': m.ant_d,
+            'ant_e': m.ant_e,
+            'cintura': m.cintura,
+            'abdome': m.abdome,
+            'quadril': m.quadril,
+            'coxa_d': m.coxa_d,
+            'coxa_e': m.coxa_e,
+            'pant_d': m.pant_d,
+            'pant_e': m.pant_e,
+            'data_atualizacao': m.data_atualizacao
+        } for m in medidas]
+    
+    def buscar_exercicios_por_nome(self, nome_aluno, filtro_dias):
+        try:
+            # Busca o aluno pelo nome
+            aluno = (
+                self.session.query(Aluno)
+                .filter(Aluno.nome == nome_aluno)
+                .first()
+            )
+
+            if aluno:
+                # Consulta os exercícios associados ao aluno
+                query = self.session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id == aluno.id)
+                
+                # Aplica filtro baseado em filtro_dias, se necessário
+                if filtro_dias and filtro_dias.lower() != 'todos':
+                    # print(f"Aplicando filtro de dias: {filtro_dias}")
+                    query = query.filter(ExerciciosAluno.tipoTreino == filtro_dias)
+                
+                # Executa a consulta
+                exercicios = query.all()
+           
+                
+                # Cria uma lista de dicionários com os dados dos exercícios
+                exercicios_data = [
+                    {
+                        'id': e.id,
+                        'tipoTreino': e.tipoTreino,
+                        'exercicio': e.exercicio,
+                        'serie': e.serie,
+                        'repeticao': e.repeticao,
+                        'descanso': e.descanso,
+                        'carga': e.carga
+                    }
+                    for e in exercicios
+                ]
+                # print(exercicios_data)
+                return exercicios_data
+            else:
+                print("Aluno não encontrado")
+                return None
+        except Exception as e:
+            print(f"Erro ao buscar exercícios: {e}")
+            return None
+
+
+    def obter_categorias(self):
+            try:
+                # Query para buscar todas as categorias
+                categorias = self.session.query(Category).all()
+                return categorias
+            except Exception as e:
+                print(f"Erro ao buscar categorias: {e}")
+                return []
+
+    def obter_categoria_por_id(self, categoria_id):
+            """
+            Obtém o nome de uma categoria específica pelo seu ID.
+            
+            :param categoria_id: ID da categoria.
+            :return: Nome da categoria como string, ou None se a categoria não for encontrada.
+            """
+            try:
+                categoria = self.session.query(Category).filter_by(id=categoria_id).one_or_none()
+                if categoria:
+                    return categoria.name  # Retorna o nome da categoria
+                return None
+            except Exception as e:
+                print(f"Erro ao obter categoria com ID {categoria_id}: {e}")
+                return None
+
+    def obter_exercicios_por_categoria(self, categoria_id):
+            """
+            Obtém todos os exercícios associados a uma categoria específica.
+
+            :param categoria_id: ID da categoria.
+            :return: Lista de objetos Exercise.
+            """
+            try:
+                return self.session.query(Exercise).filter_by(category_id=categoria_id).all()
+            except Exception as e:
+                print(f"Erro ao obter exercícios para a categoria {categoria_id}: {e}")
+                return []
+
+
+
+# Atualizaçoes
+    def atualizardados(self, aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao):
+            # Verificar se o aluno existe
+            aluno = self.session.query(Aluno).filter_by(id=aluno_id).first()
+            
+            if aluno:
+                # Restringir a atualização apenas para medidas válidas
+                if nome is not None and idade is not None:
+                    # Atualizar os atributos diretamente no objeto existente
+                    aluno.nome = nome
+                    aluno.idade = idade
+                    aluno.observacao = observacao
+                    aluno.telefone = telefone
+                    aluno.login = login
+                    aluno.senha = senha
+                    aluno.data_pagamento = datetime.strptime(data_pagamento, '%d/%m/%Y') if data_pagamento else None
+                    aluno.permissao = permissao
+
+                    # Commit apenas a atualização do aluno
+                    self.session.commit()
+                    return jsonify({'success': True}), 200
+                
+                else:
+                    # Lógica para lidar com medidas inválidas
+                    return jsonify({'error': 'Dados inválidos'}), 400
+            else:
+                # Lógica para lidar com o aluno não encontrado
+                return jsonify({'error': 'Aluno não encontrado'}), 404
+
+    def atualizar_exercicios_filtry(self, aluno_id, exercicios_filtrados):
+            try:
+                # Buscar o aluno pelo ID
+                aluno = self.session.query(Aluno).get(aluno_id)
+                if not aluno:
+                    print("Aluno não encontrado")
+                    return False
+                
+                # Buscar exercícios atuais do aluno
+                exercicios_atual = self.session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id == aluno_id).all()
+               
+                # Criar um dicionário para armazenar exercícios filtrados por tipoTreino
+                exercicios_filtrados_dict = {}
+                for exercicio in exercicios_filtrados:
+                    tipoTreino = exercicio.get('tipoTreino')
+                    if tipoTreino not in exercicios_filtrados_dict:
+                        exercicios_filtrados_dict[tipoTreino] = {}
+                    exercicios_filtrados_dict[tipoTreino][exercicio.get('id')] = exercicio
+
+                # Criar um dicionário para armazenar os IDs de exercícios atuais por tipoTreino
+                exercicios_atual_dict = {}
+                for ex_atual in exercicios_atual:
+                    tipoTreino = ex_atual.tipoTreino
+                    if tipoTreino not in exercicios_atual_dict:
+                        exercicios_atual_dict[tipoTreino] = {}
+                    exercicios_atual_dict[tipoTreino][ex_atual.id] = ex_atual
+
+                # Adicionar ou atualizar exercícios filtrados
+                for tipoTreino, exercicios_filtrados_tipo in exercicios_filtrados_dict.items():
+                    # Verificar se há exercícios atuais para este tipoTreino
+                    exercicios_atual_tipo = exercicios_atual_dict.get(tipoTreino, {})
+                    
+                    # Atualizar ou adicionar exercícios
+                    for ex_id, exercicio in exercicios_filtrados_tipo.items():
+                        
+                        ex_atual = exercicios_atual_tipo.get(ex_id)
+                        if ex_atual:
+                            # Atualizar exercício existente
+                            ex_atual.tipoTreino = exercicio.get('tipoTreino')
+                            ex_atual.exercicio = exercicio.get('exercicio')
+                            ex_atual.serie = exercicio.get('serie')
+                            ex_atual.repeticao = exercicio.get('repeticao')
+                            ex_atual.descanso = exercicio.get('descanso')
+                            ex_atual.carga = exercicio.get('carga')
+                        else:
+                            # Adicionar novo exercício se não existir
+                            novo_exercicio = ExerciciosAluno(
+                                tipoTreino=exercicio.get('tipoTreino'),
+                                exercicio=exercicio.get('exercicio'),
+                                serie=exercicio.get('serie'),
+                                repeticao=exercicio.get('repeticao'),
+                                descanso=exercicio.get('descanso'),
+                                carga=exercicio.get('carga'),
+                                aluno_id=aluno_id
+                            )
+                            self.session.add(novo_exercicio)
+                    
+                    # Remover exercícios antigos que não estão mais na lista filtrada
+                    for ex_id, ex_atual in exercicios_atual_tipo.items():
+                        if ex_id not in exercicios_filtrados_tipo:
+                            self.session.delete(ex_atual)
+                
+                # Commit das mudanças
+                self.session.commit()
+                return True
+
+            except Exception as e:
+                print(f"Erro ao atualizar exercícios: {e}")
+                self.session.rollback()
+                return False
+
+    def atualizar_medidas(self, aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e):
+        aluno = self.session.query(Aluno).filter_by(id=aluno_id).first()
 
         if aluno:
-            return aluno, aluno.permissao
+            medida = Medida(
+                aluno_id=aluno_id,
+                peso=peso,
+                ombro=ombro,
+                torax=torax,
+                braco_d=braco_d,
+                braco_e=braco_e,
+                ant_d=ant_d,
+                ant_e=ant_e,
+                cintura=cintura,
+                abdome=abdome,
+                quadril=quadril,
+                coxa_d=coxa_d,
+                coxa_e=coxa_e,
+                pant_d=pant_d,
+                pant_e=pant_e,
+                data_atualizacao=datetime.now()
+            
+            )
 
-        return None, None
 
+            self.session.add(medida)
+            self.session.commit()
+        else:
+            raise ValueError(f'Aluno com id {aluno_id} não encontrado')
+
+    def atualizar_exercicios(self, aluno_id, exercicios):
+            try:
+                aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
+
+                # Limpa os exercícios existentes
+                aluno.exercicios.clear()
+
+                # Adiciona os novos exercícios
+                for exercicio_info in exercicios:
+                    exercicio = ExerciciosAluno(
+                        tipoTreino=exercicio_info['tipoTreino'],
+                        exercicio=exercicio_info['exercicio'],
+                        serie=exercicio_info['serie'],
+                        repeticao=exercicio_info['repeticao'],
+                        descanso=exercicio_info['descanso'],
+                        carga=exercicio_info['carga']
+                    )
+                    aluno.exercicios.append(exercicio)
+
+                # Commit fora do loop para melhor desempenho e lógica de transação
+                self.session.commit()
+
+                return True  
+
+            except Exception as e:
+                print(f'Erro ao atualizar exercícios: {str(e)}')
+                self.session.rollback()  
+                return False 
+        
+    def atualizar_exercicios_cat(self, nome_aluno, filtro_dias, categoriaId):
+        try:
+            # Buscar o aluno pelo nome
+            aluno = self.session.query(Aluno).filter(Aluno.nome == nome_aluno).first()
+            if not aluno:
+                print("Aluno não encontrado")
+                return False
+            
+            # Buscar os exercícios associados ao aluno
+            query = self.session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id == aluno.id)
+            
+            # Aplica o filtro baseado em filtro_dias
+            if filtro_dias and filtro_dias.lower() != 'todos':
+                query = query.filter(ExerciciosAluno.tipoTreino == filtro_dias)
+            
+            exercicios_aluno = query.all()
+            
+            # Criar um dicionário para armazenar exercícios filtrados por ID
+            exercicios_aluno_dict = {e.id: e for e in exercicios_aluno}
+            
+            # Buscar os exercícios atuais da categoria
+            exercicios_categoria = (
+                self.session.query(Exercise)
+                .filter(Exercise.category_id == categoriaId)
+                .all()
+            )
+            
+            # Criar um dicionário para armazenar os exercícios da categoria por ID
+            exercicios_categoria_dict = {e.id: e for e in exercicios_categoria}
+
+            if filtro_dias.lower() == 'todos':
+                # Excluir todos os exercícios atuais da categoria
+                for ex_atual in exercicios_categoria:
+                    self.session.delete(ex_atual)
+                
+                # Adicionar todos os exercícios filtrados do aluno à categoria
+                for exercicio in exercicios_aluno:
+                    novo_exercicio = Exercise(
+                        tipoTreino=exercicio.tipoTreino,
+                        exercicio=exercicio.exercicio,
+                        serie=exercicio.serie,
+                        repeticao=exercicio.repeticao,
+                        descanso=exercicio.descanso,
+                        carga=exercicio.carga,
+                        category_id=categoriaId
+                    )
+                    self.session.add(novo_exercicio)
+            else:
+                # Remover apenas os exercícios da categoria que correspondem ao filtro
+                for ex_atual in exercicios_categoria:
+                    if ex_atual.tipoTreino == filtro_dias:
+                        self.session.delete(ex_atual)
+
+                # Adicionar ou atualizar exercícios da categoria conforme o filtro
+                for ex_id, exercicio in exercicios_aluno_dict.items():
+                    if ex_id in exercicios_categoria_dict:
+                        # Atualizar exercício existente na categoria
+                        ex_atual = exercicios_categoria_dict[ex_id]
+                        ex_atual.tipoTreino = exercicio.tipoTreino
+                        ex_atual.exercicio = exercicio.exercicio
+                        ex_atual.serie = exercicio.serie
+                        ex_atual.repeticao = exercicio.repeticao
+                        ex_atual.descanso = exercicio.descanso
+                        ex_atual.carga = exercicio.carga
+                    else:
+                        # Adicionar novo exercício à categoria
+                        novo_exercicio = Exercise(
+                            tipoTreino=exercicio.tipoTreino,
+                            exercicio=exercicio.exercicio,
+                            serie=exercicio.serie,
+                            repeticao=exercicio.repeticao,
+                            descanso=exercicio.descanso,
+                            carga=exercicio.carga,
+                            category_id=categoriaId
+                        )
+                        self.session.add(novo_exercicio)
+
+            # Commit das mudanças
+            self.session.commit()
+            return True
+
+        except Exception as e:
+            print(f"Erro ao atualizar exercícios: {e}")
+            self.session.rollback()
+            return False
+
+    def atualizar_exercicios_aluno(self, nome_aluno, filtro_dias, categoriaId):
+        try:
+            # Buscar o aluno pelo nome
+            aluno = self.session.query(Aluno).filter(Aluno.nome == nome_aluno).first()
+            if not aluno:
+                print("Aluno não encontrado")
+                return False
+
+            # Buscar os exercícios da categoria selecionada
+            exercicios_categoria = (
+                self.session.query(Exercise)
+                .filter(Exercise.category_id == categoriaId)
+                .all()
+            )
+
+            if filtro_dias.lower() == 'todos':
+                # Deletar todos os exercícios do aluno
+                self.session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id == aluno.id).delete()
+                
+                # Adicionar todos os exercícios da categoria ao aluno
+                for exercicio in exercicios_categoria:
+                    novo_exercicio = ExerciciosAluno(
+                        aluno_id=aluno.id,
+                        tipoTreino=exercicio.tipoTreino,
+                        exercicio=exercicio.exercicio,
+                        serie=exercicio.serie,
+                        repeticao=exercicio.repeticao,
+                        descanso=exercicio.descanso,
+                        carga=exercicio.carga,
+                    )
+                    self.session.add(novo_exercicio)
+            else:
+                # Deletar os exercícios do aluno que correspondem ao filtro
+                self.session.query(ExerciciosAluno).filter(
+                    ExerciciosAluno.aluno_id == aluno.id,
+                    ExerciciosAluno.tipoTreino == filtro_dias
+                ).delete()
+
+                # Adicionar novos exercícios da categoria conforme o filtro
+                for exercicio in exercicios_categoria:
+                    if exercicio.tipoTreino == filtro_dias:
+                        novo_exercicio = ExerciciosAluno(
+                            aluno_id=aluno.id,
+                            tipoTreino=exercicio.tipoTreino,
+                            exercicio=exercicio.exercicio,
+                            serie=exercicio.serie,
+                            repeticao=exercicio.repeticao,
+                            descanso=exercicio.descanso,
+                            carga=exercicio.carga,
+                        )
+                        self.session.add(novo_exercicio)
+
+            # Commit das mudanças
+            self.session.commit()
+            return True
+
+        except Exception as e:
+            print(f"Erro ao atualizar exercícios: {e}")
+            self.session.rollback()
+            return False
+
+    
+
+
+# Cadastramentos, adicionar 
     def cadastrar_ex(self, alunoid, tipotreino, exercicio, serie, repeticao, descanso, carga):
         exercicio = ExerciciosAluno(
             aluno_id=alunoid, tipoTreino=tipotreino, exercicio=exercicio, serie=serie, repeticao=repeticao, descanso=descanso,
@@ -151,214 +710,123 @@ class Querys():
         return exercicio
 
     def cadastrar_aluno(self, nome, idade, sexo, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, observacao, telefone, login, senha, data_entrada, data_pagamento, jatreino, permissao, exercicios):
-        data_entrada = datetime.strptime(data_entrada, '%Y-%m-%d') if data_entrada else None
-        data_pagamento = datetime.strptime(data_pagamento, '%Y-%m-%d') if data_pagamento else None
-
-
-        # Configurando a data de pagamento para a data de entrada
-        if data_pagamento is None:
-            data_pagamento = data_entrada
-
-        aluno = Aluno(
-            nome=nome, idade=idade, sexo=sexo, peso=peso,
-            ombro=ombro,torax=torax, braco_d=braco_d, braco_e=braco_e, ant_d=ant_d, ant_e=ant_e,cintura=cintura,
-            abdome=abdome, quadril=quadril, coxa_d=coxa_d, coxa_e=coxa_e, pant_d=pant_d, pant_e=pant_e,
-            observacao=observacao, telefone=telefone, login=login, senha=senha,
-            data_entrada=datetime.now(),
-            data_pagamento=data_pagamento,
-            data_atualizacao = datetime.now(),
-            jatreino=jatreino, permissao=permissao
-        )
-        
-     # Adiciona o aluno ao histórico antes de fazer o commit
-        historico_antes = aluno.medidas_historico()
-        aluno.historico_medidas_peso = self._converter_datas_para_string(historico_antes)
-        
-        self.session.add(aluno)
-
-        for exercicio in exercicios:
-            exercicio_aluno = ExerciciosAluno(
-                tipoTreino=exercicio.get('tipoTreino', ''),
-                exercicio=exercicio.get('exercicio', ''),
-                serie=exercicio.get('serie', ''),
-                repeticao=exercicio.get('repeticao', ''),
-                descanso=exercicio.get('descanso', ''),
-                carga=exercicio.get('carga', '')
-            )
-            aluno.exercicios.append(exercicio_aluno)
-        self.session.commit()
-        return aluno
-        
-    def atualizar_medidas(self, aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e):
-        aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
-        historico_antes = aluno.medidas_historico()
-
-        if aluno:
-            aluno_antes = Aluno()
-            aluno_antes.__dict__.update(aluno.__dict__)
-            aluno_antes.medidas_antes = historico_antes[:-1]
-          
-            # Restringir a atualização apenas para medidas válidas
-            if peso is not None and ombro is not None:
-                aluno.peso = peso
-                aluno.ombro = ombro
-                aluno.torax = torax
-                aluno.braco_d = braco_d
-                aluno.braco_e = braco_e
-                aluno.ant_d = ant_d
-                aluno.ant_e = ant_e
-                aluno.cintura = cintura
-                aluno.abdome = abdome
-                aluno.quadril = quadril
-                aluno.coxa_d = coxa_d
-                aluno.coxa_e = coxa_e
-                aluno.pant_d = pant_d
-                aluno.pant_e = pant_e
-                aluno.data_atualizacao = datetime.utcnow()
-
-                historico_antes = aluno_antes.medidas_historico()
-                historico_depois = aluno.medidas_historico()
-
-                historico_antes_str = self._converter_datas_para_string(historico_antes)
-                historico_depois_str = self._converter_datas_para_string(historico_depois)
-                aluno.historico_medidas_peso = historico_antes_str
-                self.session.commit()
-
-                return historico_antes_str, historico_depois_str
-            else:
-                # Lógica para lidar com medidas inválidas
-                return None, None
-        else:
-            # Lógica para lidar com o aluno não encontrado
-            return None, None
-
-    def _converter_datas_para_string(self, historico):
-        historico_str = []
-        for medida in historico:
-            medida_str = {key: value.strftime('%Y-%m-%d') if isinstance(value, datetime) else value for key, value in medida.items()}
-            historico_str.append(medida_str)
-        return historico_str
-
-    def verificar_falta_tres_dias(self, aluno_id):
-        aluno = (
-            self.session.query(Aluno)
-            .filter_by(id=aluno_id)
-            .first()
-        )
-
-        if aluno and aluno.data_pagamento:
-            # Calcular a data de vencimento do próximo pagamento (30 dias após o último pagamento)
-            data_pagamento_proximo = aluno.data_pagamento + timedelta(days=30)
-
-            # Verificar se o mês da próxima data de pagamento é diferente do mês atual
-            if aluno.data_pagamento.month == data_pagamento_proximo.month:
-                data_pagamento_proximo += timedelta(days=1)
-
-            # Calcular a diferença de dias entre a data de vencimento e a data atual
-            diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
-
-         
-            if diferenca_dias == -1:
-                return "Seu pagamento vence hoje! Efetue o pagamento e continue acessando os treinos."
-            else:
-                return None 
-        return None
-
-    def atualizar_exercicios(self, aluno_id, exercicios):
         try:
-            aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()
+            # Convertendo as datas para o formato correto
+            data_entrada = datetime.strptime(data_entrada, '%Y-%m-%d') if data_entrada else None
+            data_pagamento = datetime.strptime(data_pagamento, '%Y-%m-%d') if data_pagamento else None
 
-            # Limpa os exercícios existentes
-            aluno.exercicios.clear()
+            # Configurando a data de pagamento para a data de entrada, se necessário
+            if data_pagamento is None:
+                data_pagamento = data_entrada
 
-            # Adiciona os novos exercícios
-            for exercicio_info in exercicios:
-                exercicio = ExerciciosAluno(
-                    tipoTreino=exercicio_info['tipoTreino'],
-                    exercicio=exercicio_info['exercicio'],
-                    serie=exercicio_info['serie'],
-                    repeticao=exercicio_info['repeticao'],
-                    descanso=exercicio_info['descanso'],
-                    carga=exercicio_info['carga']
-                )
-                aluno.exercicios.append(exercicio)
+            # Criando o objeto Aluno
+            aluno = Aluno(
+                nome=nome, idade=idade, sexo=sexo,
+                observacao=observacao, telefone=telefone, 
+                login=login, senha=senha,
+                data_entrada=datetime.now(),
+                data_pagamento=data_pagamento,
+                data_atualizacao=datetime.now(),
+                jatreino=jatreino, permissao=permissao
+            )
 
-            # Commit fora do loop para melhor desempenho e lógica de transação
+            # Adicionando o aluno à sessão e comitando
+            self.session.add(aluno)
             self.session.commit()
 
-            return True  
+            # Recuperando o ID do aluno recém-criado
+            aluno_id = aluno.id
+
+            # Adicionando os exercícios do aluno
+            for exercicio in exercicios:
+                exercicio_aluno = ExerciciosAluno(
+                    tipoTreino=exercicio.get('tipoTreino', ''),
+                    exercicio=exercicio.get('exercicio', ''),
+                    serie=exercicio.get('serie', ''),
+                    repeticao=exercicio.get('repeticao', ''),
+                    descanso=exercicio.get('descanso', ''),
+                    carga=exercicio.get('carga', ''),
+                    aluno_id=aluno_id  # Associe o exercício ao aluno
+                )
+                self.session.add(exercicio_aluno)
+
+            # Criando o objeto Medida associado ao aluno
+            medida = Medida(
+                aluno_id=aluno_id,
+                peso=peso,
+                ombro=ombro, torax=torax, braco_d=braco_d, braco_e=braco_e, ant_d=ant_d, ant_e=ant_e,
+                cintura=cintura, abdome=abdome, quadril=quadril, coxa_d=coxa_d, coxa_e=coxa_e,data_atualizacao=datetime.now(),
+                pant_d=pant_d, pant_e=pant_e,
+            )
+
+            # Adicionando a medida à sessão
+            self.session.add(medida)
+            
+            # Comitando todas as alterações
+            self.session.commit()
+
+            return aluno
 
         except Exception as e:
-            print(f'Erro ao atualizar exercícios: {str(e)}')
-            self.session.rollback()  
-            return False 
-            
-    def criar_objeto_exercicio(self, aluno_id):
-        exercicios = (
-            self.session.query(ExerciciosAluno)
-            .filter(ExerciciosAluno.aluno_id == aluno_id)
-            .all()
-        )
-        aluno = aluno_id
-        exercicios_formatados = []
-        for index, exercicio in enumerate(exercicios):
-            exercicio_dict = {
-                'id': exercicio.id,  
-                'tipoTreino': exercicio.tipoTreino,
-                'exercicio': exercicio.exercicio,
-                'serie': exercicio.serie,
-                'repeticao': exercicio.repeticao,
-                'descanso': exercicio.descanso,
-                'carga': exercicio.carga
-            }
-            exercicios_formatados.append(exercicio_dict)
-
-        return exercicios_formatados
-
-        exercicios_list = []
-        exercicios_str = exercicios_str.strip("[]")  # Remove colchetes do início e do fim
-        exercicios_entries = exercicios_str.split(', ')
+            # Revertendo a sessão em caso de erro
+            self.session.rollback()
+            raise
         
-        for exercicio_entry in exercicios_entries:
-            dados_exercicio = exercicio_entry.split(' ')
-            exercicio_dict = {
-                'dia': dados_exercicio[0],
-                'exercicio': dados_exercicio[1],
-                'serie': dados_exercicio[2],
-                'repeticao': dados_exercicio[3],
-                'descanso': dados_exercicio[4],
-                'carga': dados_exercicio[5]
-                # Adicione outros atributos conforme necessário
-            }
-            exercicios_list.append(exercicio_dict)
+    def adicionar_categoria_e_exercicios(self, categoria_nome, exercicios):
+        try:
+            # Verificar se a categoria já existe
+            categoria = self.session.query(Category).filter_by(name=categoria_nome).first()
+            if not categoria:
+                # Se a categoria não existir, criar uma nova
+                categoria = Category(name=categoria_nome)
+                self.session.add(categoria)
+                self.session.commit()  # Commit para garantir que o ID da categoria esteja disponível
 
-        return exercicios_list
+           
+            # Adicionar cada exercício à categoria
+            for exercicio_data in exercicios:
+                novo_exercicio = Exercise(
+                    tipoTreino=exercicio_data.get('diasSemana', ''),
+                    exercicio=exercicio_data.get('exercicio', ''),  # Usando o campo correto para o nome do exercício
+                    serie=exercicio_data.get('serie', ''),
+                    repeticao=exercicio_data.get('repeticao', ''),
+                    descanso=exercicio_data.get('descanso', ''),
+                    carga=exercicio_data.get('carga', ''),
+                    category_id=categoria.id
+                )
+                self.session.add(novo_exercicio)
 
-    def atualizardados(self, aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao):
-        # Verificar se o aluno existe
-        aluno = self.session.query(Aluno).filter_by(id=aluno_id).first()
+            # Salvar as mudanças
+            self.session.commit()
+            return True
         
-        if aluno:
-            # Restringir a atualização apenas para medidas válidas
-            if nome is not None and idade is not None:
-                # Atualizar os atributos diretamente no objeto existente
-                aluno.nome = nome
-                aluno.idade = idade
-                aluno.observacao = observacao
-                aluno.telefone = telefone
-                aluno.login = login
-                aluno.senha = senha
-                aluno.data_pagamento = datetime.strptime(data_pagamento, '%d/%m/%Y') if data_pagamento else None
-                aluno.permissao = permissao
+        except Exception as e:
+            print(f'Erro ao adicionar categoria e exercícios: {str(e)}')
+            self.session.rollback()  # Rollback em caso de erro
+            return False
 
-                # Commit apenas a atualização do aluno
-                self.session.commit()
-                return jsonify({'success': True}), 200
+    def adicionar_exercicio(self, dados):
+        try:
+            # Itera sobre a lista de exercícios enviada
+            for exercicio in dados.get('exercicios', []):
+                novo_exercicio = Exercise(
+                    tipoTreino=dados.get('diasSemana'),
+                    exercicio=exercicio.get('nome'),
+                    serie=exercicio.get('serie'),
+                    repeticao=exercicio.get('repeticao'),
+                    descanso=exercicio.get('descanso'),
+                    carga=exercicio.get('carga'),
+                    category_id=dados.get('categoria'),  
+                )
+                self.session.add(novo_exercicio)
             
-            else:
-                # Lógica para lidar com medidas inválidas
-                return jsonify({'error': 'Dados inválidos'}), 400
-        else:
-            # Lógica para lidar com o aluno não encontrado
-            return jsonify({'error': 'Aluno não encontrado'}), 404
+            self.session.commit()
+            return True, 'Exercícios adicionados com sucesso'
+        
+        except Exception as e:
+            self.session.rollback()
+            print(f'Erro ao adicionar exercício: {str(e)}')
+            return False, 'Erro ao adicionar exercícios'
+
+
 
