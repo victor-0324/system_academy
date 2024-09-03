@@ -335,9 +335,30 @@
 
       // Função para formatar data
       function formatarData(data) {
-          var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-          return new Date(data).toLocaleDateString('pt-BR', options);
-      }
+        // Verifica se a data é uma string e se possui conteúdo
+        if (!data || typeof data !== 'string') {
+            return 'Indefinido';
+        }
+    
+        // Tenta criar uma data válida
+        var date = new Date(data);
+        if (isNaN(date)) {
+            // Tenta converter formatos comuns de entrada, como DD-MM-YYYY
+            var partes = data.split('-');
+            if (partes.length === 3) {
+                // Converte DD-MM-YYYY para MM/DD/YYYY
+                data = `${partes[1]}/${partes[0]}/${partes[2]}`;
+                date = new Date(data);
+            }
+        }
+    
+        if (isNaN(date)) {
+            return 'Indefinido';
+        }
+    
+        var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return date.toLocaleDateString('pt-BR', options);
+    }
 
       // Dicionário para nomes das medidas
       var nomesMedidas = {
@@ -359,8 +380,11 @@
 
       // Função para calcular a diferença entre dois valores
       function calcularDiferenca(antes, depois) {
-          return depois - antes;
-      }
+        if (antes === 'Indefinido' || depois === 'Indefinido') {
+            return 'Indefinido';
+        }
+        return depois - antes;
+    }
 
       var ctxPeso = document.getElementById('graficoPeso').getContext('2d');
       var graficoPeso = new Chart(ctxPeso, {
@@ -412,14 +436,24 @@
           var coresGanhoGrafico = [];
 
           medidas.forEach(function(medida, index) {
-              var depoisValor = depoisData ? depoisData[medida] : 0;
-              var antesValor = antesData ? antesData[medida] : 0;
-
+              var depoisValor = (depoisData && depoisData[medida] !== undefined) ? depoisData[medida] : 'Indefinido';
+              var antesValor = (antesData && antesData[medida] !== undefined) ? antesData[medida] : 'Indefinido';
+              
+              // Adicionando os valores aos arrays
               dadosAntes.push(antesValor);
               dadosDepois.push(depoisValor);
-
+              
+              // Calculando a diferença
               var diferenca = calcularDiferenca(antesValor, depoisValor);
-              var ganho = depoisValor !== 0 && antesValor !== 0 ? (depoisValor - antesValor).toFixed(2) : '0.0';
+              
+              // Calculando o ganho
+              var ganho;
+              if (depoisValor !== 'Indefinido' && antesValor !== 'Indefinido') {
+                  ganho = (depoisValor - antesValor).toFixed(2);
+              } else {
+                  ganho = 'Indefinido';
+              }
+
 
               if (diferenca > 0) {
                   coresGanho.push('#04D939'); // Verde para ganho
