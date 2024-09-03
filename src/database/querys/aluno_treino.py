@@ -1,11 +1,9 @@
 from typing import List
 from src.database.models import Aluno, ExerciciosAluno, Medida, Category, Exercise
-from werkzeug.security import check_password_hash, generate_password_hash
-from src.database.config import db_connector, DBConnectionHandler
-from sqlalchemy.orm import joinedload, load_only
+from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta
 from flask import jsonify
-from sqlalchemy.orm import sessionmaker
+
 
 class Querys():
    
