@@ -1,12 +1,10 @@
 from flask import Blueprint, request, render_template, url_for, redirect, jsonify, current_app
 from src.database.querys import Querys
 from datetime import datetime
-from src.database.config import db, db_connector, DBConnectionHandler
-from flask_login import current_user, login_required
+from flask_login import current_user
 from functools import wraps
 from datetime import datetime, timedelta
-from src.database.models import Aluno, ExerciciosAluno, Category, Exercise
-from dateutil.relativedelta import relativedelta 
+from src.database.models import Aluno, ExerciciosAluno, Category
 import json
 from copy import deepcopy 
 from .exercicios import ExerciciosView
@@ -208,7 +206,6 @@ def atualizar_medidas(aluno_id):
     except Exception as e:
         print(f'Erro no servidor: {str(e)}')
         return jsonify({'error': 'Erro no servidor'}), 500
-
 
 @clientes_app.route("/atualizar/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required

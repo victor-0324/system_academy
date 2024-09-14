@@ -346,7 +346,6 @@ class Querys():
             print(f"Erro ao buscar exercícios: {e}")
             return None
 
-
     def obter_categorias(self):
             try:
                 # Query para buscar todas as categorias
@@ -491,6 +490,10 @@ class Querys():
         aluno = self.session.query(Aluno).filter_by(id=aluno_id).first()
 
         if aluno:
+            # Atualiza a data de atualização do aluno
+            aluno.data_atualizacao = datetime.now()
+
+            # Cria uma nova instância de Medida com os dados fornecidos
             medida = Medida(
                 aluno_id=aluno_id,
                 peso=peso,
@@ -507,16 +510,17 @@ class Querys():
                 coxa_e=coxa_e,
                 pant_d=pant_d,
                 pant_e=pant_e,
-                data_atualizacao=datetime.now()
-            
+                data_atualizacao=datetime.now()  # Atualiza a data_atualizacao de Medida
             )
 
-
+            # Adiciona a nova medida à sessão
             self.session.add(medida)
+
+            # Faz o commit da sessão, salvando as alterações no banco de dados
             self.session.commit()
         else:
             raise ValueError(f'Aluno com id {aluno_id} não encontrado')
-
+        
     def atualizar_exercicios(self, aluno_id, exercicios):
             try:
                 aluno = self.session.query(Aluno).options(joinedload(Aluno.exercicios)).filter_by(id=aluno_id).first()

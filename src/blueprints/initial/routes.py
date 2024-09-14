@@ -385,7 +385,7 @@ def atualizarmedidas():
                 data_atualizacao_exercicio = exercicio.atualizacao
                 if data_atualizacao_exercicio:
                     data_limite_exercicio = data_atualizacao_exercicio + timedelta(days=60)
-                    if datetime.now() <= data_limite_exercicio  <= datetime.now() + timedelta(days=6):
+                    if datetime.now() <= data_limite_exercicio <= datetime.now() + timedelta(days=6):
                         precisa_atualizar_exercicios = True
                         mensagem = 'Atualizar os exercícios.'
                         break  # Parar de verificar outros exercícios
