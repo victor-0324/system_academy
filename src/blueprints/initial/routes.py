@@ -125,25 +125,28 @@ def mostrar():
                     'dataPagamento': data_pagamento_atual_str
                 })
        
-            if aluno.medidas:  # Verifique se medidas existe
-                ultima_atualizacao = aluno.medidas[0].data_atualizacao if aluno.medidas else None  # Ajuste conforme a estrutura
-                if ultima_atualizacao:
-                    data_limite_atualizacao = ultima_atualizacao + timedelta(days=60)
-                    data_limite_seis_dias = datetime.now() + timedelta(days=6)
+            if aluno.data_atualizacao:
+                # Calcular a data limite para a próxima atualização de medidas (60 dias após a última atualização)
+                data_limite_atualizacao = aluno.data_atualizacao + timedelta(days=60)
+                
+                # Calcular a data atual mais 6 dias
+                data_limite_seis_dias = datetime.now() + timedelta(days=6)
 
-                    if datetime.now() <= data_limite_atualizacao <= data_limite_seis_dias and not inadimplente:
-                        alunos_atualizar_medidas.append({
-                            'id': aluno.id,
-                            'nome': aluno.nome,
-                            'ultimaAtualizacaoMedidas': ultima_atualizacao.strftime('%d/%m/%Y'),
-                            'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
-                        })
-                else:
+                # Verificar se a data limite está dentro dos próximos 6 dias
+                if datetime.now() <= data_limite_atualizacao <= data_limite_seis_dias and not inadimplente:
                     alunos_atualizar_medidas.append({
                         'id': aluno.id,
                         'nome': aluno.nome,
-                        'mensagem': 'Atualizar medidas'
+                        'ultimaAtualizacaoMedidas': aluno.data_atualizacao.strftime('%d/%m/%Y'),
+                        'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
                     })
+            else:
+                # Se a data de atualização estiver faltando, adicione o aluno à lista com a indicação para atualizar
+                alunos_atualizar_medidas.append({
+                    'id': aluno.id,
+                    'nome': aluno.nome,
+                    'mensagem': 'Atualizar medidas'
+                })
                     
         quantidade_alunos = len(alunos)
 
