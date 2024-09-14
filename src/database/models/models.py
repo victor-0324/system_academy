@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Float
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Float, func
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -152,15 +152,15 @@ class ExerciciosAluno(Base):
     repeticao = Column(String(80), nullable=False)
     descanso = Column(String(80), nullable=False)
     carga = Column(String(80), nullable=False)
-    
     # Chave estrangeira referenciando a tabela Aluno
     aluno_id = Column(Integer, ForeignKey('alunos.id'))
     
+    atualizacao = Column(DateTime, default=func.now(), onupdate=func.now())
     # Relacionamento com a tabela Aluno
     aluno = relationship('Aluno', back_populates='exercicios')
 
     def __repr__(self):
-        return f"{self.tipoTreino} {self.exercicio} {self.serie} {self.repeticao} {self.descanso} {self.carga}"
+        return f"{self.tipoTreino} {self.exercicio} {self.serie} {self.repeticao} {self.descanso} {self.carga} {self.atualizacao}"
 
 
 
@@ -179,45 +179,4 @@ class ProgressoCronometro(Base):
 
     def __repr__(self):
         return f"{self.diaSemana} {self.tempoTreino} {self.estadoCronometro} {self.tempoTotalSemana} {self.dataInicio}"
-
-
-
-
-# ALTER TABLE alunos DROP COLUMN peso;
-# ALTER TABLE alunos DROP COLUMN ombro;
-# ALTER TABLE alunos DROP COLUMN torax;
-# ALTER TABLE alunos DROP COLUMN braco_d;
-# ALTER TABLE alunos DROP COLUMN braco_e;
-# ALTER TABLE alunos DROP COLUMN ant_d;
-# ALTER TABLE alunos DROP COLUMN ant_e;
-# ALTER TABLE alunos DROP COLUMN cintura;
-# ALTER TABLE alunos DROP COLUMN abdome;
-# ALTER TABLE alunos DROP COLUMN quadril;
-# ALTER TABLE alunos DROP COLUMN coxa_d;
-# ALTER TABLE alunos DROP COLUMN coxa_e;
-# ALTER TABLE alunos DROP COLUMN pant_d;
-# ALTER TABLE alunos DROP COLUMN pant_e;
-# ALTER TABLE alunos DROP COLUMN historico_medidas_peso;
-
-# INSERT INTO medidas (
-#     aluno_id, peso, ombro, torax, braco_d, braco_e, ant_d, ant_e, cintura, abdome, quadril, coxa_d, coxa_e, pant_d, pant_e, data_atualizacao
-# )
-# SELECT
-#     id, 
-#     peso,
-#     ombro,
-#     torax,
-#     braco_d,
-#     braco_e,
-#     ant_d,
-#     ant_e,
-#     cintura,
-#     abdome,
-#     quadril,
-#     coxa_d,
-#     coxa_e,
-#     pant_d,
-#     pant_e,
-#     data_atualizacao
-# FROM alunos;
 

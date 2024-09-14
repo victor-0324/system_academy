@@ -145,6 +145,13 @@ def atualizar_ex(aluno_id):
             return render_template("pages/alunos/exercicios/index.jinja", aluno=None)
 
         exercicios = session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id == aluno_id).all()
+        for exercicio in exercicios:
+            if exercicio.atualizacao:
+                # Formata a data como 'DD/MM/YYYY HH:MM'
+                exercicio.atualizacao_formatada = exercicio.atualizacao.strftime('%d/%m/%Y')
+            else:
+                exercicio.atualizacao_formatada = None
+                
         categorias = session.query(Category).all()
 
         with open('src/static/manifest.json', 'r') as file:
@@ -201,6 +208,7 @@ def atualizar_medidas(aluno_id):
     except Exception as e:
         print(f'Erro no servidor: {str(e)}')
         return jsonify({'error': 'Erro no servidor'}), 500
+
 
 @clientes_app.route("/atualizar/<int:aluno_id>", methods=["GET", "POST"])
 @admin_required

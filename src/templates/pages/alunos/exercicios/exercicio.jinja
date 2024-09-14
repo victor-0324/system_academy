@@ -40,18 +40,20 @@
      
         <!-- /.card-header -->
         <div class="card-body">
-            <ul>
+          <ul>
+              <li>
+                  <div class="small-box-footer d-flex align-items-center justify-content-between">
+                      <a href="" data-toggle="modal" data-target="#exercicio{{ exercicio.id }}" class="text-primary">
+                          {{ exercicio.tipoTreino }} 
+                      </a>
+                      <small class="text-muted ml-3">
+                          <i class="far fa-clock"></i> Atualizado em: {{ exercicio.atualizacao_formatada }}
+                      </small>
+                  </div>
               </li>
-                <div class="small-box-footer d-flex align-items-center justify-content-center">
-                    <a href="" data-toggle="modal" data-target="#exercicio{{ exercicio.id }}">{{ exercicio.tipoTreino }} <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-              </li>
-            </ul>
-            <!-- /.nav -->
-            <!-- /.card-body -->
-            <div class="card-footer p-0">
-            </div>
-        </div>
+          </ul>
+          <!-- /.nav -->
+      </div>
       
     </div>
 

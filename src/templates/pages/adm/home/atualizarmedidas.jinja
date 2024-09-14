@@ -66,7 +66,7 @@
                 <i class="fas fa-sync-alt"></i>
             </div>
                 <a href="/atualizarmedidas" class="small-box-footer">
-                    <small>Medidas</small> <i class="fas fa-arrow-circle-right"></i>
+                    <small>Medidas & Exercicios</small> <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </a>
       </div>
@@ -116,13 +116,14 @@
                         <th>Navegar</th>
                     </tr>
                 </thead>
-               <tbody id="tabelaAlunosBody">
+                <tbody id="tabelaAlunosBody">
                     {% for aluno in alunos_atualizar_medidas %}
                     <tr>
                         <td>{{ aluno.nome }}</td>
                         <td>
                             {% if aluno.ultimaAtualizacaoMedidas %}
-                                <span class="badge badge-success">Prox. Atualização:</span> {{ aluno.dataLimiteAtualizacao }}
+                                <span class="badge badge-warning">{{ aluno.mensagem }}</span>
+                                {{ aluno.dataLimiteAtualizacao }}
                             {% else %}
                                 <em>{{ aluno.mensagem }}</em>
                             {% endif %}
@@ -134,7 +135,7 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu" role="menu">
-                                    <a class="dropdown-item" href="alunos/detalhes/{{ aluno.id }}">Detalhes</a>
+                                    <a class="dropdown-item" href="/alunos/detalhes/{{ aluno.id }}">Detalhes</a>
                                     <a class="dropdown-item" href="/alunos/atualizar_ex/{{ aluno.id }}">Exercícios</a>
                                     <div class="dropdown-divider"></div>
                                     <button class="dropdown-item text-danger" type="button" onclick="confirmarExclusao('{{ aluno.id }}')">Deletar</button>
@@ -148,6 +149,8 @@
         </div>
         <!-- /.table-responsive -->
     </div>
+    
+    
     <!-- /.card-body -->
     <!-- Aqui poderia ir um .card-footer se necessário -->
 </div>

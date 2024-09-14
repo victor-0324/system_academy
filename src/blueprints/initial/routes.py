@@ -304,19 +304,24 @@ def pagamsemana():
 @admin_required
 def atualizarmedidas():
     with current_app.app_context():
+        # Carregar o arquivo manifest.json
         with open('src/static/manifest.json', 'r') as file:
             manifest = json.load(file)
 
+        # Configuração de sessão e consulta ao banco
         session = current_app.db.session
         querys_instance = Querys(session)
         alunos = querys_instance.mostrar(session)
+
+        # Inicialização das listas
         alunos_atualizar_medidas = []
         alunos_pagam_semana = []
         inadimplentes = []
         total_alunos_ativos = 0
 
-        # Iterar sobre cada aluno na lista
+        # Iterar sobre cada aluno
         for aluno in alunos:
+            # Verificar se o aluno está inadimplente e a data de pagamento
             data_pagamento_atual = aluno.data_pagamento.strftime('%Y-%m-%d') if aluno.data_pagamento else None
             proxima_data_pagamento = calcular_proxima_data_pagamento(data_pagamento_atual)
             inadimplente = aluno.inadimplente
@@ -333,7 +338,7 @@ def atualizarmedidas():
                 })
 
             if proxima_data_pagamento:
-                # Converta proxima_data_pagamento para datetime para comparação
+                # Verificar se o pagamento está nos próximos 6 dias
                 proxima_data_pagamento_dt = datetime.strptime(proxima_data_pagamento, '%d/%m/%Y')
                 data_limite = datetime.now() + timedelta(days=6)
                 if proxima_data_pagamento_dt <= data_limite and not inadimplente:
@@ -342,8 +347,12 @@ def atualizarmedidas():
                         'nome': aluno.nome,
                         'proximaDataPagamento': proxima_data_pagamento
                     })
-        
-        
+
+            # Verificar a atualização de medidas
+            precisa_atualizar_medidas = False
+            precisa_atualizar_exercicios = False
+            mensagem = ''
+
             if aluno.data_atualizacao:
                 # Calcular a data limite para a próxima atualização de medidas (60 dias após a última atualização)
                 data_limite_atualizacao = aluno.data_atualizacao + timedelta(days=60)
@@ -351,23 +360,60 @@ def atualizarmedidas():
                 # Calcular a data atual mais 6 dias
                 data_limite_seis_dias = datetime.now() + timedelta(days=6)
 
-                # Verificar se a data limite está dentro dos próximos 6 dias
+                # Verificar se as medidas precisam ser atualizadas nos próximos 6 dias
                 if datetime.now() <= data_limite_atualizacao <= data_limite_seis_dias and not inadimplente:
+                    precisa_atualizar_medidas = True
+                    mensagem = 'Prox, Atualização.'
                     alunos_atualizar_medidas.append({
                         'id': aluno.id,
                         'nome': aluno.nome,
                         'ultimaAtualizacaoMedidas': aluno.data_atualizacao.strftime('%d/%m/%Y'),
-                        'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
+                        'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y'),
+                        'mensagem': mensagem
                     })
             else:
-                # Se a data de atualização estiver faltando, adicione o aluno à lista com a indicação para atualizar
+                # Se não houver uma data de atualização, marcar como precisando de atualização de medidas
+                mensagem = 'Sem Data De Atualização.'
                 alunos_atualizar_medidas.append({
                     'id': aluno.id,
                     'nome': aluno.nome,
-                    'mensagem': 'Atualizar medidas'
+                    'mensagem': mensagem
                 })
+
+            # Verificar se os exercícios precisam ser atualizados (lógica simplificada)
+            for exercicio in aluno.exercicios:
+                data_atualizacao_exercicio = exercicio.atualizacao
+                if data_atualizacao_exercicio:
+                    data_limite_exercicio = data_atualizacao_exercicio + timedelta(days=60)
+                    if datetime.now() <= data_limite_exercicio  <= datetime.now() + timedelta(days=6):
+                        precisa_atualizar_exercicios = True
+                        mensagem = 'Atualizar os exercícios.'
+                        break  # Parar de verificar outros exercícios
+
+            # Adicionar à lista se precisa atualizar medidas ou exercícios
+            if precisa_atualizar_medidas and precisa_atualizar_exercicios:
+                mensagem = 'Atualizar Exercicios & Medidas'
+                alunos_atualizar_medidas.append({
+                    'id': aluno.id,
+                    'nome': aluno.nome,
+                    'mensagem': mensagem
+                })
+
+          
+
         quantidade_alunos = len(alunos)
-    return render_template("pages/adm/home/atualizarmedidas.jinja",total_alunos_ativos=total_alunos_ativos, alunos=alunos, alunosPagamSemana=alunos_pagam_semana, inadimplentes=inadimplentes, alunos_atualizar_medidas=alunos_atualizar_medidas, quantidade_alunos=quantidade_alunos, manifest=manifest) 
+
+    return render_template(
+        "pages/adm/home/atualizarmedidas.jinja",
+        total_alunos_ativos=total_alunos_ativos,
+        alunos=alunos,
+        alunosPagamSemana=alunos_pagam_semana,
+        inadimplentes=inadimplentes,
+        alunos_atualizar_medidas=alunos_atualizar_medidas,
+        quantidade_alunos=quantidade_alunos,
+        manifest=manifest
+    )
+
 
 # cadastrar categoria
 @initial_app.route("/categorias", methods=["GET", "POST"])

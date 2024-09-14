@@ -532,7 +532,7 @@ class Querys():
                         serie=exercicio_info['serie'],
                         repeticao=exercicio_info['repeticao'],
                         descanso=exercicio_info['descanso'],
-                        carga=exercicio_info['carga']
+                        carga=exercicio_info['carga'],
                     )
                     aluno.exercicios.append(exercicio)
 
@@ -545,7 +545,7 @@ class Querys():
                 print(f'Erro ao atualizar exercícios: {str(e)}')
                 self.session.rollback()  
                 return False 
-        
+
     def atualizar_exercicios_cat(self, nome_aluno, filtro_dias, categoriaId):
         try:
             # Buscar o aluno pelo nome
@@ -661,6 +661,7 @@ class Querys():
                         repeticao=exercicio.repeticao,
                         descanso=exercicio.descanso,
                         carga=exercicio.carga,
+                       
                     )
                     self.session.add(novo_exercicio)
             else:
@@ -681,6 +682,7 @@ class Querys():
                             repeticao=exercicio.repeticao,
                             descanso=exercicio.descanso,
                             carga=exercicio.carga,
+
                         )
                         self.session.add(novo_exercicio)
 
@@ -699,7 +701,12 @@ class Querys():
 # Cadastramentos, adicionar 
     def cadastrar_ex(self, alunoid, tipotreino, exercicio, serie, repeticao, descanso, carga):
         exercicio = ExerciciosAluno(
-            aluno_id=alunoid, tipoTreino=tipotreino, exercicio=exercicio, serie=serie, repeticao=repeticao, descanso=descanso,
+            aluno_id=alunoid, 
+            tipoTreino=tipotreino, 
+            exercicio=exercicio, 
+            serie=serie, 
+            repeticao=repeticao, 
+            descanso=descanso,
             carga=carga
         )
 
