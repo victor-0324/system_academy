@@ -140,6 +140,7 @@ def mostrar():
                         'ultimaAtualizacaoMedidas': aluno.data_atualizacao.strftime('%d/%m/%Y'),
                         'dataLimiteAtualizacao': data_limite_atualizacao.strftime('%d/%m/%Y')
                     })
+                    
             else:
                 # Se a data de atualização estiver faltando, adicione o aluno à lista com a indicação para atualizar
                 alunos_atualizar_medidas.append({

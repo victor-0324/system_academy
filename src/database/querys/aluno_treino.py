@@ -247,7 +247,14 @@ class Querys():
                 .filter_by(id=exercicio_id)
                 .first()
             )
-           
+            aluno =  exercicio.aluno_id
+            if not aluno:
+                return 'Sem aluno'
+            # Buscar o aluno pelo nome
+            aluno = self.session.query(Aluno).filter(Aluno.id == aluno).first()
+            # Atualiza a data de atualização do aluno junto com a da tabela medidas
+            aluno.data_atualizacao = datetime.now()
+            
             if exercicio:
                 exercicio.tipoTreino = novos_dados.get('tipoTreino', exercicio.tipoTreino)
                 exercicio.exercicio = novos_dados.get('exercicio', exercicio.exercicio)
@@ -490,9 +497,6 @@ class Querys():
         aluno = self.session.query(Aluno).filter_by(id=aluno_id).first()
 
         if aluno:
-            # Atualiza a data de atualização do aluno junto com a da tabela medidas
-            aluno.data_atualizacao = datetime.now()
-
             # Cria uma nova instância de Medida com os dados fornecidos
             medida = Medida(
                 aluno_id=aluno_id,
@@ -527,10 +531,13 @@ class Querys():
 
                 # Limpa os exercícios existentes
                 aluno.exercicios.clear()
+                # Atualiza a data de atualização do aluno junto com a da tabela medidas
+                aluno.data_atualizacao = datetime.now()
 
                 # Adiciona os novos exercícios
                 for exercicio_info in exercicios:
                     exercicio = ExerciciosAluno(
+                        aluno_id = aluno_id,
                         tipoTreino=exercicio_info['tipoTreino'],
                         exercicio=exercicio_info['exercicio'],
                         serie=exercicio_info['serie'],
@@ -557,7 +564,10 @@ class Querys():
             if not aluno:
                 print("Aluno não encontrado")
                 return False
-            
+            # Atualiza a data de atualização do aluno junto com a da tabela medidas
+            aluno.data_atualizacao = datetime.now()
+
+
             # Buscar os exercícios associados ao aluno
             query = self.session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id == aluno.id)
             
@@ -644,6 +654,9 @@ class Querys():
                 print("Aluno não encontrado")
                 return False
 
+            # Atualiza a data de atualização do aluno junto com a da tabela medidas
+            aluno.data_atualizacao = datetime.now()
+
             # Buscar os exercícios da categoria selecionada
             exercicios_categoria = (
                 self.session.query(Exercise)
@@ -704,6 +717,11 @@ class Querys():
 
 # Cadastramentos, adicionar 
     def cadastrar_ex(self, alunoid, tipotreino, exercicio, serie, repeticao, descanso, carga):
+        aluno = self.session.query(Aluno).filter(Aluno.id == alunoid).first()
+
+        # Atualiza a data de atualização do aluno junto com a da tabela medidas
+        aluno.data_atualizacao = datetime.now()
+
         exercicio = ExerciciosAluno(
             aluno_id=alunoid, 
             tipoTreino=tipotreino, 
