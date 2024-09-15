@@ -490,7 +490,7 @@ class Querys():
         aluno = self.session.query(Aluno).filter_by(id=aluno_id).first()
 
         if aluno:
-            # Atualiza a data de atualização do aluno
+            # Atualiza a data de atualização do aluno junto com a da tabela medidas
             aluno.data_atualizacao = datetime.now()
 
             # Cria uma nova instância de Medida com os dados fornecidos
