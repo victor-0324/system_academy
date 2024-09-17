@@ -123,9 +123,9 @@
                         <td>
                             {% if aluno.ultimaAtualizacaoMedidas %}
                                 <span class="badge badge-warning">{{ aluno.mensagem }}</span>
-                                {{ aluno.dataLimiteAtualizacao }}
+                                <span class="badge badge-warning">Próx. Atualiz. Medidas:</span> {{ aluno.dataLimiteAtualizacao }}
                             {% else %}
-                                <em>{{ aluno.mensagem }}</em>
+                            <span class="badge badge-warning"> <em>{{ aluno.mensagem }}</em></span>
                             {% endif %}
                         </td>
                         <td>

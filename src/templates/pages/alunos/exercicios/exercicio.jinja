@@ -43,17 +43,21 @@
           <ul>
               <li>
                   <div class="small-box-footer d-flex align-items-center justify-content-between">
-                      <a href="" data-toggle="modal" data-target="#exercicio{{ exercicio.id }}" class="text-primary">
+                      <a href="" data-toggle="modal" data-target="#exercicio{{ exercicio.id }}" 
+                         class="{% if exercicio.em_atraso %}text-danger{% else %}text-primary{% endif %}">
                           {{ exercicio.tipoTreino }} 
                       </a>
                       <small class="text-muted ml-3">
-                          <i class="far fa-clock"></i> Atualizado em: {{ exercicio.atualizacao_formatada }}
+                          <i class="far fa-clock"></i>  Atualizado em: 
+                          <span class="{% if exercicio.em_atraso %}text-danger{% endif %}">
+                              {{ exercicio.atualizacao_formatada }}
+                          </span>
                       </small>
                   </div>
               </li>
           </ul>
-          <!-- /.nav -->
       </div>
+      
       
     </div>
 

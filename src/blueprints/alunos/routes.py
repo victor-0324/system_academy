@@ -143,12 +143,24 @@ def atualizar_ex(aluno_id):
             return render_template("pages/alunos/exercicios/index.jinja", aluno=None)
 
         exercicios = session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id == aluno_id).all()
+
         for exercicio in exercicios:
             if exercicio.atualizacao:
-                # Formata a data como 'DD/MM/YYYY HH:MM'
+                # Formata a data como 'DD/MM/YYYY'
                 exercicio.atualizacao_formatada = exercicio.atualizacao.strftime('%d/%m/%Y')
+
+                # Calcula se a data está acima de 60 dias
+                data_limite = exercicio.atualizacao + timedelta(days=60)
+
+                # Verifica se a data do exercício é maior que 60 dias após a última atualização
+                if datetime.now() > data_limite:
+                    # Marcar o exercício como atrasado (adiciona uma flag ou uma classe CSS)
+                    exercicio.em_atraso = True
+                else:
+                    exercicio.em_atraso = False
             else:
                 exercicio.atualizacao_formatada = None
+                exercicio.em_atraso = False
                 
         categorias = session.query(Category).all()
 
