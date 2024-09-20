@@ -28,6 +28,7 @@ def index1():
         manifest = json.load(file)
     return render_template("index1.html", manifest=manifest)
 
+
 @initial_app.route('/manifest.json')
 def admin_required(func):
     """Decorator para restringir o acesso apenas a usuários com permissão 'admin'."""
