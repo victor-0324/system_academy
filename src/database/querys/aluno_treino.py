@@ -111,9 +111,6 @@ class Querys():
   
 # \\\\\\\\ /////////
 
-# Inicio cronometro e marcações
-
-
 # Deletar objetos no sistema
     def deletar_exercicio(self, exercicio_id):
             try:

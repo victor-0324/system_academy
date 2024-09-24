@@ -24,8 +24,7 @@ class Aluno(Base):
     # Relacionamento com as tabelas ExerciciosAluno e Medidas
     exercicios = relationship('ExerciciosAluno', back_populates='aluno')
     medidas = relationship('Medida', back_populates='aluno')
-    # Relacionamento com ProgressoCronometro
-    progresso_cronometro = relationship('ProgressoCronometro', back_populates='aluno')
+
 
     def set_password(self, password):
         self.senha = generate_password_hash(password, method="sha256")
@@ -161,22 +160,3 @@ class ExerciciosAluno(Base):
 
     def __repr__(self):
         return f"{self.tipoTreino} {self.exercicio} {self.serie} {self.repeticao} {self.descanso} {self.carga} {self.atualizacao}"
-
-
-
-class ProgressoCronometro(Base):
-    __tablename__ = "progresso_cronometro"
-    id = Column(Integer, primary_key=True)
-    diaSemana = Column(String(10), nullable=False)  # Ex: 'Seg', 'Ter', etc.
-    tempoTreino = Column(Float, nullable=False)  # Tempo em segundos
-    estadoCronometro = Column(String(10), nullable=False)  # Ex: 'ativo', 'inativo'
-    tempoTotalSemana = Column(Float, nullable=False)  # Tempo acumulado na semana
-    dataInicio = Column(DateTime)  # Data e hora de início do cronômetro
-    dataAtualizacao = Column(DateTime, default=datetime.utcnow)
-    
-    aluno_id = Column(Integer, ForeignKey('alunos.id'))
-    aluno = relationship('Aluno', back_populates='progresso_cronometro')
-
-    def __repr__(self):
-        return f"{self.diaSemana} {self.tempoTreino} {self.estadoCronometro} {self.tempoTotalSemana} {self.dataInicio}"
-
