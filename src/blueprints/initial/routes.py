@@ -18,9 +18,9 @@ def serve_manifest():
     return send_file('static/manifest.json', mimetype='application/manifest+json')
 
 
-# @initial_app.route('/offline')
-# def offline():
-#     return jsonify({"response": 0})
+@initial_app.route('/offline')
+def offline():
+    return jsonify({"response": 0})
 
 @initial_app.route('/app')
 def index1():
