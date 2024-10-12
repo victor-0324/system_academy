@@ -128,14 +128,16 @@ def mostrar():
                 })
 
             if medidas:
-                # Extrair as datas de atualização
-                datas_atualizacao = [medida.data_atualizacao for medida in medidas]
-
-                # Exibindo as datas
-                for data in datas_atualizacao:
-                   datas_medidas = data
+                # Extrair as datas de atualização, removendo valores None
+                datas_atualizacao = [medida.data_atualizacao for medida in medidas if medida.data_atualizacao is not None]
+                
+                if datas_atualizacao:
+                    # Encontrar a data mais recente
+                    datas_medidas = max(datas_atualizacao)
+                else:
+                    datas_medidas = None
             else:
-                print("Não há medidas cadastradas para este aluno.")
+                datas_medidas = None
 
             # Verificar a atualização de medidas
             precisa_atualizar_medidas = False
@@ -163,7 +165,7 @@ def mostrar():
                 alunos_atualizar_medidas.append({
                     'id': aluno.id,
                     'nome': aluno.nome,
-                    'mensagem': 'Atualizar medidas'
+                    'mensagem': 'Sem Data De Atualização'
                 })
 
             # Verificar se os exercícios precisam ser atualizados (lógica simplificada)
@@ -246,14 +248,18 @@ def inadimplentes():
                 })
 
             if medidas:
-                # Extrair as datas de atualização
-                datas_atualizacao = [medida.data_atualizacao for medida in medidas]
-
-                # Exibindo as datas
-                for data in datas_atualizacao:
-                   datas_medidas = data
+                # Extrair as datas de atualização, removendo valores None
+                datas_atualizacao = [medida.data_atualizacao for medida in medidas if medida.data_atualizacao is not None]
+                
+                if datas_atualizacao:
+                    # Encontrar a data mais recente
+                    datas_medidas = max(datas_atualizacao)
+                else:
+                    
+                    datas_medidas = None
             else:
-                print("Não há medidas cadastradas para este aluno.")
+              
+                datas_medidas = None
 
             # Verificar a atualização de medidas
             precisa_atualizar_medidas = False
@@ -281,7 +287,7 @@ def inadimplentes():
                 alunos_atualizar_medidas.append({
                     'id': aluno.id,
                     'nome': aluno.nome,
-                    'mensagem': 'Atualizar medidas'
+                    'mensagem': 'Sem Data De Atualização'
                 })
 
             # Verificar se os exercícios precisam ser atualizados (lógica simplificada)
@@ -353,14 +359,18 @@ def pagamsemana():
                 })
             
             if medidas:
-                # Extrair as datas de atualização
-                datas_atualizacao = [medida.data_atualizacao for medida in medidas]
-
-                # Exibindo as datas
-                for data in datas_atualizacao:
-                   datas_medidas = data
+                # Extrair as datas de atualização, removendo valores None
+                datas_atualizacao = [medida.data_atualizacao for medida in medidas if medida.data_atualizacao is not None]
+                
+                if datas_atualizacao:
+                    # Encontrar a data mais recente
+                    datas_medidas = max(datas_atualizacao)
+                else:
+             
+                    datas_medidas = None
             else:
-                print("Não há medidas cadastradas para este aluno.")
+              
+                datas_medidas = None
 
             # Verificar a atualização de medidas
             precisa_atualizar_medidas = False
@@ -388,7 +398,7 @@ def pagamsemana():
                 alunos_atualizar_medidas.append({
                     'id': aluno.id,
                     'nome': aluno.nome,
-                    'mensagem': 'Atualizar medidas'
+                    'mensagem': 'Sem Data De Atualização'
                 })
 
             # Verificar se os exercícios precisam ser atualizados (lógica simplificada)
@@ -474,10 +484,10 @@ def atualizarmedidas():
                     # Encontrar a data mais recente
                     datas_medidas = max(datas_atualizacao)
                 else:
-                    print("Não há datas válidas de atualização.")
+                    
                     datas_medidas = None
             else:
-                print("Não há medidas cadastradas para este aluno.")
+              
                 datas_medidas = None
 
             # Verificar a atualização de medidas
@@ -508,6 +518,7 @@ def atualizarmedidas():
                     'nome': aluno.nome,
                     'mensagem': 'Sem Data De Atualização'
                 })
+
             # Verificar se os exercícios precisam ser atualizados (lógica simplificada)
             for exercicio in aluno.exercicios:
                 data_atualizacao_exercicio = exercicio.atualizacao
