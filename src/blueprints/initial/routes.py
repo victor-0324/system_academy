@@ -174,7 +174,7 @@ def mostrar():
                     if datetime.now() <= data_limite_exercicio <= datetime.now() + timedelta(days=6):
                         precisa_atualizar_exercicios = True
                         mensagem = 'Atualizar os exercícios.'
-                        break  # Parar de verificar outros exercícios
+                        break 
 
             # Adicionar à lista se precisa atualizar medidas ou exercícios
             if precisa_atualizar_medidas or precisa_atualizar_exercicios:
@@ -467,14 +467,18 @@ def atualizarmedidas():
              # Verificando se há medidas cadastradas
             
             if medidas:
-                # Extrair as datas de atualização
-                datas_atualizacao = [medida.data_atualizacao for medida in medidas]
-
-                # Exibindo as datas
-                for data in datas_atualizacao:
-                   datas_medidas = data
+                # Extrair as datas de atualização, removendo valores None
+                datas_atualizacao = [medida.data_atualizacao for medida in medidas if medida.data_atualizacao is not None]
+                
+                if datas_atualizacao:
+                    # Encontrar a data mais recente
+                    datas_medidas = max(datas_atualizacao)
+                else:
+                    print("Não há datas válidas de atualização.")
+                    datas_medidas = None
             else:
                 print("Não há medidas cadastradas para este aluno.")
+                datas_medidas = None
 
             # Verificar a atualização de medidas
             precisa_atualizar_medidas = False
@@ -504,7 +508,6 @@ def atualizarmedidas():
                     'nome': aluno.nome,
                     'mensagem': 'Sem Data De Atualização'
                 })
-
             # Verificar se os exercícios precisam ser atualizados (lógica simplificada)
             for exercicio in aluno.exercicios:
                 data_atualizacao_exercicio = exercicio.atualizacao
@@ -523,9 +526,7 @@ def atualizarmedidas():
                     'nome': aluno.nome,
                     'mensagem': mensagem
                 })
-
           
-
         quantidade_alunos = len(alunos)
 
     return render_template(
