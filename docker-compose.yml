@@ -1,18 +1,29 @@
 # docker-compose.yml
 version: '3.12'
 
+networks:
+  mynetwork:
+
 services:
   web:
-    build: .
-    ports:
-      - "5001:5001"
-    environment:
-      - FLASK_APP=main.py
-      - FLASK_ENV=development
-      - DATABASE_CONNECTION=${DATABASE_CONNECTION}
+  networks:
+      - mynetwork
+  deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 
-    volumes:
-      - .:/code
+      build: .
+      ports:
+        - "5001:5001"
+      environment:
+        - FLASK_APP=main.py
+        - FLASK_ENV=development
+        - DATABASE_CONNECTION=${DATABASE_CONNECTION}
+
+      volumes:
+        - .:/code
 
 volumes:
   dbdata:
