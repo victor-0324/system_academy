@@ -171,6 +171,7 @@ class Querys():
 
         if aluno:
             self.session.query(ExerciciosAluno).filter_by(aluno_id=aluno.id).delete()
+            self.session.query(ExerciciosAluno).filter(ExerciciosAluno.aluno_id.is_(None)).delete(synchronize_session=False)
             self.session.query(Medida).filter_by(aluno_id=aluno.id).delete()
             self.session.delete(aluno)
             self.session.commit()
