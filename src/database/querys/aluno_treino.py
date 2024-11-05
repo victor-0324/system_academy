@@ -62,30 +62,26 @@ class Querys():
             return historico_str
 
     def verificar_falta_tres_dias(self, aluno_id):
-            aluno = (
-                self.session.query(Aluno)
-                .filter_by(id=aluno_id)
-                .first()
-            )
+        aluno = (
+        self.session.query(Aluno)
+        .filter_by(id=aluno_id)
+        .first()
+        )
 
-            if aluno and aluno.data_pagamento:
-                # Calcular a data de vencimento do próximo pagamento (30 dias após o último pagamento)
-                data_pagamento_proximo = aluno.data_pagamento + timedelta(days=30)
-
-                # Verificar se o mês da próxima data de pagamento é diferente do mês atual
-                if aluno.data_pagamento.month == data_pagamento_proximo.month:
-                    data_pagamento_proximo += timedelta(days=1)
-
-                # Calcular a diferença de dias entre a data de vencimento e a data atual
-                diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
-
+        if aluno and aluno.data_pagamento:
             
-                if diferenca_dias == -1:
-                    return "Seu pagamento vence hoje! Efetue o pagamento e continue acessando os treinos."
-                else:
-                    return None 
-            return None
-        
+            # Calcular a data de vencimento do próximo pagamento (30 dias após o último pagamento)
+            data_pagamento_proximo = aluno.data_pagamento + timedelta(days=30)
+           
+            # Calcular a diferença de dias entre a data de vencimento e a data atual
+            diferenca_dias = (data_pagamento_proximo - datetime.utcnow()).days
+            
+            if diferenca_dias == -2:  # Se o pagamento vence hoje
+                return "Seu pagamento vence hoje! Efetue o pagamento e continue acessando os treinos."
+            else:
+                return None 
+        return None
+            
     def criar_objeto_exercicio(self, aluno_id):
             exercicios = (
                 self.session.query(ExerciciosAluno)

@@ -65,7 +65,10 @@ def mostrar():
         
     # Verificação de pagamento
     faltam_tres_dias = querys_instance.verificar_falta_tres_dias(aluno_id)
-    return render_template('aluno_treino.html',proxima_data_pagamento=proxima_data_pagamento, exercicios=exercicios, faltam_tres_dias=faltam_tres_dias, aluno=aluno, manifest=manifest)
+    return render_template('aluno_treino.html',proxima_data_pagamento=proxima_data_pagamento,
+                            exercicios=exercicios,
+                            faltam_tres_dias=faltam_tres_dias,
+                            aluno=aluno, manifest=manifest)
 
 @treino_app.route("/evolucao/<int:aluno_id>", methods=["GET"])
 @treino_required

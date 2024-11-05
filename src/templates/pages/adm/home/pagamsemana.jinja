@@ -42,7 +42,7 @@
       <div class="small-box bg-success">
         <a href="/pagamsemana" class="small-box">
             <div class="inner">
-                <h3>{{alunosPagamSemana|length}}</h3>
+                <h3>{{alunos_pagam_semana|length}}</h3>
                 <h5>Pagamentos</h5>
             </div>
             <div class="icon">
@@ -118,7 +118,7 @@
                     </tr>
                 </thead>
                 <tbody id="tabelaAlunosBody">
-                    {% for aluno in alunosPagamSemana %}
+                    {% for aluno in alunos_pagam_semana %}
                     <tr>
                         <td>{{ aluno.nome }}</td>
                          <td>
