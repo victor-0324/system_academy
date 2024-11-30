@@ -51,14 +51,14 @@ def db_connector(func):
     """
 
     def with_connection_(*args, **kwargs):
-        with DBConnectionHandler(current_app.db).app.app_context():
+        with DBConnectionHandler(db).app.app_context():
             try:
                 query = func(*args, **kwargs)
                 return query
             except:
-                current_app.db.session.rollback()
+                db.session.rollback()
                 raise
             finally:
-                current_app.db.session.close()
+                db.session.close()
 
     return with_connection_

@@ -370,49 +370,51 @@
         <ul class="subpages collection z-depth-1">
           <li class="collection-img">
               <a class="img-wrap" href="#!">
-                <div class="desafio-container">
-                  <h3>Progresso Semanal</h3>
-                  <div class="container">
-                    <table class="table" aria-labelledby="tabelaProgressoLabel">
-                      <thead>
-                          <tr>
-                              <th scope="col">Seg</th>
-                              <th scope="col">Ter</th>
-                              <th scope="col">Qua</th>
-                              <th scope="col">Qui</th>
-                              <th scope="col">Sex</th>
-                              <th scope="col">Sab</th>
-                          </tr>
-                      </thead>
-                      <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
-                          <tr id="rowProgresso">
-                              <td id="segunda"></td>
-                              <td id="terca"></td>
-                              <td id="quarta"></td>
-                              <td id="quinta"></td>
-                              <td id="sexta"></td>
-                              <td id="sabado"></td>
-                          </tr>
-                      </tbody>
-                  </table>
-                  
-                      <h5 id="resultadoDia" aria-label="Resultado do dia"></h5>
-                      <div id="mensagemAlerta"></div>
-                      <div class="cronometro-estiloso">
-                          <div id="tempo-cronometro" aria-label="Tempo do cronômetro">00:00:00</div>
-                      </div>
-                      <h5 id="resultadoSemana" aria-label="Resultado da semana"></h5>
-                  </div>
-              </div>
+                <img src="{{ url_for('static', filename='images/manutencao.png') }}" alt="manutencao" style="max-width: 100%; height: auto;">
+                <!-- <div class="desafio-container">
+                    <h3>Progresso Semanal</h3>
+                    <div class="container">
+                      <table class="table" aria-labelledby="tabelaProgressoLabel">
+                        <thead>
+                            <tr>
+                                <th scope="col">Seg</th>
+                                <th scope="col">Ter</th>
+                                <th scope="col">Qua</th>
+                                <th scope="col">Qui</th>
+                                <th scope="col">Sex</th>
+                                <th scope="col">Sab</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
+                            <tr id="rowProgresso">
+                                <td id="segunda"></td>
+                                <td id="terca"></td>
+                                <td id="quarta"></td>
+                                <td id="quinta"></td>
+                                <td id="sexta"></td>
+                                <td id="sabado"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                        <h5 id="resultadoDia" aria-label="Resultado do dia"></h5>
+                        <div id="mensagemAlerta"></div>
+                        <div class="cronometro-estiloso">
+                            <div id="tempo-cronometro" aria-label="Tempo do cronômetro">00:00:00</div>
+                        </div>
+                        <h5 id="resultadoSemana" aria-label="Resultado da semana"></h5>
+                    </div>
+                </div> -->
               </a>
-              <div class="botoes" data-aluno-id="{{ aluno.id }}">
-                <button class="btn waves-effect waves-light bg-primary" id="btnIniciarTreino" onclick="iniciarTreino()" type="submit" name="action">Iniciar
-                  <i class="mdi mdi-timer"></i>
-                </button>
-                <button class="btn waves-effect waves-light bg-primary" onclick="concluirTreino()" type="submit" name="action">Parar
-                  <i class="mdi mdi-timer-off"></i>
-                </button>
-            </div>
+              <!-- <div class="botoes" data-aluno-id="{{ aluno.id }}">
+                  <button class="btn waves-effect waves-light bg-primary" id="btnIniciarTreino" onclick="iniciarTreino()" type="submit" name="action">Iniciar
+                    <i class="mdi mdi-timer"></i>
+                  </button>
+                  <button class="btn waves-effect waves-light bg-primary" onclick="concluirTreino()" type="submit" name="action">Parar
+                    <i class="mdi mdi-timer-off"></i>
+                  </button>
+              </div> -->
+              
           </li>
           
         </ul>

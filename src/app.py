@@ -11,16 +11,18 @@ def load_user(user_id):
     with DBConnectionHandler(current_app.db) as connection:
         connection = DBConnectionHandler(db)
         user = connection.query(Aluno).get(int(user_id))
+        print(user)
         return user
 
 def init_app():
     """Construindo o app"""
     app = Flask(__name__)
     app.config.from_object("src.database.config.DevelopmentConfig")
+   
     login_manager.init_app(app)
     login_manager.login_view = 'login_app.login'
     login_manager.user_loader(load_user)
-
+  
     # Importar blueprints após a criação do aplicativo
     from .blueprints import login_app, initial_app, cadastro_app, clientes_app, treino_app
 
