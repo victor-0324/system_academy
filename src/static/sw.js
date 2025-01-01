@@ -77,36 +77,30 @@ workbox.routing.registerRoute(
   })
 );
 
-// Registrar o Service Worker uma única vez e monitorar atualização
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').then((registration) => {
-    console.log('Service Worker registrado com sucesso:', registration);
+  navigator.serviceWorker.register('/sw.js') 
+    .then((registration) => {
+      console.log('Service Worker registrado com sucesso:', registration);
 
-    // Verificar se há um SW novo em espera
-    if (registration.waiting) {
-      // Informar a todos os clientes sobre o novo SW e pular a espera
-      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-    }
-
-    
-    // Monitora atualizações do SW
-    registration.addEventListener('updatefound', () => {
-      const newWorker = registration.installing;
-      if (newWorker) {
-        newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            console.log('Novo SW instalado, esperando para ativar.');
-          }
-        });
+      // Verificar se há um SW novo em espera
+      if (registration.waiting) {
+        // Informar a todos os clientes sobre o novo SW e pular a espera
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
       }
-    });
-  }).catch((error) => {
-    console.error('Falha ao registrar o Service Worker:', error);
-  });
 
-  // Monitora mensagens do Service Worker
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    console.log('Novo SW ativo, recarregando página.');
-    window.location.reload();
-  });
+      // Monitora atualizações do SW
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('Novo SW instalado, esperando para ativar.');
+            }
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      console.error('Falha ao registrar o Service Worker:', error);
+    });
 }
