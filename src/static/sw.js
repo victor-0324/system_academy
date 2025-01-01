@@ -79,7 +79,7 @@ workbox.routing.registerRoute(
 
 // Registrar o Service Worker uma única vez e monitorar atualização
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+  navigator.serviceWorker.register('/sw.js').then((registration) => {
     console.log('Service Worker registrado com sucesso:', registration);
 
     // Verificar se há um SW novo em espera
@@ -88,6 +88,7 @@ if ('serviceWorker' in navigator) {
       registration.waiting.postMessage({ type: 'SKIP_WAITING' });
     }
 
+    
     // Monitora atualizações do SW
     registration.addEventListener('updatefound', () => {
       const newWorker = registration.installing;
