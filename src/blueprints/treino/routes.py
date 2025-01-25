@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template, flash, redirect, url_for,current_app, request, abort, json, jsonify
+from flask import Blueprint, render_template, redirect, url_for,current_app, abort, json
 from flask_login import current_user, login_required
 from src.database.querys import Querys
 from functools import wraps
-from src.database.config import DBConnectionHandler, db
 from src.database.models import Aluno
 import locale
 from datetime import datetime, timedelta
@@ -14,8 +13,6 @@ def formatar_data(data):
     if data is None:
         return "Inicio Da Evolução"
     return datetime.strptime(data, "%Y-%m-%d").strftime("%d/%m/%Y")
-
-
 
 def treino_required(func):
     """Decorator para restringir o acesso apenas a usuários com permissão 'treino' e que não estão inadimplentes."""
@@ -45,6 +42,8 @@ def calcular_proxima_data_pagamento(data_pagamento_atual):
         return proxima_data_pagamento_str
 
     return None
+
+
 
 @treino_app.route("/", methods=["GET", "POST"])
 @treino_required

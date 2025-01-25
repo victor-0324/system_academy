@@ -59,7 +59,7 @@
       <div class="small-box bg-warning">
         <a href="/atualizarmedidas" class="small-box">
             <div class="inner">
-                <h3>{{ alunos_atualizar_medidas|length }}</h3>
+                <h3>{{ alunos_atualizar_exercicios|length }}</h3>
                 <h5>Atualizar</h5>
             </div>
             <div class="icon">
@@ -117,15 +117,14 @@
                     </tr>
                 </thead>
                 <tbody id="tabelaAlunosBody">
-                    {% for aluno in alunos_atualizar_medidas %}
+                    {% for aluno in alunos_atualizar_exercicios %}
                     <tr>
                         <td>{{ aluno.nome }}</td>
                         <td>
-                            {% if aluno.ultimaAtualizacaoMedidas %}
-                                <span class="badge badge-warning">{{ aluno.mensagem }}</span>
-                                <span class="badge badge-warning">Próx. Atualiz. Medidas:</span> {{ aluno.dataLimiteAtualizacao }}
-                            {% else %}
-                            <span class="badge badge-warning"> <em>{{ aluno.mensagem }}</em></span>
+                            {% if aluno.exercicio_atrasado %}
+                                
+                                <span class="badge badge-danger">Atrasado: {{ aluno.exercicio_atrasado.dataLimiteAtualizacao }}</span>                            {% else %}
+                                <span class="badge badge-warning"><em>{{ aluno.mensagem }}</em></span>
                             {% endif %}
                         </td>
                         <td>
@@ -134,6 +133,7 @@
                                 <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
+                                
                                 <div class="dropdown-menu" role="menu">
                                     <a class="dropdown-item" href="/alunos/detalhes/{{ aluno.id }}">Detalhes</a>
                                     <a class="dropdown-item" href="/alunos/atualizar_ex/{{ aluno.id }}">Exercícios</a>

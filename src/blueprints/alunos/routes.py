@@ -234,12 +234,13 @@ def atualizar(aluno_id):
             senha = request.form.get("senha")
             data_pagamento = request.form.get("data_pagamento")
             permissao = request.form.get('permissao')
+            pagamento = request.form.get('pagamento')
 
             aluno = querys_instance.mostrar_detalhes(aluno_id)
 
             # Use a função atualizar_dados para atualizar as informações do aluno
             aluno = querys_instance.atualizardados(
-                aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao
+                aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao, pagamento
             )
             
             return jsonify({'success': True}), 200

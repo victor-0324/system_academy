@@ -388,7 +388,7 @@ class Querys():
 
 
 # Atualizaçoes
-    def atualizardados(self, aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao):
+    def atualizardados(self, aluno_id, nome, idade, observacao, telefone, login, senha, data_pagamento, permissao, pagamento):
             # Verificar se o aluno existe
             aluno = self.session.query(Aluno).filter_by(id=aluno_id).first()
             
@@ -404,6 +404,7 @@ class Querys():
                     aluno.senha = senha
                     aluno.data_pagamento = datetime.strptime(data_pagamento, '%d/%m/%Y') if data_pagamento else None
                     aluno.permissao = permissao
+                    aluno.pagamento = pagamento
 
                     # Commit apenas a atualização do aluno
                     self.session.commit()

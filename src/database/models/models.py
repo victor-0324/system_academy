@@ -19,6 +19,7 @@ class Aluno(Base):
     jatreino = Column(String(20), nullable=False)
     permissao = Column(String(30), nullable=False)
     observacao = Column(String(50), nullable=False)
+    pagamento = Column(String(20), nullable=False)
     data_atualizacao = Column(DateTime, nullable=True)
 
     # Relacionamento com as tabelas ExerciciosAluno e Medidas

@@ -126,6 +126,12 @@
           font-size: 0.8em; /* Reduz o tamanho da fonte para dispositivos móveis */
       }
   }
+
+  .mark-complete.completed {
+        background-color: #4caf50;
+        color: #fff;
+    }
+
 </style>
 
 </head>
@@ -178,12 +184,18 @@
           <a href="#user" class="status available"><img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user"></a>
       </div>
       <div class="col s9 infoarea">
-        <a href=""><span class="name">{{aluno.nome}}</span></a>
-        <a href="">
-          <span class="date">Data De Inicio: {{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else '' }}</span>
-          <span class="date">Prox. Pagamento: {{ proxima_data_pagamento }}</span>
+        <!-- Nome do Aluno -->
+        <a href="#">
+            <strong>{{ aluno.nome }}</strong>
         </a>
-      </div>
+    
+        <!-- Informações Detalhadas -->
+        <div>
+            <p><strong>Data de Início:</strong> {{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else 'N/A' }}</p>
+            <p><strong>Próximo Pagamento:</strong> {{ proxima_data_pagamento }}</p>
+            <p><strong>Valor:</strong> {{ aluno.pagamento }}</p>
+        </div>
+    </div>
     </div>
   </li>
   <li class="menulinks">
@@ -478,7 +490,11 @@
                                       {% for exercicio in exercicios_por_dia %}
                                           <tr>
                                               <td><strong>Exercício:</strong></td>
-                                              <td>{{ exercicio.exercicio|capitalize }}</td>
+                                            <td>
+                                                {{ exercicio.exercicio|capitalize }}<br>
+                                                <button class="mark-complete btn" data-exercise-id="{{ exercicio.id }}">💤🕒💤</button>
+                                            </td>
+                                             
                                           </tr>
                                           <tr>
                                               <td><strong>Série:</strong></td>
@@ -576,7 +592,48 @@
 <script src="{{ url_for('static', filename='modules/app/scripts.js') }}"></script>
 
 <!-- END CORE TEMPLATE JS - END -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      // Carrega o estado salvo dos exercícios
+      const completedExercises = JSON.parse(localStorage.getItem('completedExercises')) || {};
 
+      // Atualiza a interface com base no estado
+      document.querySelectorAll('.mark-complete').forEach(button => {
+          const exerciseId = button.getAttribute('data-exercise-id');
+          if (completedExercises[exerciseId]) {
+              markAsCompleted(button);
+          }
+
+          // Adiciona evento de clique ao botão
+          button.addEventListener('click', () => {
+              if (completedExercises[exerciseId]) {
+                  // Marca como não concluído
+                  delete completedExercises[exerciseId];
+                  unmarkAsCompleted(button);
+              } else {
+                  // Marca como concluído
+                  completedExercises[exerciseId] = true;
+                  markAsCompleted(button);
+              }
+
+              // Salva o estado no localStorage
+              localStorage.setItem('completedExercises', JSON.stringify(completedExercises));
+          });
+      });
+
+      // Função para estilizar o botão como concluído
+      function markAsCompleted(button) {
+          button.textContent = "Feito 🏅💪";
+          button.classList.add('completed'); // Classe para estilos
+      }
+
+      // Função para restaurar o botão ao estado original
+      function unmarkAsCompleted(button) {
+          button.textContent = "💤🕒💤";
+          button.classList.remove('completed');
+      }
+  });
+</script>
 
 <script src="{{ url_for('static', filename='assets/js/preloader.js') }}"></script>
 <script src="{{ url_for('static', filename='js/treinos.js') }}"></script>
