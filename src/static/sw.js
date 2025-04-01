@@ -1,35 +1,33 @@
-const CACHE_STATIC = "pwabuilder-static-v1";
-const CACHE_DYNAMIC = "pwabuilder-dynamic-v1";
-const CACHE_OTHER = "pwabuilder-other-v1";
+const CACHE_STATIC = "pwabuilder-static-v2";  // Mudando a versão do cache para atualizar corretamente
+const CACHE_DYNAMIC = "pwabuilder-dynamic-v2";
+const CACHE_OTHER = "pwabuilder-other-v2";
 
 // Importa Workbox no contexto do Service Worker
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
-// Listener para ativar o novo Service Worker assim que for atualizado
+// 🔹 Força a ativação imediata do novo Service Worker
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
 
-// Listener para limpar caches antigos
+// 🔹 Limpa TODOS os caches antigos ao ativar o novo Service Worker
 self.addEventListener("activate", (event) => {
-  const currentCaches = [CACHE_STATIC, CACHE_DYNAMIC, CACHE_OTHER];
   event.waitUntil(
     caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (!currentCaches.includes(cacheName)) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
+      return Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
     })
   );
   return self.clients.claim();
 });
 
-// Rotas dinâmicas usando NetworkFirst
+// 🔹 Atualiza o Service Worker e recarrega a página automaticamente
+self.addEventListener("install", (event) => {
+  self.skipWaiting(); // Força a atualização imediata
+});
+
+// 🔹 Rotas dinâmicas usando NetworkFirst (para páginas que precisam estar sempre atualizadas)
 workbox.routing.registerRoute(
   new RegExp('/(login|logout|treino|alunos)'),
   new workbox.strategies.NetworkFirst({
@@ -37,27 +35,27 @@ workbox.routing.registerRoute(
     plugins: [
       new workbox.expiration.ExpirationPlugin({
         maxEntries: 50,
-        maxAgeSeconds: 7 * 24 * 60 * 60,
+        maxAgeSeconds: 7 * 24 * 60 * 60, // Expira em 7 dias
       }),
     ],
   })
 );
 
-// Cache de arquivos estáticos
+// 🔹 Cache de arquivos estáticos (JS, CSS, imagens, etc.) com StaleWhileRevalidate para sempre atualizar
 workbox.routing.registerRoute(
   /\.(?:js|css|html|png|jpg|jpeg|svg|gif)$/,
-  new workbox.strategies.CacheFirst({
+  new workbox.strategies.StaleWhileRevalidate({
     cacheName: CACHE_STATIC,
     plugins: [
       new workbox.expiration.ExpirationPlugin({
         maxEntries: 100,
-        maxAgeSeconds: 30 * 24 * 60 * 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // Expira em 30 dias
       }),
     ],
   })
 );
 
-// Rotas com StaleWhileRevalidate
+// 🔹 Estratégia para outras rotas (garante que a versão mais recente seja carregada)
 workbox.routing.registerRoute(
   new RegExp('/.*'),
   new workbox.strategies.StaleWhileRevalidate({
@@ -65,7 +63,7 @@ workbox.routing.registerRoute(
     plugins: [
       new workbox.expiration.ExpirationPlugin({
         maxEntries: 50,
-        maxAgeSeconds: 7 * 24 * 60 * 60,
+        maxAgeSeconds: 7 * 24 * 60 * 60, // Expira em 7 dias
       }),
     ],
   })
