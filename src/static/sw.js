@@ -6,23 +6,11 @@ const CACHE_OTHER = "pwabuilder-other-v1";
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
 // Listener para ativar o novo Service Worker assim que for atualizado
-self.addEventListener("install", (event) => {
-  self.skipWaiting(); // Ativa o novo SW imediatamente
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
-
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          return caches.delete(cacheName); // Apaga todos os caches antigos
-        })
-      );
-    })
-  );
-  return self.clients.claim();
-});
-
 
 // Listener para limpar caches antigos
 self.addEventListener("activate", (event) => {
@@ -58,7 +46,7 @@ workbox.routing.registerRoute(
 // Cache de arquivos estáticos
 workbox.routing.registerRoute(
   /\.(?:js|css|html|png|jpg|jpeg|svg|gif)$/,
-  new workbox.strategies.StaleWhileRevalidate({
+  new workbox.strategies.CacheFirst({
     cacheName: CACHE_STATIC,
     plugins: [
       new workbox.expiration.ExpirationPlugin({
@@ -68,7 +56,6 @@ workbox.routing.registerRoute(
     ],
   })
 );
-
 
 // Rotas com StaleWhileRevalidate
 workbox.routing.registerRoute(
