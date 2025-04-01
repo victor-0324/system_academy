@@ -8,13 +8,13 @@ from .consultas import obter_dados_alunos, carregar_manifesto, obter_dados_aluno
 
 initial_app = Blueprint("initial_app", __name__, url_prefix="/", template_folder='templates',static_folder='static')
 
-@initial_app.route('/sw.js')
-def serve_sw():
-    return send_file('static/sw.js', mimetype='application/javascript')
+# @initial_app.route('/sw.js')
+# def serve_sw():
+#     return send_file('static/sw.js', mimetype='application/javascript')
 
-@initial_app.route('/manifest.json')
-def serve_manifest():
-    return send_file('static/manifest.json', mimetype='application/manifest+json')
+# @initial_app.route('/manifest.json')
+# def serve_manifest():
+#     return send_file('static/manifest.json', mimetype='application/manifest+json')
 
 # @initial_app.route('/offline')
 # def offline():
