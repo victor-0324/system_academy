@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Float, func
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Boolean, func, Interval
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -25,7 +25,7 @@ class Aluno(Base):
     # Relacionamento com as tabelas ExerciciosAluno e Medidas
     exercicios = relationship('ExerciciosAluno', back_populates='aluno')
     medidas = relationship('Medida', back_populates='aluno')
-
+    progresso_semanal = relationship('ProgressoSemanal', back_populates='aluno')
 
     def set_password(self, password):
         self.senha = generate_password_hash(password, method="sha256")
@@ -64,6 +64,20 @@ class Aluno(Base):
             f"{self.id} {self.nome} {self.idade} {self.sexo} {self.telefone} "
             f"{self.login} {self.senha} {self.data_entrada} {self.data_pagamento} {self.jatreino} {self.permissao}"
         )
+
+class ProgressoSemanal(Base):
+    __tablename__ = 'ProgressoSemanal'  # Nome da tabela
+
+    id = Column(Integer, primary_key=True)  # ID do progresso
+    aluno_id = Column(Integer, ForeignKey('alunos.id'))
+    dia = Column(String(10), nullable=False)  # Data do progresso
+    tempo_treino = Column(Interval, nullable=False)  # Tempo de treino
+    pontos = Column(Integer, default=0)  # Pontos
+    finalizado = Column(Boolean, default=False)  # Finalizado ou não
+
+    # Relacionamento com a tabela Aluno
+    aluno = relationship('Aluno', back_populates='progresso_semanal')
+
 
 class Medida(Base):
     __tablename__ = "medidas"
@@ -161,3 +175,4 @@ class ExerciciosAluno(Base):
 
     def __repr__(self):
         return f"{self.tipoTreino} {self.exercicio} {self.serie} {self.repeticao} {self.descanso} {self.carga} {self.atualizacao}"
+    

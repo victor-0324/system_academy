@@ -375,66 +375,63 @@
     </div>
   </div>
 
-<!-- <div class="container full subpage ">
+    <!--  <div class="container full subpage ">
     <div class="section">
-    <div class="container">
-      <div class="section"> 
-        <ul class="subpages collection z-depth-1">
-          <li class="collection-img">
-              <a class="img-wrap" href="#!">
-                <img src="{{ url_for('static', filename='images/manutencao.png') }}" alt="manutencao" style="max-width: 100%; height: auto;">
-                <div class="desafio-container">
-                    <h3>Progresso Semanal</h3>
-                    <div class="container">
-                      <table class="table" aria-labelledby="tabelaProgressoLabel">
-                        <thead>
-                            <tr>
-                                <th scope="col">Seg</th>
-                                <th scope="col">Ter</th>
-                                <th scope="col">Qua</th>
-                                <th scope="col">Qui</th>
-                                <th scope="col">Sex</th>
-                                <th scope="col">Sab</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
-                            <tr id="rowProgresso">
-                                <td id="segunda"></td>
-                                <td id="terca"></td>
-                                <td id="quarta"></td>
-                                <td id="quinta"></td>
-                                <td id="sexta"></td>
-                                <td id="sabado"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                        <h5 id="resultadoDia" aria-label="Resultado do dia"></h5>
-                        <div id="mensagemAlerta"></div>
-                        <div class="cronometro-estiloso">
-                            <div id="tempo-cronometro" aria-label="Tempo do cronômetro">00:00:00</div>
-                        </div>
-                        <h5 id="resultadoSemana" aria-label="Resultado da semana"></h5>
-                    </div>
-                </div> 
-              </a>
-              <div class="botoes" data-aluno-id="{{ aluno.id }}">
-                  <button class="btn waves-effect waves-light bg-primary" id="btnIniciarTreino" onclick="iniciarTreino()" type="submit" name="action">Iniciar
-                    <i class="mdi mdi-timer"></i>
-                  </button>
-                  <button class="btn waves-effect waves-light bg-primary" onclick="concluirTreino()" type="submit" name="action">Parar
-                    <i class="mdi mdi-timer-off"></i>
-                  </button>
-              </div> 
-              
-          </li>
-          
-        </ul>
-        
-       </div>
-      </div> 
+        <div class="container">
+            <div class="section"> 
+                <ul class="subpages collection z-depth-1">
+                    <li class="collection-img">
+                        <a class="img-wrap" href="#!">
+                        <img src="{{ url_for('static', filename='images/default.png') }}" alt="manutencao" style="max-width: 100%; height: auto;">
+                            <div class="desafio-container">
+                                <h3>Progresso Semanal</h3>
+                                <div class="container">
+                                    <table class="table" aria-labelledby="tabelaProgressoLabel">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Seg</th>
+                                                <th scope="col">Ter</th>
+                                                <th scope="col">Qua</th>
+                                                <th scope="col">Qui</th>
+                                                <th scope="col">Sex</th>
+                                                <th scope="col">Sab</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
+                                            <tr id="rowProgresso">
+                                                <td id="segunda"></td>
+                                                <td id="terca"></td>
+                                                <td id="quarta"></td>
+                                                <td id="quinta"></td>
+                                                <td id="sexta"></td>
+                                                <td id="sabado"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <h5 id="resultadoDia"></h5>
+                                    <div id="mensagemAlerta"></div>
+                                    <div class="cronometro-estiloso">
+                                        <div id="tempo-cronometro">00:00:00</div>
+                                    </div>
+                                    <h5 id="resultadoSemana"></h5>
+                                </div>
+                            </div> 
+                        </a>
+                        <div class="botoes" data-aluno-id="{{ aluno.id or '' }}">
+                            <button class="btn waves-effect waves-light bg-primary" id="btnIniciarTreino" type="button">
+                                Iniciar <i class="mdi mdi-timer"></i>
+                            </button>
+                            <button class="btn waves-effect waves-light bg-primary" id="btnConcluirTreino" type="button">
+                                Parar <i class="mdi mdi-timer-off"></i>
+                            </button>
+                        </div> 
+                    </li>
+                </ul>
+            </div>
+        </div> 
     </div>
 </div> -->
+
 
     {% if faltam_tres_dias is not none %}
         <div id="modal1577950785" class="modal modal-mediabox default-open open" tabindex="0" style="z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);">
@@ -566,12 +563,10 @@
 </div>
 <!--.content-area-->
 <!-- <div class="footer-menu circular">
- 
 </div> -->
 
 <script src="{{ url_for('static', filename='assets/js/pwa.js') }}"></script>
 
-<!-- LOAD FILES AT PAGE END FOR FASTER LOADING -->
 
 <!-- CORE JS FRAMEWORK - START -->
 <script src="{{ url_for('static', filename='modules/jquery/jquery-2.2.4.min.js') }}"></script>
@@ -579,7 +574,6 @@
 <script src="{{ url_for('static', filename='modules/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
 <script src="{{ url_for('static', filename='assets/js/variables.js') }}"></script>
 <!-- CORE JS FRAMEWORK - END -->
-
 
 <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
 <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
@@ -591,71 +585,7 @@
 
 <script src="{{ url_for('static', filename='modules/app/scripts.js') }}"></script>
 
-<!-- END CORE TEMPLATE JS - END -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-      // Carrega o estado salvo dos exercícios
-      const completedExercises = JSON.parse(localStorage.getItem('completedExercises')) || {};
-
-      // Atualiza a interface com base no estado
-      document.querySelectorAll('.mark-complete').forEach(button => {
-          const exerciseId = button.getAttribute('data-exercise-id');
-          if (completedExercises[exerciseId]) {
-              markAsCompleted(button);
-          }
-
-          // Adiciona evento de clique ao botão
-          button.addEventListener('click', () => {
-              if (completedExercises[exerciseId]) {
-                  // Marca como não concluído
-                  delete completedExercises[exerciseId];
-                  unmarkAsCompleted(button);
-              } else {
-                  // Marca como concluído
-                  completedExercises[exerciseId] = true;
-                  markAsCompleted(button);
-              }
-
-              // Salva o estado no localStorage
-              localStorage.setItem('completedExercises', JSON.stringify(completedExercises));
-          });
-      });
-
-      // Função para estilizar o botão como concluído
-      function markAsCompleted(button) {
-          button.textContent = "Feito 🏅💪";
-          button.classList.add('completed'); // Classe para estilos
-      }
-
-      // Função para restaurar o botão ao estado original
-      function unmarkAsCompleted(button) {
-          button.textContent = "💤🕒💤";
-          button.classList.remove('completed');
-      }
-  });
-</script>
-
 <script src="{{ url_for('static', filename='assets/js/preloader.js') }}"></script>
 <script src="{{ url_for('static', filename='js/treinos.js') }}"></script>
-<script>
-  function toggleExercicios(dia) {
-      // Esconder todos os exercícios
-      console.log('Dia:', dia);
-      dia = dia.toLowerCase().replace(/[\s&]+/g, '_');
-      var todasExercicios = document.querySelectorAll('.exercicios');
-      todasExercicios.forEach(function (exercicios) {
-          if (exercicios) {
-              exercicios.style.display = 'none';
-          }
-      });
-  
-      // Exibir exercícios específicos
-      var exerciciosDia = document.querySelector('.exercicios-' + dia);
-      if (exerciciosDia) {
-          exerciciosDia.style.display = 'table-row-group';
-      }
-  }
-</script>
 </body>
-
 </html>

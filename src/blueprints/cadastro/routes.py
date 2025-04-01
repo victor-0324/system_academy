@@ -1,7 +1,6 @@
 from flask import Blueprint, request, render_template, url_for, redirect, jsonify, current_app
 from src.database.querys import  Querys
 import json
-from src.database.config import db_connector, DBConnectionHandler
 from functools import wraps
 from flask_login import current_user
 from datetime import datetime

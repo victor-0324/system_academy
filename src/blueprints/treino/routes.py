@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for,current_app, abort, json
-from flask_login import current_user, login_required
+from flask import Blueprint, render_template, redirect, url_for, current_app, abort, json, jsonify, request
+from flask_login import current_user
 from src.database.querys import Querys
 from functools import wraps
 from src.database.models import Aluno
-import locale
+# from .consultas import ConsultaTreino
 from datetime import datetime, timedelta
 
 treino_app = Blueprint("treino_app", __name__, url_prefix="/treino", template_folder='templates', static_folder='static')
@@ -110,4 +110,79 @@ def evolucao(aluno_id):
     else:
         abort(404)
 
-        # asdfas
+
+treinos = {}  
+
+@treino_app.route("/iniciar_treino", methods=["POST"])
+def iniciar_treino():
+    dados = request.json
+    aluno_id = dados.get("aluno_id")
+
+    if not aluno_id:
+        return jsonify({"error": "ID do aluno é obrigatório"}), 400
+
+    inicio_treino = datetime.utcnow()
+
+    # Salva temporariamente na memória
+    treinos[aluno_id] = {"inicio": inicio_treino, "status": "em andamento"}
+
+    return jsonify({"status": "sucesso", "inicio": inicio_treino.isoformat()})
+
+@treino_app.route("/finalizar_treino", methods=["POST"])
+def finalizar_treino():
+    dados = request.json
+    aluno_id = dados.get("aluno_id")
+    tempo_inicial = dados.get("tempo_inicial") 
+    session = current_app.db.session
+    querys_instance = Querys(session)
+
+    if not aluno_id or not tempo_inicial:
+        return jsonify({"error": "Dados inválidos"}), 400
+
+    inicio_treino = datetime.utcfromtimestamp(int(tempo_inicial) / 1000) 
+    fim_treino = datetime.utcnow() 
+
+    duracao = datetime.utcnow() - datetime.utcfromtimestamp(int(tempo_inicial) / 1000)
+    
+    pontos = querys_instance.calcular_pontos(duracao)
+
+    print(f"Aluno {aluno_id} finalizou o treino com duração de {duracao} e {pontos} pontos")
+    querys_instance.salvar_progresso(aluno_id, inicio_treino, duracao, pontos)
+
+    return jsonify({"status": "sucesso", "duracao": str(duracao), "pontos": pontos})
+
+
+@treino_app.route("/verificar_progresso_semanal", methods=["GET"])
+def verificar_progresso():
+    aluno_id = request.args.get("aluno_id")
+    session = current_app.db.session
+    querys_instance = Querys(session)
+    
+    if not aluno_id:
+        return jsonify({"error": "ID do aluno é obrigatório"}), 400
+
+    progresso = querys_instance.busca_progresso_semanal(aluno_id)
+    print(progresso)
+    if not progresso:
+        return jsonify({"error": "Nenhum progresso encontrado"}), 404
+
+    progresso_json = []
+    for p in progresso:
+        # Verifica se 'tempo_treino' é datetime, e se for, calcula a diferença
+        if isinstance(p.tempo_treino, datetime):
+            tempo_treino_segundos = (datetime.utcnow() - p.tempo_treino).total_seconds()
+        elif isinstance(p.tempo_treino, timedelta):
+            tempo_treino_segundos = p.tempo_treino.total_seconds()
+        else:
+            tempo_treino_segundos = 0
+
+        progresso_json.append({
+            "dia": p.dia,
+            "tempo_treino": tempo_treino_segundos,
+            "pontos": p.pontos
+        })
+
+    return jsonify({
+        "total_pontos": sum(p.pontos for p in progresso),
+        "progresso": progresso_json
+    })

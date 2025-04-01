@@ -1,5 +1,5 @@
 from typing import List
-from src.database.models import Aluno, ExerciciosAluno, Medida, Category, Exercise
+from src.database.models import Aluno, ExerciciosAluno, Medida, Category, Exercise, ProgressoSemanal
 from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta
 from flask import jsonify
@@ -851,4 +851,66 @@ class Querys():
             return False, 'Erro ao adicionar exercícios'
 
 
+
+    def busca_progresso_semanal(self, aluno_id):
+        print(aluno_id)
+        progresso = self.session.query(ProgressoSemanal).filter_by(aluno_id=aluno_id).all() 
+        print(progresso)
+        return progresso
+
+
+    def salvar_progresso(self, aluno_id, inicio_treino, duracao, pontos):
+ 
+            # Obtém o nome do dia da semana em português
+            hoje = datetime.utcnow().strftime("%A")  # Nome do dia da semana
+            hoje = hoje.lower()  # Deixa tudo minúsculo para padronizar
+            
+            # Converte nomes para a versão correta (caso precise ajustar formatação)
+            dias_semana = {
+                "monday": "segunda-feira",
+                "tuesday": "terça-feira",
+                "wednesday": "quarta-feira",
+                "thursday": "quinta-feira",
+                "friday": "sexta-feira",
+                "saturday": "sábado",
+                "sunday": "domingo",
+            }
+            hoje = dias_semana.get(hoje, hoje)  # Garante que o nome está em pt-br
+
+            # Verifica se já existe um progresso para o aluno hoje
+            progresso = (
+                self.session.query(ProgressoSemanal)
+                .filter_by(aluno_id=aluno_id, dia=hoje)
+                .first()
+            )
+
+            if progresso:
+                # Atualiza tempo de treino e pontos
+                progresso.tempo_treino += duracao
+                progresso.pontos += pontos
+                print(f"Progresso atualizado para aluno {aluno_id} ({hoje}).")
+            else:
+                # Cria um novo registro
+                progresso = ProgressoSemanal(
+                    aluno_id=aluno_id,
+                    dia=hoje,  # Nome do dia da semana
+                    tempo_treino=duracao,
+                    pontos=pontos
+                )
+                self.session.add(progresso)
+                print(f"Novo progresso registrado para aluno {aluno_id} ({hoje}).")
+
+            self.session.commit()
+
+
+    def calcular_pontos(self, duracao: timedelta) -> int:
+        MAX_DURACAO = timedelta(hours=2) 
+        PONTOS_MAX = 100
+        PONTOS_MIN = 10 
+        if duracao >= MAX_DURACAO:
+            return PONTOS_MAX
+        elif duracao >= timedelta(minutes=30):
+            return max(int((duracao.total_seconds() / MAX_DURACAO.total_seconds()) * PONTOS_MAX), PONTOS_MIN)
+        else:
+            return PONTOS_MIN
 
