@@ -547,6 +547,7 @@
     
                     // Salva a alteração no localStorage
                     localStorage.setItem('completedExercises', JSON.stringify(completedExercises));
+                    location.reload();
                 }
             }
         }
