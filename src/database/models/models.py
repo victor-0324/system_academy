@@ -22,10 +22,10 @@ class Aluno(Base):
     pagamento = Column(String(20), nullable=False)
     data_atualizacao = Column(DateTime, nullable=True)
 
-    # Relacionamento com as tabelas ExerciciosAluno e Medidas
-    exercicios = relationship('ExerciciosAluno', back_populates='aluno')
-    medidas = relationship('Medida', back_populates='aluno')
-    progresso_semanal = relationship('ProgressoSemanal', back_populates='aluno')
+    # Relacionamentos com cascade
+    exercicios = relationship('ExerciciosAluno', back_populates='aluno', cascade="all, delete-orphan")
+    medidas = relationship('Medida', back_populates='aluno', cascade="all, delete-orphan")
+    progresso_semanal = relationship('ProgressoSemanal', back_populates='aluno', cascade="all, delete-orphan")
 
     def set_password(self, password):
         self.senha = generate_password_hash(password, method="sha256")
@@ -66,23 +66,21 @@ class Aluno(Base):
         )
 
 class ProgressoSemanal(Base):
-    __tablename__ = 'ProgressoSemanal'  # Nome da tabela
+    __tablename__ = 'ProgressoSemanal'
 
-    id = Column(Integer, primary_key=True)  # ID do progresso
-    aluno_id = Column(Integer, ForeignKey('alunos.id'))
-    dia = Column(String(10), nullable=False)  # Data do progresso
-    tempo_treino = Column(Interval, nullable=False)  # Tempo de treino
-    pontos = Column(Integer, default=0)  # Pontos
-    finalizado = Column(Boolean, default=False)  # Finalizado ou não
+    id = Column(Integer, primary_key=True)
+    aluno_id = Column(Integer, ForeignKey('alunos.id', ondelete="CASCADE"))
+    dia = Column(String(10), nullable=False)
+    tempo_treino = Column(Interval, nullable=False)
+    pontos = Column(Integer, default=0)
+    finalizado = Column(Boolean, default=False)
 
-    # Relacionamento com a tabela Aluno
     aluno = relationship('Aluno', back_populates='progresso_semanal')
-
 
 class Medida(Base):
     __tablename__ = "medidas"
     id = Column(Integer, primary_key=True)
-    aluno_id = Column(Integer, ForeignKey('alunos.id'))
+    aluno_id = Column(Integer, ForeignKey('alunos.id', ondelete="CASCADE"))
     peso = Column(String(30), nullable=False)
     ombro = Column(String(30), nullable=False)
     torax = Column(String(30), nullable=False)
@@ -113,8 +111,7 @@ class Category(Base):
     
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False, unique=True)
-    
-    # Relacionamento com a tabela de exercícios
+
     exercises = relationship('Exercise', back_populates='category', cascade="all, delete-orphan")
 
     def to_dict(self):
@@ -134,10 +131,8 @@ class Exercise(Base):
     descanso = Column(String(80), nullable=False)
     carga = Column(String(80), nullable=False)
     
-    # Chave estrangeira para a tabela Category
     category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     
-    # Relacionamento com a tabela de categorias
     category = relationship('Category', back_populates='exercises')
 
     def to_dict(self):
@@ -166,13 +161,11 @@ class ExerciciosAluno(Base):
     repeticao = Column(String(80), nullable=False)
     descanso = Column(String(80), nullable=False)
     carga = Column(String(80), nullable=False)
-    # Chave estrangeira referenciando a tabela Aluno
-    aluno_id = Column(Integer, ForeignKey('alunos.id'))
-    
+    aluno_id = Column(Integer, ForeignKey('alunos.id', ondelete="CASCADE"))
+
     atualizacao = Column(DateTime, default=func.now(), onupdate=func.now())
-    # Relacionamento com a tabela Aluno
+
     aluno = relationship('Aluno', back_populates='exercicios')
 
     def __repr__(self):
         return f"{self.tipoTreino} {self.exercicio} {self.serie} {self.repeticao} {self.descanso} {self.carga} {self.atualizacao}"
-    

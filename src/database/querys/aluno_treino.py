@@ -707,7 +707,21 @@ class Querys():
             self.session.rollback()
             return False
 
-    
+    def limpar_alunos(self):
+        # Define o limite de 3 meses atrás
+        limite = datetime.now() - timedelta(days=90)
+
+        # Busca os alunos que não pagam há mais de 3 meses
+        alunos_inadimplentes = self.session.query(Aluno).filter(Aluno.data_pagamento < limite).all()
+
+        # Exclui cada um deles
+        for aluno in alunos_inadimplentes:
+            self.session.delete(aluno)
+
+        # Confirma as exclusões no banco
+        self.session.commit()
+        print(f"{len(alunos_inadimplentes)} aluno(s) excluído(s) por inadimplência.")
+        return f"{len(alunos_inadimplentes)} aluno(s) excluído(s) por inadimplência."
 
 
 # Cadastramentos, adicionar 

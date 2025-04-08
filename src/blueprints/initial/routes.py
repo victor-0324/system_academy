@@ -46,7 +46,8 @@ def mostrar():
     manifest = carregar_manifesto()
     session = current_app.db.session
     querys_instance = Querys(session)
-    alunos = querys_instance.mostrar(session)
+    alunos = querys_instance.mostrar(session) 
+    querys_instance.limpar_alunos() 
     dados_alunos = obter_dados_alunos(alunos)
     quantidade_alunos = len(alunos)
        
