@@ -375,9 +375,9 @@
     </div>
   </div>
 
-    <!--  <div class="container full subpage ">
+<!-- <div class="container full subpage ">
     <div class="section">
-        <div class="container">
+      <div class="container">
             <div class="section"> 
                 <ul class="subpages collection z-depth-1">
                     <li class="collection-img">
@@ -429,8 +429,8 @@
                 </ul>
             </div>
         </div> 
-    </div>
-</div> -->
+      </div>
+    </div> -->
 
 
     {% if faltam_tres_dias is not none %}
@@ -506,8 +506,10 @@
                                               <td>{{ exercicio.descanso }}</td>
                                           </tr>
                                           <tr>
-                                              <td><strong>Carga:</strong></td>
-                                              <td>{{ exercicio.carga }}</td>
+                                            <td><strong>Carga:</strong></td>
+                                            <td data-exercise-id="{{ exercicio.id }}">
+                                              {{ exercicio.carga }} kg
+                                            </td>
                                           </tr>
                                           <tr>
                                               <td colspan="2">

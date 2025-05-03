@@ -12,30 +12,31 @@
     padding: 0; /* Preenchimento zero para evitar espaçamento extra */
     font-weight: bold; /* Deixa o texto em negrito */
 
-}
+    }
 
-.dropdown-menu {
-    padding: 1rem;
-}
-.dropdown-item.active, .dropdown-item:active {
-    background-color: #007bff;
-    color: white;
-}
-.form-control {
-    margin-bottom: 1rem;
-}
-/* Centraliza o dropdown-menu */
-.dropdown-menu {
-    min-width: 200px;
-}
-.card-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
+    .dropdown-menu {
+        padding: 1rem;
+    }
+    .dropdown-item.active, .dropdown-item:active {
+        background-color: #007bff;
+        color: white;
+    }
+    .form-control {
+        margin-bottom: 1rem;
+    }
+    /* Centraliza o dropdown-menu */
+    .dropdown-menu {
+        min-width: 200px;
+    }
+    .card-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
 
 </style>
+
 {% endblock %}
 {% block content %}
 <section class="content-header">
@@ -45,12 +46,13 @@
       <div class="col-sm-2">
         <ol class="breadcrumb float-sm-right">
           
-          <h4 class="breadcrumb-item active">Aluno: {{aluno.nome}}</h4>
+          <h4 class="breadcrumb-item active">Aluno: {{aluno.nome}} Categoria </h4>
         </ol>
       </div>
     </div>
   </div><!-- /.container-fluid -->
 </section>
+
   <div class="card">
     <div class="card-header d-flex p-0">
       <ul class="nav nav-pills ml-auto p-2">
@@ -83,7 +85,7 @@
                             <option value="{{ categoria.id }}">{{ categoria.name }}</option>
                             {% endfor %}
                         </select>
-                    </div>
+                      </div>
                     <div class="form-group">
                         <label for="searchOptions">Filtrar:</label>
                         <select class="form-control" id="searchOptions" name="searchOptions">
@@ -110,6 +112,7 @@
         </ul>
     </div>
   </div>
+
 <div class="row">
 {% for exercicio in exercicios %}
 {% include 'pages/alunos/exercicios/exercicio.jinja' with context %}
