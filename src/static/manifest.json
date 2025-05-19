@@ -3,7 +3,7 @@
   "dir": "ltr",
   "display": "standalone",
   "name": "innovare.krypta",
-  "orientation": "any",
+  "orientation": "portrait",
   "scope": "/",
   "short_name": "innovare.krypta",
   "start_url": "/app",
