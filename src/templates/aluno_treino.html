@@ -18,576 +18,645 @@
 
   <meta name="description" content="{{ manifest.description }}">
 
-    <!-- Vincula o manifest.json usando url_for -->
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <!-- Vincula o manifest.json usando url_for -->
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 
-    <!-- Adicione as tags de ícone para diferentes tamanhos usando um loop -->
-    {% for icon in manifest.icons %}
-        {% set icon_path = url_for('static', filename=icon.src) %}
-        <link rel="icon" type="image/png" sizes="{{ icon.sizes }}" href="{{ icon_path }}">
-    {% endfor %}
-  
+  <!-- Adicione as tags de ícone para diferentes tamanhos usando um loop -->
+  {% for icon in manifest.icons %}
+  {% set icon_path = url_for('static', filename=icon.src) %}
+  <link rel="icon" type="image/png" sizes="{{ icon.sizes }}" href="{{ icon_path }}">
+  {% endfor %}
+
   <meta name="msapplication-TileColor" content="#ffffff">
- 
+
   <meta name="theme-color" content="#ffffff">
 
   <!-- CORE CSS FRAMEWORK - START -->
-  <link href="{{ url_for('static', filename='assets/css/preloader.css') }}" type="text/css" rel="stylesheet" media="screen" />
+  <link href="{{ url_for('static', filename='assets/css/preloader.css') }}" type="text/css" rel="stylesheet"
+    media="screen" />
 
-  <link href="{{ url_for('static', filename='modules/materialize/materialize.min.css') }}" type="text/css" rel="stylesheet" media="screen" />
-  <link href="{{ url_for('static', filename='modules/fonts/mdi/appicon/appicon.css') }}" type="text/css" rel="stylesheet" media="screen" />
-  <link href="{{ url_for('static', filename='modules/fonts/mdi/materialdesignicons.min.css') }}" type="text/css" rel="stylesheet" media="screen" />
-  <link href="{{ url_for('static', filename='modules/perfect-scrollbar/perfect-scrollbar.css') }}" type="text/css" rel="stylesheet" media="screen" />
-  
+  <link href="{{ url_for('static', filename='modules/materialize/materialize.min.css') }}" type="text/css"
+    rel="stylesheet" media="screen" />
+  <link href="{{ url_for('static', filename='modules/fonts/mdi/appicon/appicon.css') }}" type="text/css"
+    rel="stylesheet" media="screen" />
+  <link href="{{ url_for('static', filename='modules/fonts/mdi/materialdesignicons.min.css') }}" type="text/css"
+    rel="stylesheet" media="screen" />
+  <link href="{{ url_for('static', filename='modules/perfect-scrollbar/perfect-scrollbar.css') }}" type="text/css"
+    rel="stylesheet" media="screen" />
+
 
   <!-- CORE CSS FRAMEWORK - END -->
 
   <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
-    <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
+  <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
 
   <!-- CORE CSS TEMPLATE - START -->
 
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='assets/images/icons/favicon-16x16.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16"
+    href="{{ url_for('static', filename='assets/images/icons/favicon-16x16.png') }}">
 
-    <link href="{{ url_for('static', filename='assets/css/style.css')}}" type="text/css" rel="stylesheet" media="screen" id="main-style" />
+  <link href="{{ url_for('static', filename='assets/css/style.css')}}" type="text/css" rel="stylesheet" media="screen"
+    id="main-style" />
   <!-- CORE CSS TEMPLATE - END -->
 
-<style>
-  .desafio-container {
-        display: flex; /* Habilita o Flexbox */
-        flex-direction: column; /* Organiza os elementos em uma coluna */
-        align-items: center; /* Centraliza os elementos horizontalmente */
-        justify-content: center; /* Centraliza os elementos verticalmente */
-        gap: 5px; /* Adiciona um espaço entre os elementos */
-        padding: 10px; /* Espaçamento interno */
+  <style>
+    .desafio-container {
+      display: flex;
+      /* Habilita o Flexbox */
+      flex-direction: column;
+      /* Organiza os elementos em uma coluna */
+      align-items: center;
+      /* Centraliza os elementos horizontalmente */
+      justify-content: center;
+      /* Centraliza os elementos verticalmente */
+      gap: 5px;
+      /* Adiciona um espaço entre os elementos */
+      padding: 10px;
+      /* Espaçamento interno */
     }
 
-    
-    
-    h5 {
-     
-      text-align: left; /* Alinha o texto para a esquerda */
+    .cronometro-estiloso #tempo-cronometro {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #ff9800;
+      text-align: center;
+      padding: 10px;
+      animation: pulse 1s infinite;
     }
-    
-      .botoes {
-        display: flex;
-        justify-content: space-between;
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
     }
-  
-    
-  
+
+    .btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: space-between;
+    }
+
+
+
     .botoes button:last-child {
-        margin-right: 0; /* Remove a margem direita do último botão para evitar excesso de espaço */
+      margin-right: 0;
+      /* Remove a margem direita do último botão para evitar excesso de espaço */
     }
-  
-    
-    
+
+
+
     .table {
       width: 100%;
       margin-top: 20px;
     }
-    
-    th, td {
+
+    th,
+    td {
       text-align: center;
       padding: 10px 0;
-    
+
     }
-  
-  
+
+
     .cronometro-estiloso {
       text-align: center;
     }
-      .treino {
-        padding: 10px;
-          border: none;
-          border-radius: 15px; /* Bordas mais arredondadas */
-          cursor: pointer;
-          transition: background-color 0.3s;
-          margin-right: 10px; 
-      }
+
+    .treino {
+      padding: 10px;
+      border: none;
+      border-radius: 15px;
+      /* Bordas mais arredondadas */
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-right: 10px;
+    }
+
     #tempo-cronometro {
-        font-size: 2em;
-        
+      font-size: 2em;
+
     }
-    
+
     .container .table {
-      width: 100%; /* Garante que a tabela ocupe a largura total do seu contêiner */
-      border-collapse: collapse; /* Combina as bordas das células para uma aparência mais limpa */
-  }
-
-  .container .table th, .container .table td {
-      padding: 8px; /* Espaçamento interno das células */
-      text-align: center; /* Centraliza o texto das células */
-  }
-
-  /* Regras de mídia para ajustar a tabela em dispositivos móveis */
-  @media screen and (max-width: 600px) {
-      .container .table {
-          font-size: 0.8em; /* Reduz o tamanho da fonte para dispositivos móveis */
-      }
-  }
-
-  .mark-complete.completed {
-        background-color: #4caf50;
-        color: #fff;
+      width: 100%;
+      /* Garante que a tabela ocupe a largura total do seu contêiner */
+      border-collapse: collapse;
+      /* Combina as bordas das células para uma aparência mais limpa */
     }
 
-</style>
+    .container .table th,
+    .container .table td {
+      padding: 8px;
+      /* Espaçamento interno das células */
+      text-align: center;
+      /* Centraliza o texto das células */
+    }
+
+    /* Regras de mídia para ajustar a tabela em dispositivos móveis */
+    @media screen and (max-width: 600px) {
+      .container .table {
+        font-size: 0.8em;
+        /* Reduz o tamanho da fonte para dispositivos móveis */
+      }
+    }
+
+    .mark-complete.completed {
+      background-color: #4caf50;
+      color: #fff;
+    }
+  </style>
 
 </head>
 <!-- END HEAD -->
 
 <!-- BEGIN BODY -->
-<body class=" menu-full header-image html"  data-header="light" data-footer="light"  data-header_align="app"  data-menu_type="left" data-menu="light" data-menu_icons="on" data-footer_type="left" data-site_mode="light" data-footer_menu="show" data-footer_menu_style="light"  >
-    <div class="preloader-background">
-      <div class="preloader-wrapper">
-        <div class="configure-border-1">  
-        </div>  
-        <div class="configure-border-2">
-        </div> 
+
+<body class=" menu-full header-image html" data-header="light" data-footer="light" data-header_align="app"
+  data-menu_type="left" data-menu="light" data-menu_icons="on" data-footer_type="left" data-site_mode="light"
+  data-footer_menu="show" data-footer_menu_style="light">
+  <div class="preloader-background">
+    <div class="preloader-wrapper">
+      <div class="configure-border-1">
+      </div>
+      <div class="configure-border-2">
       </div>
     </div>
+  </div>
 
   <!-- SIDEBAR - START -->
-<!-- MAIN MENU - START -->
+  <!-- MAIN MENU - START -->
 
-<!-- MAIN MENU - END -->
+  <!-- START navigation -->
+  <nav class="fix_topscroll logo_on_fixed  topbar navigation">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="index.html" class=" brand-logo ">Innovare</a>
 
-<!--  SIDEBAR - END --><!-- SIDEBAR - START -->
+      <a href="/logout" data-target="" class="waves-effect waves-circle navicon back-button htmlmode show-on-large "><i
+          class="mdi mdi-arrow-left" data-page=""></i></a>
 
-<!-- MAIN MENU - START -->
 
-<!-- MAIN MENU - END -->
+      <a href="#" data-target="slide-nav" class="waves-effect waves-circle navicon sidenav-trigger show-on-large"><i
+          class="app-icon-menu1"></i></a>
 
-<!--  SIDEBAR - END -->
+      <a href="#" data-target="slide-settings"
+        class="waves-effect waves-circle navicon right sidenav-trigger show-on-large"><i
+          class="app-icon-equalizer"></i></a>
 
-<!-- START navigation -->
-<nav class="fix_topscroll logo_on_fixed  topbar navigation">
-  <div class="nav-wrapper container">
-    <a id="logo-container" href="index.html" class=" brand-logo " >Innovare</a>    
-      
-      <a href="/logout" data-target="" class="waves-effect waves-circle navicon back-button htmlmode show-on-large "><i class="mdi mdi-arrow-left" data-page=""></i></a>
-    
-    
-    <a href="#" data-target="slide-nav" class="waves-effect waves-circle navicon sidenav-trigger show-on-large"><i class="app-icon-menu1"></i></a>
-
-    <a href="#" data-target="slide-settings" class="waves-effect waves-circle navicon right sidenav-trigger show-on-large"><i class="app-icon-equalizer"></i></a>
-
-    <a href="#" data-target="" class="waves-effect waves-circle navicon right nav-site-mode show-on-large"><i class="app-icon-contrast"></i></a>
-    <!-- <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a> -->
-  </div>
-</nav>
+      <a href="#" data-target="" class="waves-effect waves-circle navicon right nav-site-mode show-on-large"><i
+          class="app-icon-contrast"></i></a>
+      <!-- <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a> -->
+    </div>
+  </nav>
   <ul id="slide-nav" class="sidenav sidemenu">
-  <li class="user-wrap">
-    <div class="user-view row">
-      <div class="col s3 imgarea">
-          <a href="#user" class="status available"><img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user"></a>
-      </div>
-      <div class="col s9 infoarea">
-        <!-- Nome do Aluno -->
-        <a href="#">
+    <li class="user-wrap">
+      <div class="user-view row">
+        <div class="col s3 imgarea">
+          <a href="#user" class="status available"><img class="circle"
+              src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user"></a>
+        </div>
+        <div class="col s9 infoarea">
+          <!-- Nome do Aluno -->
+          <a href="#">
             <strong>{{ aluno.nome }}</strong>
-        </a>
-    
-        <!-- Informações Detalhadas -->
-        <div>
-            <p><strong>Data de Início:</strong> {{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else 'N/A' }}</p>
+          </a>
+
+          <!-- Informações Detalhadas -->
+          <div>
+            <p><strong>Data de Início:</strong> {{ aluno.data_entrada.strftime('%d/%m/%Y') if aluno.data_entrada else
+              'N/A' }}</p>
             <p><strong>Próximo Pagamento:</strong> {{ proxima_data_pagamento }}</p>
             <p><strong>Valor:</strong> {{ aluno.pagamento }}</p>
+          </div>
         </div>
-    </div>
-    </div>
-  </li>
-  <li class="menulinks">
-    <ul class="collapsible">
-      <!-- Menu Data Start-->
-    <li class="sh-wrap">
-      <div class="subheader">
-          Explore
       </div>
-    </li>             
-    <li class="lvl1 ">
-        <div class="waves-effect "><a href="/treino/evolucao/{{ aluno.id }}" class="sidenav-trigger"><i class="mdi mdi-trending-up"></i><span class="title">Evolução</span><div class='lvl1-tag'>Evolua a cada treino.</div>  </a>
-        </div>
     </li>
-    <li class="lvl1 ">
-        <div class="waves-effect ">
-          <a href="" class="sidenav-trigger" onclick="confirmarReinicio()">
-            <i class="mdi mdi-refresh"></i>
-            <span class="title">Reiniciar</span>
-            <div class='lvl1-tag'>
-              Reiniciar o Progresso Semanal
-            </div> 
-          </a>
-      </div>
-    </li>   
-    <li class="lvl1 ">
-      <div class="waves-effect ">
-        <a href="/login/logout" class="sidenav-trigger" >
-          <i class="mdi mdi-logout"></i>
-          <span class="title">Sair</span>
-          <div class='lvl1-tag'>
-            Sair do app
-          </div> 
-        </a>
-      </div>
-    </li> 
-    <!-- Menu Data End-->
-    </ul>
-  </li>
-    
+    <li class="menulinks">
+      <ul class="collapsible">
+        <!-- Menu Data Start-->
+        <li class="sh-wrap">
+          <div class="subheader">
+            Explore
+          </div>
+        </li>
+        <li class="lvl1 ">
+          <div class="waves-effect "><a href="/treino/evolucao/{{ aluno.id }}" class="sidenav-trigger"><i
+                class="mdi mdi-trending-up"></i><span class="title">Evolução</span>
+              <div class='lvl1-tag'>Evolua a cada treino.</div>
+            </a>
+          </div>
+        </li>
+        <li class="lvl1 ">
+          <div class="waves-effect ">
+            <a href="/login/logout" class="sidenav-trigger">
+              <i class="mdi mdi-logout"></i>
+              <span class="title">Sair</span>
+              <div class='lvl1-tag'>
+                Sair do app
+              </div>
+            </a>
+          </div>
+        </li>
+        <!-- Menu Data End-->
+      </ul>
+    </li>
+
     <li class="copy-spacer"></li>
     <li class="copy-wrap">
-  <div class="copyright">
-    &copy; kryptacode @ Innovare
-  </div>
+      <div class="copyright">
+        &copy; kryptacode @ Innovare
+      </div>
   </ul>
   <!-- END navigation -->
- 
+
   <ul id="slide-settings" class="sidenav sidesettings ">
     <li class="menulinks">
       <ul class="collapsible">
-      <!-- Menu Settings Start-->
-      <li class="sh-wrap"><div class="subheader">Temas</div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="red">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-intermediate red-text text-lighten-2"></i>
-                        <span class="title">Red</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="orange">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline deep-orange-text text-lighten-2"></i>
-                        <span class="title">Orange</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="blue">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline blue-text text-lighten-2"></i>
-                        <span class="title">Blue</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="teal">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline teal-text text-lighten-2"></i>
-                        <span class="title">Teal</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="pink">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline pink-text text-lighten-2"></i>
-                        <span class="title">Pink</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="light-green">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline light-green-text text-lighten-2"></i>
-                        <span class="title">Light Green</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="purple">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline purple-text text-lighten-2"></i>
-                        <span class="title">Violet</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="green">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline green-text text-lighten-2"></i>
-                        <span class="title">Green</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings active" data-type="theme" data-value="deep-purple">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline deep-purple-text text-lighten-2"></i>
-                        <span class="title">Purple</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="amber">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline amber-text"></i>
-                        <span class="title">Yellow</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="indigo">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline indigo-text text-lighten-2"></i>
-                        <span class="title">Indigo</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="blue-grey">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline blue-grey-text text-lighten-2"></i>
-                        <span class="title">Blue Grey</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="brown">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline brown-text text-lighten-2"></i>
-                        <span class="title">Brown</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="cyan">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline cyan-text text-lighten-2"></i>
-                        <span class="title">Cyan</span>  </a>
-                        </div></li>
-                    <li class="lvl1  theme">
-                    <div class="waves-effect appsettings " data-type="theme" data-value="grey">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline grey-text text-darken-2"></i>
-                        <span class="title">Black</span>  </a>
-                        </div></li><li class="sep-wrap"><div class="divider"></div></li><li class="sh-wrap"><div class="subheader">Cor Do Sistema</div></li>
-                    <li class="lvl1  site_mode">
-                    <div class="waves-effect appsettings active" data-type="site_mode" data-value="light">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-intermediate"></i>
-                        <span class="title">Modo Claro</span>  </a>
-                        </div></li>
-                    <li class="lvl1  site_mode">
-                    <div class="waves-effect appsettings " data-type="site_mode" data-value="dark">
-                        <a href="#!">
-                        <i class="mdi mdi-checkbox-blank-outline"></i>
-                        <span class="title">Modo Escuro</span>  </a>
-                    <li class="lvl1  header">
-                   
-                   
-                   
+        <!-- Menu Settings Start-->
+        <li class="sh-wrap">
+          <div class="subheader">Temas</div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="red">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-intermediate red-text text-lighten-2"></i>
+              <span class="title">Red</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="orange">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline deep-orange-text text-lighten-2"></i>
+              <span class="title">Orange</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="blue">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline blue-text text-lighten-2"></i>
+              <span class="title">Blue</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="teal">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline teal-text text-lighten-2"></i>
+              <span class="title">Teal</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="pink">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline pink-text text-lighten-2"></i>
+              <span class="title">Pink</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="light-green">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline light-green-text text-lighten-2"></i>
+              <span class="title">Light Green</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="purple">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline purple-text text-lighten-2"></i>
+              <span class="title">Violet</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="green">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline green-text text-lighten-2"></i>
+              <span class="title">Green</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings active" data-type="theme" data-value="deep-purple">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline deep-purple-text text-lighten-2"></i>
+              <span class="title">Purple</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="amber">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline amber-text"></i>
+              <span class="title">Yellow</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="indigo">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline indigo-text text-lighten-2"></i>
+              <span class="title">Indigo</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="blue-grey">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline blue-grey-text text-lighten-2"></i>
+              <span class="title">Blue Grey</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="brown">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline brown-text text-lighten-2"></i>
+              <span class="title">Brown</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="cyan">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline cyan-text text-lighten-2"></i>
+              <span class="title">Cyan</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  theme">
+          <div class="waves-effect appsettings " data-type="theme" data-value="grey">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline grey-text text-darken-2"></i>
+              <span class="title">Black</span> </a>
+          </div>
+        </li>
+        <li class="sep-wrap">
+          <div class="divider"></div>
+        </li>
+        <li class="sh-wrap">
+          <div class="subheader">Cor Do Sistema</div>
+        </li>
+        <li class="lvl1  site_mode">
+          <div class="waves-effect appsettings active" data-type="site_mode" data-value="light">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-intermediate"></i>
+              <span class="title">Modo Claro</span> </a>
+          </div>
+        </li>
+        <li class="lvl1  site_mode">
+          <div class="waves-effect appsettings " data-type="site_mode" data-value="dark">
+            <a href="#!">
+              <i class="mdi mdi-checkbox-blank-outline"></i>
+              <span class="title">Modo Escuro</span> </a>
+        <li class="lvl1  header">
+
+
+
       </ul>
     </li>
   </ul>
 
-<div class="menu-close">
-  <i class="mdi mdi-close">
+  <div class="menu-close">
+    <i class="mdi mdi-close">
 
-  </i>
-</div>
-
-<div class="content-area">
-  <div class="pagehead-bg   primary-bg" >
-  </div> 
-
-  <div class="container has-pagehead is-pagetitle">
-    <div class="section">
-      <h5 class="pagetitle">{{ aluno.nome }}</h5>
-
-    </div>
+    </i>
   </div>
 
-<!-- <div class="container full subpage ">
-    <div class="section">
-      <div class="container">
-            <div class="section"> 
-                <ul class="subpages collection z-depth-1">
-                    <li class="collection-img">
-                        <a class="img-wrap" href="#!">
-                        <img src="{{ url_for('static', filename='images/default.png') }}" alt="manutencao" style="max-width: 100%; height: auto;">
-                            <div class="desafio-container">
-                                <h3>Progresso Semanal</h3>
-                                <div class="container">
-                                    <table class="table" aria-labelledby="tabelaProgressoLabel">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Seg</th>
-                                                <th scope="col">Ter</th>
-                                                <th scope="col">Qua</th>
-                                                <th scope="col">Qui</th>
-                                                <th scope="col">Sex</th>
-                                                <th scope="col">Sab</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tabelaProgresso" aria-labelledby="rowProgressoLabel">
-                                            <tr id="rowProgresso">
-                                                <td id="segunda"></td>
-                                                <td id="terca"></td>
-                                                <td id="quarta"></td>
-                                                <td id="quinta"></td>
-                                                <td id="sexta"></td>
-                                                <td id="sabado"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <h5 id="resultadoDia"></h5>
-                                    <div id="mensagemAlerta"></div>
-                                    <div class="cronometro-estiloso">
-                                        <div id="tempo-cronometro">00:00:00</div>
-                                    </div>
-                                    <h5 id="resultadoSemana"></h5>
-                                </div>
-                            </div> 
-                        </a>
-                        <div class="botoes" data-aluno-id="{{ aluno.id or '' }}">
-                            <button class="btn waves-effect waves-light bg-primary" id="btnIniciarTreino" type="button">
-                                Iniciar <i class="mdi mdi-timer"></i>
-                            </button>
-                            <button class="btn waves-effect waves-light bg-primary" id="btnConcluirTreino" type="button">
-                                Parar <i class="mdi mdi-timer-off"></i>
-                            </button>
-                        </div> 
-                    </li>
-                </ul>
-            </div>
-        </div> 
+  <div class="content-area">
+    <div class="pagehead-bg   primary-bg">
+    </div>
+
+    <div class="container has-pagehead is-pagetitle">
+      <div class="section">
+        <h5 class="pagetitle">{{ aluno.nome }}</h5>
+
       </div>
-    </div> -->
+    </div>
 
+    <div class="container full subpage">
+      <div class="section">
+        <div class="container">
+          <div class="section">
+            <ul class="subpages collection z-depth-1">
+              <li class="collection-img">
 
-    {% if faltam_tres_dias is not none %}
-        <div id="modal1577950785" class="modal modal-mediabox default-open open" tabindex="0" style="z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);">
-          <div class="modal-content profile-card">
-            <div class="ui-profile">
-              <div class="primg">
-                <img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user">
-              </div>
-              <div class="prinfo card-panel">
-                <div class="prname">
-                  <h4 class="name"></h4>
-                  <div class="pos">
+                <div class="desafio-container">
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                  {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
                   </div>
-                    <p>{{ faltam_tres_dias }}</p>              
+                  {% endfor %}
+                  {% endif %}
+                  {% endwith %}
+
+                  <div id="mensagemAlerta" style="display: none; color: red; font-weight: bold;"></div>
+                  <h4>Progresso Semanal</h4>
+                  <div class="container">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Seg</th>
+                          <th>Ter</th>
+                          <th>Qua</th>
+                          <th>Qui</th>
+                          <th>Sex</th>
+                          <th>Sab</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td id="segunda"></td>
+                          <td id="terca"></td>
+                          <td id="quarta"></td>
+                          <td id="quinta"></td>
+                          <td id="sexta"></td>
+                          <td id="sabado"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br>
+                    <div class="cronometro-estiloso">
+                      <div id="tempo-cronometro">00:00:00</div>
+                    </div>
+
+                    <div id="mensagemAlerta" style="display: none; color: red; font-weight: bold;"></div>
+                    <h6 id="resultadoDia"></h6>
+                    <p id="resultadoSemana"></p>
+                  </div>
                 </div>
-              </div>
-            </div>  
+                <div class="botoes" data-aluno-id="{{ aluno.id or ''}}">
+                  <button id="btnIniciarTreino" class="btn">Iniciar</button>
+                  <button id="btnConcluirTreino" class="btn">Parar</button>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
-    {% endif %}
+      </div>
+    </div>
 
-  <div class="container over transparent pr0 pl0">
-      <div class="section pt0 pb0">
-          <div class="row">
-            <div class="col s12 pad-0">
-              <h5 class="bot-20 sec-tit">Exercicios</h5>
-              <ul class="collapsible">
-                  {% set dias_exercicios = {
-                      'segunda&sexta': 'Segunda e Sexta',
-                      'terca&quinta': 'Terca e Quinta',
-                      'quarta': 'Quarta e Sabado',
-                  } %}
-                  {% for dia, nome_amigavel_dia in dias_exercicios.items() %}
-                      {% set exercicios_por_dia = [] %}
-                      {% for exercicio in exercicios %}
-                          {% if exercicio.tipoTreino == dia %}
-                              {% set _ = exercicios_por_dia.append(exercicio) %}
-                          {% endif %}
-                      {% endfor %}
-                      <li>
-                          <div class="collapsible-header" tabindex="0">
-                            <i class="mdi mdi-calendar"></i>
-                            {{ nome_amigavel_dia }}
-                          </div>
-                          <div class="collapsible-body">
-                              <table class="table text-left">
-                                  <thead>
-                                      <tr>
-                                          
-                                      </tr>
-                                  </thead>
-                                  <tbody class="exercicios exercicios-{{ nome_amigavel_dia|replace('&', 'and')|lower }}">
-                                      {% for exercicio in exercicios_por_dia %}
-                                          <tr>
-                                              <td><strong>Exercício:</strong></td>
-                                            <td>
-                                                {{ exercicio.exercicio|capitalize }}<br>
-                                                <button class="mark-complete btn" data-exercise-id="{{ exercicio.id }}">💤🕒💤</button>
-                                            </td>
-                                             
-                                          </tr>
-                                          <tr>
-                                              <td><strong>Série:</strong></td>
-                                              <td>{{ exercicio.serie }}</td>
-                                          </tr>
-                                          <tr>
-                                              <td><strong>Repetição:</strong></td>
-                                              <td>{{ exercicio.repeticao }}</td>
-                                          </tr>
-                                          <tr>
-                                              <td><strong>Descanso:</strong></td>
-                                              <td>{{ exercicio.descanso }}</td>
-                                          </tr>
-                                          <tr>
-                                            <td><strong>Carga:</strong></td>
-                                            <td data-exercise-id="{{ exercicio.id }}">
-                                              {{ exercicio.carga }} kg
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                              <td colspan="2">
-                                                  <br>
-                                              </td>
-                                          </tr>
-                                      {% endfor %}
-                                  </tbody>
-                              </table>
-                          </div>
-                      </li>
-                  {% endfor %}
-              </ul>
+    {% if faltam_tres_dias is not none %}
+    <div id="modal1577950785" class="modal modal-mediabox default-open open" tabindex="0"
+      style="z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);">
+      <div class="modal-content profile-card">
+        <div class="ui-profile">
+          <div class="primg">
+            <img class="circle" src="{{ url_for('static', filename='images/IMG.png') }}" alt="menu user">
+          </div>
+          <div class="prinfo card-panel">
+            <div class="prname">
+              <h4 class="name"></h4>
+              <div class="pos">
+              </div>
+              <p>{{ faltam_tres_dias }}</p>
             </div>
           </div>
+        </div>
       </div>
-  </div>
+    </div>
+    {% endif %}
 
-<footer class="page-footer center social-colored ">
-  <div class="container footer-content">
-    <div class="row">
-      <div class="">
-        <h6 class="logo">Redes Sociais</h6>
+    <div class="container over transparent pr0 pl0">
+      <div class="section pt0 pb0">
+        <div class="row">
+          <div class="col s12 pad-0">
+            <h5 class="bot-20 sec-tit">Exercicios</h5>
+            <ul class="collapsible">
+              {% set dias_exercicios = {
+              'segunda&sexta': 'Segunda e Sexta',
+              'terca&quinta': 'Terca e Quinta',
+              'quarta': 'Quarta e Sabado',
+              } %}
+              {% for dia, nome_amigavel_dia in dias_exercicios.items() %}
+              {% set exercicios_por_dia = [] %}
+              {% for exercicio in exercicios %}
+              {% if exercicio.tipoTreino == dia %}
+              {% set _ = exercicios_por_dia.append(exercicio) %}
+              {% endif %}
+              {% endfor %}
+              <li>
+                <div class="collapsible-header" tabindex="0">
+                  <i class="mdi mdi-calendar"></i>
+                  {{ nome_amigavel_dia }}
+                </div>
+                <div class="collapsible-body">
+                  <table class="table text-left">
+                    <thead>
+                      <tr>
+
+                      </tr>
+                    </thead>
+                    <tbody class="exercicios exercicios-{{ nome_amigavel_dia|replace('&', 'and')|lower }}">
+                      {% for exercicio in exercicios_por_dia %}
+                      <tr>
+                        <td><strong>Exercício:</strong></td>
+                        <td>
+                          {{ exercicio.exercicio|capitalize }}<br>
+                          <button class="mark-complete btn" data-exercise-id="{{ exercicio.id }}">💤🕒💤</button>
+                        </td>
+
+                      </tr>
+                      <tr>
+                        <td><strong>Série:</strong></td>
+                        <td>{{ exercicio.serie }}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Repetição:</strong></td>
+                        <td>{{ exercicio.repeticao }}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Descanso:</strong></td>
+                        <td>{{ exercicio.descanso }}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Carga:</strong></td>
+                        <td data-exercise-id="{{ exercicio.id }}">
+                          {{ exercicio.carga }} kg
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <br>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
           </div>
-      <div class="link-wrap">
-
-        <ul class="social-wrap">
-          <li class="social">
-            <a class="social-link" href="https://www.instagram.com/academiainnovare/" target="_blank">
-              <i class="mdi mdi-instagram"></i>
-            </a>      
-            <a class="social-link" href="https://wa.me/558481544585" target="_blank">
-              <i class="mdi mdi-whatsapp"></i>
-            </a>        
-          </li>
-        </ul>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="footer-copyright">
-    <div class="container">
-      &copy; <!--<a class="" href="https://krypta.cloud/"><strong>Krypta</strong></a> --> Academia Innovare. Todos os direitos reservados.
-    </div>
-  </div>
-</footer>
+    <footer class="page-footer center social-colored ">
+      <div class="container footer-content">
+        <div class="row">
+          <div class="">
+            <h6 class="logo">Redes Sociais</h6>
+          </div>
+          <div class="link-wrap">
 
-  <!-- <div class="backtotop">
+            <ul class="social-wrap">
+              <li class="social">
+                <a class="social-link" href="https://www.instagram.com/academiainnovare/" target="_blank">
+                  <i class="mdi mdi-instagram"></i>
+                </a>
+                <a class="social-link" href="https://wa.me/558481544585" target="_blank">
+                  <i class="mdi mdi-whatsapp"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-copyright">
+        <div class="container">
+          &copy; <!--<a class="" href="https://krypta.cloud/"><strong>Krypta</strong></a> --> Academia Innovare. Todos
+          os direitos reservados.
+        </div>
+      </div>
+    </footer>
+
+    <!-- <div class="backtotop">
     <a class="btn-floating btn primary-bg">
       <i class="mdi mdi-chevron-up"></i>
     </a>
   </div> -->
-</div>
-<!--.content-area-->
-<!-- <div class="footer-menu circular">
+  </div>
+  <!--.content-area-->
+  <!-- <div class="footer-menu circular">
 </div> -->
 
-<script src="{{ url_for('static', filename='assets/js/pwa.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/pwa.js') }}"></script>
 
 
-<!-- CORE JS FRAMEWORK - START -->
-<script src="{{ url_for('static', filename='modules/jquery/jquery-2.2.4.min.js') }}"></script>
-<script src="{{ url_for('static', filename='modules/materialize/materialize.js') }}"></script>
-<script src="{{ url_for('static', filename='modules/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-<script src="{{ url_for('static', filename='assets/js/variables.js') }}"></script>
-<!-- CORE JS FRAMEWORK - END -->
+  <!-- CORE JS FRAMEWORK - START -->
+  <script src="{{ url_for('static', filename='modules/jquery/jquery-2.2.4.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='modules/materialize/materialize.js') }}"></script>
+  <script src="{{ url_for('static', filename='modules/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/variables.js') }}"></script>
+  <!-- CORE JS FRAMEWORK - END -->
 
-<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
-<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
-<script src="{{ url_for('static', filename='assets/js/common.js') }}"></script>
+  <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
+  <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
+  <script src="{{ url_for('static', filename='assets/js/common.js') }}"></script>
 
-<!-- CORE TEMPLATE JS - START -->
-<script src="{{ url_for('static', filename='modules/app/init.js') }}"></script>
-<script src="{{ url_for('static', filename='modules/app/settings.js') }}"></script>
+  <!-- CORE TEMPLATE JS - START -->
+  <script src="{{ url_for('static', filename='modules/app/init.js') }}"></script>
+  <script src="{{ url_for('static', filename='modules/app/settings.js') }}"></script>
 
-<script src="{{ url_for('static', filename='modules/app/scripts.js') }}"></script>
+  <script src="{{ url_for('static', filename='modules/app/scripts.js') }}"></script>
 
-<script src="{{ url_for('static', filename='assets/js/preloader.js') }}"></script>
-<script src="{{ url_for('static', filename='js/treinos.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/preloader.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/treinos.js') }}"></script>
 </body>
+
 </html>

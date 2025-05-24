@@ -1,9 +1,19 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Boolean, func, Interval
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+    ForeignKey,
+    DateTime,
+    Boolean,
+    func,
+    Interval,
+)
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta, timezone
 from src.database import Base
+
 
 class Aluno(Base):
     __tablename__ = "alunos"
@@ -23,9 +33,15 @@ class Aluno(Base):
     data_atualizacao = Column(DateTime, nullable=True)
 
     # Relacionamentos com cascade
-    exercicios = relationship('ExerciciosAluno', back_populates='aluno', cascade="all, delete-orphan")
-    medidas = relationship('Medida', back_populates='aluno', cascade="all, delete-orphan")
-    progresso_semanal = relationship('ProgressoSemanal', back_populates='aluno', cascade="all, delete-orphan")
+    exercicios = relationship(
+        "ExerciciosAluno", back_populates="aluno", cascade="all, delete-orphan"
+    )
+    medidas = relationship(
+        "Medida", back_populates="aluno", cascade="all, delete-orphan"
+    )
+    progresso_semanal = relationship(
+        "ProgressoSemanal", back_populates="aluno", cascade="all, delete-orphan"
+    )
 
     def set_password(self, password):
         self.senha = generate_password_hash(password, method="sha256")
@@ -34,7 +50,7 @@ class Aluno(Base):
         return check_password_hash(self.senha, password)
 
     def is_active(self):
-        return True 
+        return True
 
     def get_id(self):
         return str(self.id)
@@ -65,22 +81,25 @@ class Aluno(Base):
             f"{self.login} {self.senha} {self.data_entrada} {self.data_pagamento} {self.jatreino} {self.permissao}"
         )
 
+
 class ProgressoSemanal(Base):
-    __tablename__ = 'ProgressoSemanal'
+    __tablename__ = "ProgressoSemanal"
 
     id = Column(Integer, primary_key=True)
-    aluno_id = Column(Integer, ForeignKey('alunos.id', ondelete="CASCADE"))
-    dia = Column(String(10), nullable=False)
+    aluno_id = Column(Integer, ForeignKey("alunos.id", ondelete="CASCADE"))
+    dia = Column(String(50), nullable=False)
     tempo_treino = Column(Interval, nullable=False)
     pontos = Column(Integer, default=0)
     finalizado = Column(Boolean, default=False)
+    data_criacao = Column(DateTime, default=datetime.now)
 
-    aluno = relationship('Aluno', back_populates='progresso_semanal')
+    aluno = relationship("Aluno", back_populates="progresso_semanal")
+
 
 class Medida(Base):
     __tablename__ = "medidas"
     id = Column(Integer, primary_key=True)
-    aluno_id = Column(Integer, ForeignKey('alunos.id', ondelete="CASCADE"))
+    aluno_id = Column(Integer, ForeignKey("alunos.id", ondelete="CASCADE"))
     peso = Column(String(30), nullable=False)
     ombro = Column(String(30), nullable=False)
     torax = Column(String(30), nullable=False)
@@ -97,7 +116,7 @@ class Medida(Base):
     pant_e = Column(String(30), nullable=False)
     data_atualizacao = Column(DateTime, nullable=True)
 
-    aluno = relationship('Aluno', back_populates='medidas')
+    aluno = relationship("Aluno", back_populates="medidas")
 
     def __repr__(self):
         return (
@@ -106,23 +125,24 @@ class Medida(Base):
             f"{self.quadril} {self.coxa_d} {self.coxa_e} {self.pant_d} {self.pant_e} {self.data_atualizacao}"
         )
 
+
 class Category(Base):
-    __tablename__ = 'categories'
-    
+    __tablename__ = "categories"
+
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False, unique=True)
 
-    exercises = relationship('Exercise', back_populates='category', cascade="all, delete-orphan")
+    exercises = relationship(
+        "Exercise", back_populates="category", cascade="all, delete-orphan"
+    )
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name
-        }
+        return {"id": self.id, "name": self.name}
+
 
 class Exercise(Base):
-    __tablename__ = 'exercises'
-    
+    __tablename__ = "exercises"
+
     id = Column(Integer, primary_key=True)
     tipoTreino = Column(String(80), nullable=False)
     exercicio = Column(String(80), nullable=False)
@@ -130,27 +150,28 @@ class Exercise(Base):
     repeticao = Column(String(80), nullable=False)
     descanso = Column(String(80), nullable=False)
     carga = Column(String(80), nullable=False)
-    
-    category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
-    
-    category = relationship('Category', back_populates='exercises')
+
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+
+    category = relationship("Category", back_populates="exercises")
 
     def to_dict(self):
         return {
-            'id': self.id,
-            'tipoTreino': self.tipoTreino,
-            'exercicio': self.exercicio,
-            'serie': self.serie,
-            'repeticao': self.repeticao,
-            'descanso': self.descanso,
-            'carga': self.carga,
+            "id": self.id,
+            "tipoTreino": self.tipoTreino,
+            "exercicio": self.exercicio,
+            "serie": self.serie,
+            "repeticao": self.repeticao,
+            "descanso": self.descanso,
+            "carga": self.carga,
         }
-    
+
     def __repr__(self):
         return (
             f"Exercise({self.tipoTreino}, {self.exercicio}, {self.serie}, "
             f"{self.repeticao}, {self.descanso}, {self.carga})"
         )
+
 
 class ExerciciosAluno(Base):
     __tablename__ = "exercicios_aluno"
@@ -161,11 +182,11 @@ class ExerciciosAluno(Base):
     repeticao = Column(String(80), nullable=False)
     descanso = Column(String(80), nullable=False)
     carga = Column(String(80), nullable=False)
-    aluno_id = Column(Integer, ForeignKey('alunos.id', ondelete="CASCADE"))
+    aluno_id = Column(Integer, ForeignKey("alunos.id", ondelete="CASCADE"))
 
     atualizacao = Column(DateTime, default=func.now(), onupdate=func.now())
 
-    aluno = relationship('Aluno', back_populates='exercicios')
+    aluno = relationship("Aluno", back_populates="exercicios")
 
     def __repr__(self):
         return f"{self.tipoTreino} {self.exercicio} {self.serie} {self.repeticao} {self.descanso} {self.carga} {self.atualizacao}"
