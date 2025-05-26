@@ -274,5 +274,5 @@ def verificar_progresso_semanal():
                 "pontos": pontos,
             }
         )
-
+    print(progresso)
     return jsonify({"total_pontos": total_pontos, "progresso": progresso})

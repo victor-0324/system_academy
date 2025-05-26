@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.removeItem('treinoAtivo');
         localStorage.removeItem('tempoInicial');
         const msgDiv = document.getElementById("mensagemAlerta");
-        msgDiv.textContent = 'Tempo máximo (2h) atingido. Treino não foi salvo.';
+        msgDiv.textContent = 'Tempo finalizado automaticamente ';
         msgDiv.style.display = 'block';
         carregarProgressoSemanal();
         atualizarBotoes();
