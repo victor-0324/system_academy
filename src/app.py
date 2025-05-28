@@ -1,6 +1,5 @@
 from flask import Flask, current_app
 from flask_login import LoginManager
-from src.database.querys import Querys
 from src.database.config import db, DBConnectionHandler, DevelopmentConfig
 from src.database import Base
 from src.database.models import Aluno

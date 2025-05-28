@@ -435,7 +435,8 @@
       </div>
     </div>
 
-   <!--  <div class="container full subpage">
+    {% if current_user.id == 4 %} 
+    <div class="container full subpage">
       <div class="section">
         <div class="container">
           <div class="section">
@@ -485,7 +486,7 @@
 
                     <div id="mensagemAlerta" style="display: none; color: red; font-weight: bold;"></div>
                     <h6 id="resultadoDia"></h6>
-                    <p id="resultadoSemana"></p>
+                    <p id="ponTos"></p>
                   </div>
                 </div>
                 <div class="botoes" data-aluno-id="{{ aluno.id or ''}}">
@@ -498,7 +499,8 @@
         </div>
       </div>
     </div>
--->
+    {% endif %}
+
     {% if faltam_tres_dias is not none %}
     <div id="modal1577950785" class="modal modal-mediabox default-open open" tabindex="0"
       style="z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);">

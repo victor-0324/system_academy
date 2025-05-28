@@ -9,7 +9,6 @@ from sqlalchemy import (
     Interval,
 )
 from sqlalchemy.orm import relationship
-from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta, timezone
 from src.database import Base
@@ -190,3 +189,13 @@ class ExerciciosAluno(Base):
 
     def __repr__(self):
         return f"{self.tipoTreino} {self.exercicio} {self.serie} {self.repeticao} {self.descanso} {self.carga} {self.atualizacao}"
+
+
+class HistoricoSemanal(Base):
+    __tablename__ = 'historico_semanal'
+    id = Column(Integer, primary_key=True)
+    aluno_id = Column(Integer, nullable=False)
+    data_criacao = Column(DateTime)
+    tempo_treino = Column(Interval)
+    pontos = Column(Integer) 
+

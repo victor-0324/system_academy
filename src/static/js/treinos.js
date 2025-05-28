@@ -69,11 +69,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Atualiza resumo
         document.getElementById('resultadoDia').textContent =
-            `Tempo hoje: ${formatarSegundos(
+            `Hoje: ${formatarSegundos(
                 progresso.find(p => p.dia_nome === new Date().toLocaleDateString('pt-BR', { weekday: 'long' }))
                     ?.tempo_treino || 0
             )}`;
-        document.getElementById('resultadoSemana').textContent =
+        document.getElementById('ponTos').textContent =
             `Pontos: ${total_pontos}`;
     }
 
