@@ -1088,47 +1088,38 @@ class Querys:
 
     def calcular_conquista(self, mapa: dict) -> str:
         """
-        Retorna apenas UMA conquista, na ordem de prioridade:
-        1) Semana completa 🔥
-        2) 3 Dias Seguidos 🥇
-        3) 1º Treino 🎯
-        Caso não haja nenhuma, retorna string vazia.
+        De segunda (0) a sábado (5):
+        - total_dias: quantos dias tiveram ≥5min
+        Retorna UMA mensagem, na prioridade:
+        1) Semana completa 🔥 (6 dias)
+        2) 3 Dias de Treino 🥇  (total_dias >= 3)
+        3) X Dias de Treino 🎯  (1 <= total_dias < 3)
+        4) 😴 Sem Treino      (total_dias == 0)
         """
-        MIN_SEGUNDOS = 5 * 60  # 5 minutos
-        fuso_brasilia = ZoneInfo("America/Sao_Paulo")
-        hoje = datetime.now(fuso_brasilia)
-        inicio_semana = (hoje - timedelta(days=hoje.weekday())).replace(
+        MIN_SEGUNDOS = 5 * 60
+        fuso = ZoneInfo("America/Sao_Paulo")
+        hoje = datetime.now(fuso)
+        inicio_sem = (hoje - timedelta(days=hoje.weekday())).replace(
             hour=0, minute=0, second=0, microsecond=0
         )
 
-        # Gera as datas ISO de segunda (0) a sábado (5)
-        dias_iso = [
-            (inicio_semana + timedelta(days=i)).date().isoformat()
-            for i in range(6)
-        ]
+        # Datas de segunda (0) a sábado (5)
+        dias = [(inicio_sem + timedelta(days=i)).date().isoformat() for i in range(6)]
+        # Marca se treinou ≥5min em cada dia
+        valido = [mapa.get(d, {}).get("tempo", 0) >= MIN_SEGUNDOS for d in dias]
+        total_dias = sum(valido)
 
-        # Marca cada dia se teve ≥5 min
-        valido = {
-            dia: (mapa.get(dia, {}).get("tempo", 0) >= MIN_SEGUNDOS)
-            for dia in dias_iso
-        }
-
-        # 1) Semana completa
-        if all(valido.values()):
+        # 1) Semana completa (6 dias)
+        if total_dias == 6:
             return "💪🏼 SEMANA COMPLETA 🔥"
 
-        # 2) 3 dias seguidos
-        streak = 0
-        for dia in dias_iso:
-            if valido[dia]:
-                streak += 1
-                if streak >= 3:
-                    return "🥇 3 Dias Seguidos"
-            else:
-                streak = 0
+        # 2) Três ou mais dias (não precisa ser seguidos)
+        if total_dias >= 3:
+            return f"🥇 {total_dias} Dias de Treino"
 
-        # 3) Primeiro treino
-        if any(valido.values()):
-            return "🎯 1º Treino"
+        # 3) Um ou dois dias
+        if total_dias >= 1:
+            return f"🎯 {total_dias} Dias de Treino"
 
-        return ""
+        # 4) Sem treino
+        return "😴 Sem Treino"
