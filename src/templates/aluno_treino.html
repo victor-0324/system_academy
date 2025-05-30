@@ -57,126 +57,7 @@
 
   <link href="{{ url_for('static', filename='assets/css/style.css')}}" type="text/css" rel="stylesheet" media="screen"
     id="main-style" />
-  <!-- CORE CSS TEMPLATE - END -->
-
-  <style>
-    .desafio-container {
-      display: flex;
-      /* Habilita o Flexbox */
-      flex-direction: column;
-      /* Organiza os elementos em uma coluna */
-      align-items: center;
-      /* Centraliza os elementos horizontalmente */
-      justify-content: center;
-      /* Centraliza os elementos verticalmente */
-      gap: 5px;
-      /* Adiciona um espaço entre os elementos */
-      padding: 10px;
-      /* Espaçamento interno */
-    }
-
-    .cronometro-estiloso #tempo-cronometro {
-      font-size: 2.5em;
-      font-weight: bold;
-      color: #ff9800;
-      text-align: center;
-      padding: 10px;
-      animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.05);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .btn[disabled] {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .botoes {
-      display: flex;
-      justify-content: space-between;
-    }
-
-
-
-    .botoes button:last-child {
-      margin-right: 0;
-      /* Remove a margem direita do último botão para evitar excesso de espaço */
-    }
-
-
-
-    .table {
-      width: 100%;
-      margin-top: 20px;
-    }
-
-    th,
-    td {
-      text-align: center;
-      padding: 10px 0;
-
-    }
-
-
-    .cronometro-estiloso {
-      text-align: center;
-    }
-
-    .treino {
-      padding: 10px;
-      border: none;
-      border-radius: 15px;
-      /* Bordas mais arredondadas */
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-right: 10px;
-    }
-
-    #tempo-cronometro {
-      font-size: 2em;
-
-    }
-
-    .container .table {
-      width: 100%;
-      /* Garante que a tabela ocupe a largura total do seu contêiner */
-      border-collapse: collapse;
-      /* Combina as bordas das células para uma aparência mais limpa */
-    }
-
-    .container .table th,
-    .container .table td {
-      padding: 8px;
-      /* Espaçamento interno das células */
-      text-align: center;
-      /* Centraliza o texto das células */
-    }
-
-    /* Regras de mídia para ajustar a tabela em dispositivos móveis */
-    @media screen and (max-width: 600px) {
-      .container .table {
-        font-size: 0.8em;
-        /* Reduz o tamanho da fonte para dispositivos móveis */
-      }
-    }
-
-    .mark-complete.completed {
-      background-color: #4caf50;
-      color: #fff;
-    }
-  </style>
+  <link href="{{ url_for('static', filename='css/treinos.css')}}" type="text/css" rel="stylesheet" >
 
 </head>
 <!-- END HEAD -->
@@ -456,50 +337,13 @@
 
                   <div id="mensagemAlerta" style="display: none; color: red; font-weight: bold;"></div>
                   <h4>Progresso Semanal</h4>
-                  <div class="container">
+                 <div class="container">
 
-                   <ul style="
-                      display: flex;
-                      gap: 12px;
-                      list-style: none;
-                      padding: 8px 16px;
-                      margin: 0 0 12px;
-                      border-radius: 6px;
-                      background: rgba(255, 255, 255, 0.8);
-                      backdrop-filter: blur(8px);
-                      font-size: 11px;
-                      font-weight: 500;
-                      color: #111;
-                      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                    ">
-                  <li id="conquistas" style="
-                        display: flex;
-                        align-items: center;
-                        gap: 6px;
-                        padding-left: 8px;
-                        border-left: 4px solid #3B82F6;  /* azul vivo */
-                      ">
-                    🏆 <span></span>
-                  </li>
-                  <li id="ponTos" style="
-                        display: flex;
-                        align-items: center;
-                        gap: 6px;
-                        padding-left: 8px;
-                        border-left: 4px solid #10B981;  /* verde vibrante */
-                      ">
-                    ⭐ <span></span>
-                  </li>
-                  <li id="nivel" style="
-                        display: flex;
-                        align-items: center;
-                        gap: 6px;
-                        padding-left: 8px;
-                        border-left: 4px solid #F97316;  /* laranja quente */
-                      ">
-                    🏅 <span></span>
-                  </li>
-                </ul>
+                    <ul class="badges-list">
+                      <li id="conquistas"></li>
+                      <li id="ponTos"></li>
+                      <li id="nivel"></li>
+                    </ul>
 
                     <table class="table">
                       <thead>

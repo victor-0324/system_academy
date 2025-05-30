@@ -278,7 +278,7 @@ def verificar_progresso_semanal():
     # 🎯 Novas funcionalidades de gamificação:
     nivel = querys_instance.calcular_nivel(aluno_id)
     conquistas = querys_instance.calcular_conquistas(mapa)
-    print("Conquistas calculadas:", conquistas)
+
     return jsonify({
         "total_pontos": total_pontos,
         "nivel": nivel,

@@ -1,74 +1,155 @@
+.badges-list {
+  text-align: center;
+  /* centraliza todas as badges no container */
+  padding: 8px 0;
+  margin: 0;
+  list-style: none;
+}
+
+.badges-list li {
+  display: inline-block;
+  /* comporta-se como texto, mas aceita padding */
+  white-space: nowrap;
+  /* não quebra texto */
+  text-align: center;
+  /* centraliza texto/emoji dentro da badge */
+  padding: 4px 12px;
+  margin: 0 6px;
+  border-left: 4px solid #333;
+  font-size: 11px;
+  font-weight: 500;
+  color: #111;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* cores específicas */
+#conquistas {
+  border-color: #3B82F6;
+}
+
+#ponTos {
+  border-color: #10B981;
+}
+
+#nivel {
+  border-color: #F97316;
+}
+
 .desafio-container {
-    background-color: #ffffffe1; /* Cor de fundo dark */
-    display: flex; /* Habilita o Flexbox */
-    flex-direction: column; /* Organiza os elementos em uma coluna */
-    align-items: center; /* Centraliza os elementos horizontalmente */
-    justify-content: center; /* Centraliza os elementos verticalmente */
-    gap: 10px; /* Adiciona um espaço entre os elementos */
-    padding: 20px; /* Espaçamento interno */
-  }
-  
-  
-  h2, h4 {
-    color: #F28907; /* Cor do texto laranja escuro */
-  }
-  
-  h5 {
-    color: #000; /* Cor do texto laranja escuro */
-    border: 2px solid #F28907; /* Borda com a cor #F28907 */
-    text-align: left; /* Alinha o texto para a esquerda */
-  }
-  
-  .botoes {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  /* Habilita o Flexbox */
+  flex-direction: column;
+  /* Organiza os elementos em uma coluna */
+  align-items: center;
+  /* Centraliza os elementos horizontalmente */
+  justify-content: center;
+  /* Centraliza os elementos verticalmente */
+  gap: 5px;
+  /* Adiciona um espaço entre os elementos */
+  padding: 10px;
+  /* Espaçamento interno */
 }
 
-  .botoes button {
-      padding: 10px;
-      background-color: #F28907; /* Nova cor do botão */
-      color: #000;
-      border: none;
-      border-radius: 15px; /* Bordas mais arredondadas */
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-right: 10px; /* Adiciona um pequeno espaço entre os botões */
-  }
-
-  .botoes button:last-child {
-      margin-right: 0; /* Remove a margem direita do último botão para evitar excesso de espaço */
-  }
-
-  .botoes button:hover {
-      background-color: #D57706; /* Cor de fundo mais escura ao passar o mouse */
-  }
-  
-  .table {
-    width: 100%;
-    margin-top: 20px;
-  }
-  
-  th, td {
-    text-align: center;
-    padding: 10px 0;
-    color: #000; /* Cor do texto laranja escuro */
-  }
-
-
-  .cronometro-estiloso {
-    text-align: center;
+.cronometro-estiloso #tempo-cronometro {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #ff9800;
+  text-align: center;
+  padding: 10px;
+  animation: pulse 1s infinite;
 }
-  .treino {
-    padding: 10px;
-      background-color: #F28907; /* Nova cor do botão */
-      color: #000;
-      border: none;
-      border-radius: 15px; /* Bordas mais arredondadas */
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-right: 10px; 
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
   }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.botoes {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+.botoes button:last-child {
+  margin-right: 0;
+  /* Remove a margem direita do último botão para evitar excesso de espaço */
+}
+
+
+
+.table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+th,
+td {
+  text-align: center;
+  padding: 10px 0;
+
+}
+
+
+.cronometro-estiloso {
+  text-align: center;
+}
+
+.treino {
+  padding: 10px;
+  border: none;
+  border-radius: 15px;
+  /* Bordas mais arredondadas */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+}
+
 #tempo-cronometro {
-    font-size: 2em;
-    color: #4CAF50; /* Cor verde para destacar */
+  font-size: 2em;
+
+}
+
+.container .table {
+  width: 100%;
+  /* Garante que a tabela ocupe a largura total do seu contêiner */
+  border-collapse: collapse;
+  /* Combina as bordas das células para uma aparência mais limpa */
+}
+
+.container .table th,
+.container .table td {
+  padding: 8px;
+  /* Espaçamento interno das células */
+  text-align: center;
+  /* Centraliza o texto das células */
+}
+
+/* Regras de mídia para ajustar a tabela em dispositivos móveis */
+@media screen and (max-width: 600px) {
+  .container .table {
+    font-size: 0.8em;
+    /* Reduz o tamanho da fonte para dispositivos móveis */
+  }
+}
+
+.mark-complete.completed {
+  background-color: #4caf50;
+  color: #fff;
 }

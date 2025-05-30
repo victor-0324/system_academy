@@ -79,10 +79,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('nivel').textContent = `${nivel} 🏅`;
 
         const conquEl = document.getElementById('conquistas');
+
+        // 1) Escolhe a conquista na ordem de prioridade
+        let raw = "";
         if (Array.isArray(conquistas)) {
-            conquEl.textContent = ` ${conquistas.join(', ')}`;
+            if (conquistas.find(c => c.includes("SEMANA COMPLETA"))) {
+                raw = conquistas.find(c => c.includes("SEMANA COMPLETA"));
+            } else if (conquistas.find(c => c.includes("3 Dias Seguidos"))) {
+                raw = conquistas.find(c => c.includes("3 Dias Seguidos"));
+            } else if (conquistas.find(c => c.includes("1º Treino"))) {
+                raw = conquistas.find(c => c.includes("1º Treino"));
+            }
         } else {
-            conquEl.textContent = ` ${conquistas}`;
+            raw = conquistas;
+        }
+
+        // 2) Renderiza sem quebra de linha
+        if (raw) {
+            conquEl.textContent = raw;
+        } else {
+            conquEl.textContent = "😴";
         }
     }
 

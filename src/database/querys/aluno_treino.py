@@ -1086,12 +1086,13 @@ class Querys:
             return "Avançado"
 
 
-    def calcular_conquistas(self, mapa: dict) -> list[str]:
+    def calcular_conquista(self, mapa: dict) -> str:
         """
-        Com base no mapa {"YYYY-MM-DD": {"tempo": segs, "pontos": pts}}, retorna:
-        🎯 Primeiro treino      -> >=1 dia com ≥5min
-        🥇 3 dias seguidos      -> sequência de 3 dias com ≥5min
-        🔥 Semana completa      -> 6 dias (segunda–sábado) com ≥5min
+        Retorna apenas UMA conquista, na ordem de prioridade:
+        1) Semana completa 🔥
+        2) 3 Dias Seguidos 🥇
+        3) 1º Treino 🎯
+        Caso não haja nenhuma, retorna string vazia.
         """
         MIN_SEGUNDOS = 5 * 60  # 5 minutos
         fuso_brasilia = ZoneInfo("America/Sao_Paulo")
@@ -1100,31 +1101,34 @@ class Querys:
             hour=0, minute=0, second=0, microsecond=0
         )
 
-        # ISO das datas de segunda (0) a sábado (5)
+        # Gera as datas ISO de segunda (0) a sábado (5)
         dias_iso = [
             (inicio_semana + timedelta(days=i)).date().isoformat()
             for i in range(6)
         ]
-        # Marca se em cada dia teve ao menos 5min
-        valido = {dia: (mapa.get(dia, {}).get("tempo", 0) >= MIN_SEGUNDOS)
-                for dia in dias_iso}
 
-        badges = []
-        # Primeiro treino
-        if any(valido.values()):
-            badges.append(" 1º Treino 🎯")
-        # 3 dias seguidos
+        # Marca cada dia se teve ≥5 min
+        valido = {
+            dia: (mapa.get(dia, {}).get("tempo", 0) >= MIN_SEGUNDOS)
+            for dia in dias_iso
+        }
+
+        # 1) Semana completa
+        if all(valido.values()):
+            return "💪🏼 SEMANA COMPLETA 🔥"
+
+        # 2) 3 dias seguidos
         streak = 0
         for dia in dias_iso:
             if valido[dia]:
                 streak += 1
                 if streak >= 3:
-                    badges.append("3 Dias Seguidos 🥇")
-                    break
+                    return "🥇 3 Dias Seguidos"
             else:
                 streak = 0
-        # Semana completa
-        if all(valido[dia] for dia in dias_iso):
-            badges.append("💪🏼 SEMANA COMPLETA 💪🏼")
 
-        return badges
+        # 3) Primeiro treino
+        if any(valido.values()):
+            return "🎯 1º Treino"
+
+        return ""
