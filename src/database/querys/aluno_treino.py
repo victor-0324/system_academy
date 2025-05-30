@@ -1112,19 +1112,19 @@ class Querys:
         badges = []
         # Primeiro treino
         if any(valido.values()):
-            badges.append("Primeiro treino 🎯")
+            badges.append(" 1º Treino 🎯")
         # 3 dias seguidos
         streak = 0
         for dia in dias_iso:
             if valido[dia]:
                 streak += 1
                 if streak >= 3:
-                    badges.append("3 dias seguidos 🥇")
+                    badges.append("3 Dias Seguidos 🥇")
                     break
             else:
                 streak = 0
         # Semana completa
         if all(valido[dia] for dia in dias_iso):
-            badges.append("🔥💪🏼 SEMANA COMPLETA 💪🏼🔥")
+            badges.append("💪🏼 SEMANA COMPLETA 💪🏼")
 
         return badges
