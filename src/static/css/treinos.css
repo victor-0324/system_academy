@@ -24,17 +24,25 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* cores específicas */
-#conquistas {
+#conquista {
   border-color: #3B82F6;
+  background: linear-gradient(90deg, #dbeafe, #eff6ff);
+  color: #1e40af;
+  font-weight: 600;
 }
 
 #ponTos {
   border-color: #10B981;
+  background: linear-gradient(90deg, #d1fae5, #ecfdf5);
+  color: #065f46;
+  font-weight: 600;
 }
 
 #nivel {
   border-color: #F97316;
+  background: linear-gradient(90deg, #ffedd5, #fff7ed);
+  color: #c2410c;
+  font-weight: 600;
 }
 
 .desafio-container {
@@ -124,6 +132,10 @@ td {
 #tempo-cronometro {
   font-size: 2em;
 
+}
+
+.hidden {
+  display: none !important;
 }
 
 .container .table {

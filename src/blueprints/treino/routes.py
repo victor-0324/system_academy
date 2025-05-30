@@ -209,8 +209,8 @@ def verificar_progresso_semanal():
     querys_instance = Querys(session)
 
     registros = querys_instance.busca_progresso_semanal(aluno_id)
-    if not registros:
-        return jsonify({"error": "Nenhum progresso encontrado"}), 404
+    # if not registros:
+    #     return jsonify({"error": "Nenhum progresso encontrado"}), 404
 
     fuso_brasilia = ZoneInfo("America/Sao_Paulo")
     agora = datetime.now(fuso_brasilia)
@@ -277,11 +277,30 @@ def verificar_progresso_semanal():
 
     # 🎯 Novas funcionalidades de gamificação:
     nivel = querys_instance.calcular_nivel(aluno_id)
-    conquistas = querys_instance.calcular_conquista(mapa)
-
+    conquista = querys_instance.calcular_conquista(mapa)
+    print('Conquista:', conquista)
     return jsonify({
-        "total_pontos": total_pontos,
-        "nivel": nivel,
-        "conquistas": conquistas,
-        "progresso": progresso
+        "progresso":     progresso,
+        "total_pontos":  total_pontos,
+        "nivel":         nivel,
+        "conquista":     conquista,
     })
+
+@treino_required
+@treino_app.route("/penalizar_auto_finalizacao", methods=["POST"])
+def penalizar_auto_finalizacao():
+    dados = request.json
+    aluno_id = dados.get("aluno_id")
+    session = current_app.db.session
+    querys_instance = Querys(session)
+
+    if not aluno_id:
+        return jsonify({"error": "ID do aluno é obrigatório"}), 400
+
+    # Penalizar o aluno por auto finalização
+    resultado = querys_instance.penalizar_auto_finalizacao(aluno_id)
+
+    if resultado:
+        return jsonify({"status": "sucesso", "mensagem": "Auto finalização penalizada."})
+    else:
+        return jsonify({"error": "Erro ao penalizar auto finalização."}), 500

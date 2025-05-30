@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from flask import jsonify
 from sqlalchemy import func
 from zoneinfo import ZoneInfo
-
+import random
 
 class Querys:
 
@@ -1087,39 +1087,77 @@ class Querys:
 
 
     def calcular_conquista(self, mapa: dict) -> str:
-        """
-        De segunda (0) a sábado (5):
-        - total_dias: quantos dias tiveram ≥5min
-        Retorna UMA mensagem, na prioridade:
-        1) Semana completa 🔥 (6 dias)
-        2) 3 Dias de Treino 🥇  (total_dias >= 3)
-        3) X Dias de Treino 🎯  (1 <= total_dias < 3)
-        4) 😴 Sem Treino      (total_dias == 0)
-        """
-        MIN_SEGUNDOS = 5 * 60
+        MIN_SEGUNDOS = 1 * 60
         fuso = ZoneInfo("America/Sao_Paulo")
         hoje = datetime.now(fuso)
         inicio_sem = (hoje - timedelta(days=hoje.weekday())).replace(
             hour=0, minute=0, second=0, microsecond=0
         )
 
-        # Datas de segunda (0) a sábado (5)
         dias = [(inicio_sem + timedelta(days=i)).date().isoformat() for i in range(6)]
-        # Marca se treinou ≥5min em cada dia
         valido = [mapa.get(d, {}).get("tempo", 0) >= MIN_SEGUNDOS for d in dias]
         total_dias = sum(valido)
 
-        # 1) Semana completa (6 dias)
-        if total_dias == 6:
-            return "💪🏼 SEMANA COMPLETA 🔥"
+        mensagens = {
+            0: ["😴 Nenhum treino... bora reagir!"],
+            1: [
+                "1º dia! Começou com tudo 💪🏼",
+                "Primeiro passo dado! 👣",
+                "Dia 1! Bora virar rotina 🔁",
+            ],
+            2: [
+                "2 dias! Ritmo bom, continue! 🚀",
+                "Dois treinos! Isso é foco 🎯",
+                "2 dias seguidos! Tá voando 🔥",
+            ],
+            3: [
+                "3 dias! Você está pegando firme 🥇",
+                "Três treinos! Já é disciplina 👏🏼",
+                "3/6 da semana! Mandou bem 🔥",
+            ],
+            4: [
+                "4 dias! Isso sim é determinação 💥",
+                "Você tá on fire! 🔥🔥🔥🔥",
+                "Quatro treinos! Exemplo de foco 🎯",
+            ],
+            5: [
+                "5 dias! Foco total, orgulho! 🎯",
+                "Você está a 1 dia da semana perfeita! 👊🏼",
+                "5 treinos! Rumo ao topo 🚀",
+            ],
+            6: [
+                "6 dias! Semana completa, campeão! 🏆",
+                "🔥🔥🔥 Semana 100% concluída!",
+                "Você dominou a semana 💪🏼",
+            ],
+        }
 
-        # 2) Três ou mais dias (não precisa ser seguidos)
-        if total_dias >= 3:
-            return f"🥇 {total_dias} Dias de Treino"
+        return random.choice(mensagens.get(total_dias, [f"{total_dias} dias! Incrível! 👊🏼"]))
 
-        # 3) Um ou dois dias
-        if total_dias >= 1:
-            return f"🎯 {total_dias} Dias de Treino"
 
-        # 4) Sem treino
-        return "😴 Sem Treino"
+    def penalizar_auto_finalizacao(self, aluno_id):
+        """
+        Penaliza o aluno por auto-finalização de treino.
+        A penalização consiste em retirar 15 pontos do progresso semanal,
+        sem permitir que fique abaixo de zero.
+        """
+        try:
+            progresso = (
+                self.session.query(ProgressoSemanal)
+                .filter_by(aluno_id=aluno_id)
+                .first()
+            )
+
+            if not progresso:
+                print("Progresso semanal não encontrado para o aluno.")
+                return False
+
+            # Subtrai 15 pontos, garantindo que não fique negativo
+            progresso.pontos = max(progresso.pontos - 15, 0)
+            self.session.commit()
+            return True
+
+        except Exception as e:
+            print(f"Erro ao penalizar auto-finalização: {e}")
+            self.session.rollback()
+            return False

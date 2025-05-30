@@ -11,17 +11,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     function atualizarBotoes() {
         btnStart.disabled = treinoAtivo;
         btnStop.disabled = !treinoAtivo;
+        mostrarCronometro(treinoAtivo);
     }
-
-    function autoFinalizarTreino() {
+    function mostrarCronometro(ativo) {
+        document.getElementById("cronometroContainer").classList.toggle("hidden", !ativo);
+    }
+    // function autoFinalizarTreino() {
+    //     clearInterval(intervaloCronometro);
+    //     treinoAtivo = false;
+    //     localStorage.removeItem('treinoAtivo');
+    //     localStorage.removeItem('tempoInicial');
+    //     const msgDiv = document.getElementById("mensagemAlerta");
+    //     msgDiv.textContent = 'Tempo finalizado automaticamente ';
+    //     msgDiv.style.display = 'block';
+    //     carregarProgressoSemanal();
+    //     atualizarBotoes();
+    // }
+    async function autoFinalizarTreino() {
         clearInterval(intervaloCronometro);
         treinoAtivo = false;
         localStorage.removeItem('treinoAtivo');
         localStorage.removeItem('tempoInicial');
+
+        // ① Pega o ID do aluno (mesma lógica que você já usa)
+        const alunoId = document.querySelector('.botoes').dataset.alunoId;
+
+        // ② Penaliza no backend
+        if (alunoId) {
+            fetch('/treino/penalizar_auto_finalizacao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ aluno_id: alunoId })
+            })
+                .then(res => {
+                    if (!res.ok) console.warn('Falha ao penalizar auto finalização');
+                    return res.json();
+                })
+                .then(json => console.log('Penalização:', json))
+                .catch(err => console.error(err));
+        }
+
+        // ③ Exibe alerta e atualiza interface
         const msgDiv = document.getElementById("mensagemAlerta");
-        msgDiv.textContent = 'Tempo finalizado automaticamente ';
+        msgDiv.textContent = 'Tempo finalizado automaticamente. Penalidade aplicada!';
         msgDiv.style.display = 'block';
-        carregarProgressoSemanal();
+
+
+        await carregarProgressoSemanal(); // recarrega pontos, conquistas, nível
         atualizarBotoes();
     }
 
@@ -34,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 autoFinalizarTreino();
             }
         }, 1000);
+
     }
 
     async function carregarProgressoSemanal() {
@@ -43,8 +80,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const resp = await fetch(`/treino/verificar_progresso_semanal?aluno_id=${alunoId}`);
         if (!resp.ok) return console.warn("Sem progresso");
 
+
         // Extrai também nivel e conquistas
-        const { progresso, total_pontos, nivel, conquistas } = await resp.json();
+        const { progresso, total_pontos, nivel, conquista } = await resp.json();
 
         // mapeia e pinta o progresso na tabela (como você já tem)
         const mapIds = {
@@ -78,28 +116,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // —— NOVO —— mostrar nível e conquistas
         document.getElementById('nivel').textContent = `${nivel} 🏅`;
 
-        const conquEl = document.getElementById('conquistas');
-
-        // 1) Escolhe a conquista na ordem de prioridade
-        let raw = "";
-        if (Array.isArray(conquistas)) {
-            if (conquistas.find(c => c.includes("SEMANA COMPLETA"))) {
-                raw = conquistas.find(c => c.includes("SEMANA COMPLETA"));
-            } else if (conquistas.find(c => c.includes("3 Dias Seguidos"))) {
-                raw = conquistas.find(c => c.includes("3 Dias Seguidos"));
-            } else if (conquistas.find(c => c.includes("1º Treino"))) {
-                raw = conquistas.find(c => c.includes("1º Treino"));
-            }
-        } else {
-            raw = conquistas;
-        }
-
-        // 2) Renderiza sem quebra de linha
-        if (raw) {
-            conquEl.textContent = raw;
-        } else {
-            conquEl.textContent = "😴";
-        }
+        document.getElementById('conquista').textContent =
+            conquista || "😴 Sem Treino";
     }
 
     // e não esqueça de chamar
@@ -117,6 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.setItem('tempoInicial', String(tempoInicial));
             iniciarCronometro();
             atualizarBotoes();
+            mostrarCronometro(true);
         } else {
             const e = await resp.json(); alert(e.error);
         }
@@ -138,6 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             await carregarProgressoSemanal();
             atualizarBotoes();
+            mostrarCronometro(false);
         } else {
             const e = await resp.json(); alert(e.error);
         }
