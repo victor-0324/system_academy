@@ -10,6 +10,8 @@ from src.database.models import (
 from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta
 from flask import jsonify
+from sqlalchemy import func
+from zoneinfo import ZoneInfo
 
 
 class Querys:
@@ -974,7 +976,6 @@ class Querys:
             return False, "Erro ao adicionar exercícios"
 
     def busca_progresso_semanal(self, aluno_id):
-        print(aluno_id)
         progresso = (
             self.session.query(ProgressoSemanal).filter_by(aluno_id=aluno_id).all()
         )
@@ -991,7 +992,11 @@ class Querys:
             "sábado",
             "domingo",
         ]
-        hoje_idx = datetime.utcnow().weekday()  # 0=segunda ... 6=domingo
+
+        fuso_brasilia = ZoneInfo("America/Sao_Paulo")
+        # obtém o datetime “agora” já no timezone correto
+        agora = datetime.now(fuso_brasilia)
+        hoje_idx = agora.weekday()  # 0=segunda ... 6=domingo
         dia_pt = dias[hoje_idx]
 
         # 2) Não grava domingo
@@ -1013,7 +1018,7 @@ class Querys:
             if prog.pontos == 0:
                 prog.pontos = pontos
 
-            prog.data_criacao = datetime.utcnow()
+            prog.data_criacao = datetime.now(fuso_brasilia)
         else:
             # 4) Primeiro treino do dia: cria registro com tempo+pontos
             prog = ProgressoSemanal(
@@ -1021,7 +1026,8 @@ class Querys:
                 dia=dia_pt,
                 tempo_treino=duracao,
                 pontos=pontos,
-                data_criacao=datetime.utcnow(),
+                data_criacao=datetime.now(fuso_brasilia),
+                finalizado=True,
             )
             self.session.add(prog)
 
@@ -1043,3 +1049,82 @@ class Querys:
             )
         else:
             return PONTOS_MIN
+
+
+    def calcular_nivel(self, aluno_id) -> str:
+        """
+        Retorna o nível do aluno nesta semana:
+        - Iniciante (<30 pts)
+        - Intermediário (30–99 pts)
+        - Avançado (>=100 pts)
+        """
+        # 1) Calcula intervalo segunda 00:00 até sábado 23:59:59
+        fuso_brasilia = ZoneInfo("America/Sao_Paulo")
+        agora = datetime.now(fuso_brasilia)
+        inicio_semana = (agora - timedelta(days=agora.weekday())).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
+        fim_semana = inicio_semana + timedelta(days=5, hours=23, minutes=59, seconds=59)
+
+        # 2) Soma pontos desta semana (segunda–sábado)
+        total = (
+            self.session.query(func.coalesce(func.sum(ProgressoSemanal.pontos), 0))
+            .filter(
+                ProgressoSemanal.aluno_id == aluno_id,
+                ProgressoSemanal.data_criacao >= inicio_semana,
+                ProgressoSemanal.data_criacao <= fim_semana,
+            )
+            .scalar()
+        )
+
+        # 3) Define níveis
+        if total < 30:
+            return "Iniciante"
+        elif total < 100:
+            return "Intermediário"
+        else:
+            return "Avançado"
+
+
+    def calcular_conquistas(self, mapa: dict) -> list[str]:
+        """
+        Com base no mapa {"YYYY-MM-DD": {"tempo": segs, "pontos": pts}}, retorna:
+        🎯 Primeiro treino      -> >=1 dia com ≥5min
+        🥇 3 dias seguidos      -> sequência de 3 dias com ≥5min
+        🔥 Semana completa      -> 6 dias (segunda–sábado) com ≥5min
+        """
+        MIN_SEGUNDOS = 5 * 60  # 5 minutos
+        fuso_brasilia = ZoneInfo("America/Sao_Paulo")
+        hoje = datetime.now(fuso_brasilia)
+        inicio_semana = (hoje - timedelta(days=hoje.weekday())).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
+
+        # ISO das datas de segunda (0) a sábado (5)
+        dias_iso = [
+            (inicio_semana + timedelta(days=i)).date().isoformat()
+            for i in range(6)
+        ]
+        # Marca se em cada dia teve ao menos 5min
+        valido = {dia: (mapa.get(dia, {}).get("tempo", 0) >= MIN_SEGUNDOS)
+                for dia in dias_iso}
+
+        badges = []
+        # Primeiro treino
+        if any(valido.values()):
+            badges.append("Primeiro treino 🎯")
+        # 3 dias seguidos
+        streak = 0
+        for dia in dias_iso:
+            if valido[dia]:
+                streak += 1
+                if streak >= 3:
+                    badges.append("3 dias seguidos 🥇")
+                    break
+            else:
+                streak = 0
+        # Semana completa
+        if all(valido[dia] for dia in dias_iso):
+            badges.append("🔥💪🏼 SEMANA COMPLETA 💪🏼🔥")
+
+        return badges

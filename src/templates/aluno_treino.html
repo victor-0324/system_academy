@@ -2,8 +2,8 @@
 <html lang="pt-br" translate="no">
 
 <head>
-  <!-- 
-         * @Package: Ensign PWA Mobile App 
+  <!--
+         * @Package: Ensign PWA Mobile App
          * @Author: themepassion
          * @Version: 1.0
         -->
@@ -435,7 +435,7 @@
       </div>
     </div>
 
-    {% if current_user.id == 4 or current_user.id == 12 %} 
+    {% if current_user.id == 4 or current_user.id == 12 %}
     <div class="container full subpage">
       <div class="section">
         <div class="container">
@@ -457,6 +457,50 @@
                   <div id="mensagemAlerta" style="display: none; color: red; font-weight: bold;"></div>
                   <h4>Progresso Semanal</h4>
                   <div class="container">
+
+                   <ul style="
+                      display: flex;
+                      gap: 12px;
+                      list-style: none;
+                      padding: 8px 16px;
+                      margin: 0 0 12px;
+                      border-radius: 6px;
+                      background: rgba(255, 255, 255, 0.8);
+                      backdrop-filter: blur(8px);
+                      font-size: 11px;
+                      font-weight: 500;
+                      color: #111;
+                      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    ">
+                  <li id="conquistas" style="
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        padding-left: 8px;
+                        border-left: 4px solid #3B82F6;  /* azul vivo */
+                      ">
+                    🏆 <span>Conquistas: –</span>
+                  </li>
+                  <li id="ponTos" style="
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        padding-left: 8px;
+                        border-left: 4px solid #10B981;  /* verde vibrante */
+                      ">
+                    ⭐ <span>Pontos: 0</span>
+                  </li>
+                  <li id="nivel" style="
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        padding-left: 8px;
+                        border-left: 4px solid #F97316;  /* laranja quente */
+                      ">
+                    🏅 <span>Nível: –</span>
+                  </li>
+                </ul>
+
                     <table class="table">
                       <thead>
                         <tr>
@@ -486,7 +530,7 @@
 
                     <div id="mensagemAlerta" style="display: none; color: red; font-weight: bold;"></div>
                     <h6 id="resultadoDia"></h6>
-                    <p id="ponTos"></p>
+
                   </div>
                 </div>
                 <div class="botoes" data-aluno-id="{{ aluno.id or ''}}">

@@ -14,6 +14,7 @@ from flask_login import current_user
 from src.database.querys import Querys
 from functools import wraps
 from src.database.models import Aluno
+from zoneinfo import ZoneInfo
 
 # from .consultas import ConsultaTreino
 from datetime import datetime, timedelta
@@ -149,8 +150,6 @@ def evolucao(aluno_id):
 
 
 treinos = {}
-
-
 @treino_required
 @treino_app.route("/iniciar_treino", methods=["POST"])
 def iniciar_treino():
@@ -160,8 +159,8 @@ def iniciar_treino():
     if not aluno_id:
         return jsonify({"error": "ID do aluno é obrigatório"}), 400
 
-    inicio_treino = datetime.utcnow()
-
+    inicio_treino  = datetime.now(ZoneInfo("America/Sao_Paulo"))
+    print(f"Iniciando treino para o aluno {aluno_id} às {inicio_treino}")
     # Salva temporariamente na memória
     treinos[aluno_id] = {"inicio": inicio_treino, "status": "em andamento"}
 
@@ -180,7 +179,15 @@ def finalizar_treino():
     if not aluno_id or not tempo_inicial:
         return jsonify({"error": "Dados inválidos"}), 400
 
-    duracao = datetime.utcnow() - datetime.utcfromtimestamp(int(tempo_inicial) / 1000)
+    fuso_brasilia = ZoneInfo("America/Sao_Paulo")
+
+    agora = datetime.now(fuso_brasilia)
+    inicio = datetime.fromtimestamp(int(tempo_inicial) / 1000, tz=fuso_brasilia)
+
+    duracao = agora - inicio
+
+    if duracao < timedelta(minutes=1):
+        return jsonify({"error": "Tempo de treino muito curto para pontuar."}), 400
 
     pontos = querys_instance.calcular_pontos(duracao)
 
@@ -191,6 +198,7 @@ def finalizar_treino():
     return jsonify({"status": "sucesso", "duracao": str(duracao), "pontos": pontos})
 
 
+@treino_required
 @treino_app.route("/verificar_progresso_semanal", methods=["GET"])
 def verificar_progresso_semanal():
     aluno_id = request.args.get("aluno_id")
@@ -198,51 +206,45 @@ def verificar_progresso_semanal():
         return jsonify({"error": "ID do aluno é obrigatório"}), 400
 
     session = current_app.db.session
-    querys = Querys(session)
-    registros = querys.busca_progresso_semanal(aluno_id)
+    querys_instance = Querys(session)
+
+    registros = querys_instance.busca_progresso_semanal(aluno_id)
     if not registros:
         return jsonify({"error": "Nenhum progresso encontrado"}), 404
 
-    agora = datetime.now()
+    fuso_brasilia = ZoneInfo("America/Sao_Paulo")
+    agora = datetime.now(fuso_brasilia)
     inicio_semana = (agora - timedelta(days=agora.weekday())).replace(
         hour=0, minute=0, second=0, microsecond=0
     )
 
-    # Agrupamento por data ISO
     mapa = {}
     pontos_contabilizados = set()
-    for p in sorted(
-        registros, key=lambda r: getattr(r, "data_criacao", datetime.utcnow())
-    ):
-        dt = getattr(p, "data_criacao", None) or datetime.utcnow()
+    for p in sorted(registros, key=lambda r: getattr(r, "data_criacao", datetime.now(fuso_brasilia))):
+        dt = getattr(p, "data_criacao", None)
+        if dt is None:
+            dt = datetime.now(fuso_brasilia)
+        elif dt.tzinfo is None:
+            dt = dt.replace(tzinfo=fuso_brasilia)
+
         if dt < inicio_semana:
             continue
+
         key = dt.date().isoformat()
 
         if key not in mapa:
             mapa[key] = {"tempo": 0, "pontos": 0}
 
-        # Sempre soma o tempo
-        tempo = (
-            p.tempo_treino.total_seconds()
-            if isinstance(p.tempo_treino, timedelta)
-            else 0
-        )
+        tempo = p.tempo_treino.total_seconds() if isinstance(p.tempo_treino, timedelta) else 0
         mapa[key]["tempo"] += tempo
 
-        # Só soma os pontos uma vez por dia
         if key not in pontos_contabilizados:
             mapa[key]["pontos"] += getattr(p, "pontos", 0)
             pontos_contabilizados.add(key)
 
     nomes_pt = {
-        0: "segunda-feira",
-        1: "terça-feira",
-        2: "quarta-feira",
-        3: "quinta-feira",
-        4: "sexta-feira",
-        5: "sábado",
-        6: "domingo",
+        0: "segunda-feira", 1: "terça-feira", 2: "quarta-feira",
+        3: "quinta-feira", 4: "sexta-feira", 5: "sábado", 6: "domingo",
     }
 
     progresso = []
@@ -265,14 +267,21 @@ def verificar_progresso_semanal():
         pontos = mapa.get(chave, {}).get("pontos", 0)
         total_pontos += pontos
 
-        progresso.append(
-            {
-                "data": chave,
-                "dia_nome": dia_nome,
-                "status": status,
-                "tempo_treino": tempo,
-                "pontos": pontos,
-            }
-        )
-    print(progresso)
-    return jsonify({"total_pontos": total_pontos, "progresso": progresso})
+        progresso.append({
+            "data": chave,
+            "dia_nome": dia_nome,
+            "status": status,
+            "tempo_treino": tempo,
+            "pontos": pontos,
+        })
+
+    # 🎯 Novas funcionalidades de gamificação:
+    nivel = querys_instance.calcular_nivel(aluno_id)
+    conquistas = querys_instance.calcular_conquistas(mapa)
+    print("Conquistas calculadas:", conquistas)
+    return jsonify({
+        "total_pontos": total_pontos,
+        "nivel": nivel,
+        "conquistas": conquistas,
+        "progresso": progresso
+    })

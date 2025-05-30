@@ -42,9 +42,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const resp = await fetch(`/treino/verificar_progresso_semanal?aluno_id=${alunoId}`);
         if (!resp.ok) return console.warn("Sem progresso");
-        const { progresso, total_pontos } = await resp.json();
 
-        // Map dia_nome para id do <td>
+        // Extrai também nivel e conquistas
+        const { progresso, total_pontos, nivel, conquistas } = await resp.json();
+
+        // mapeia e pinta o progresso na tabela (como você já tem)
         const mapIds = {
             "segunda-feira": "segunda",
             "terça-feira": "terca",
@@ -52,30 +54,40 @@ document.addEventListener('DOMContentLoaded', async () => {
             "quinta-feira": "quinta",
             "sexta-feira": "sexta",
             "sábado": "sabado",
-            // domingo omitido
         };
-
-        // Limpa todas as células
-        Object.values(mapIds).forEach(id => {
-            document.getElementById(id).textContent = "";
-        });
-
-        // Preenche os status
+        Object.values(mapIds).forEach(id => document.getElementById(id).textContent = "");
         progresso.forEach(item => {
             const tdId = mapIds[item.dia_nome];
-            if (!tdId) return;      // pula domingo
-            document.getElementById(tdId).textContent = item.status;
+            if (tdId) document.getElementById(tdId).textContent = item.status;
         });
 
-        // Atualiza resumo
+        // formata e mostra o cronômetro e pontos (como você já tem)
+        function formatarSegundos(segundos) {
+            if (!segundos) return '';
+            const h = Math.floor(segundos / 3600);
+            const m = Math.floor((segundos % 3600) / 60);
+            const s = segundos % 60;
+            return [h > 0 && `${h}h`, m > 0 && `${m}m`, s > 0 && `${s}s`].filter(Boolean).join(' ');
+        }
+        const hojeNome = new Date().toLocaleDateString('pt-BR', { weekday: 'long' });
+        const progHoje = progresso.find(p => p.dia_nome === hojeNome);
         document.getElementById('resultadoDia').textContent =
-            `Hoje: ${formatarSegundos(
-                progresso.find(p => p.dia_nome === new Date().toLocaleDateString('pt-BR', { weekday: 'long' }))
-                    ?.tempo_treino || 0
-            )}`;
-        document.getElementById('ponTos').textContent =
-            `Pontos: ${total_pontos}`;
+            progHoje ? `Hoje: ${formatarSegundos(progHoje.tempo_treino)}` : '';
+        document.getElementById('ponTos').textContent = `Pontos: ${total_pontos}`;
+
+        // —— NOVO —— mostrar nível e conquistas
+        document.getElementById('nivel').textContent = `${nivel} 🏅`;
+
+        const conquEl = document.getElementById('conquistas');
+        if (Array.isArray(conquistas)) {
+            conquEl.textContent = ` ${conquistas.join(', ')}`;
+        } else {
+            conquEl.textContent = ` ${conquistas}`;
+        }
     }
+
+    // e não esqueça de chamar
+    document.addEventListener('DOMContentLoaded', carregarProgressoSemanal);
 
     async function iniciarTreino() {
         if (treinoAtivo) return;
